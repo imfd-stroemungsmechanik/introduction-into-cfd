@@ -91,13 +91,13 @@ OpenFOAM 12 and OpenFOAM v2412 are already installed on the PCs in the computer 
 
 Whenever OpenFOAM is going to be used, you have to source it at least once inside this terminal. This can be achieved by typing the following command inside the terminal:
 
-```
+```bash
 source /app2/OpenFOAM/OpenFOAM-v2412/etc/bashrc
 ```
 
 Once enter is pressed, OpenFOAM will be sourced and ready for usage. Utilities and solvers can now be executed by typing their respective name in the terminal. However, typing this command inside each new terminal can be time consuming and prone to error. Therefore, an alias will be used instead. In order to create this alias, the following command has to be executed once in the terminal:
 
-```
+```bash
 echo 'alias of2412="source /app2/OpenFOAM/OpenFOAM-v2412/etc/bashrc"' >> ~/.bashrc
 ```
 
