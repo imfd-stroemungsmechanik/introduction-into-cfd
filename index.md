@@ -30,7 +30,9 @@ Throughout the tutorials, the user guide will show you the content of certain fi
 
 Commands, which should be executed in the command line are formatted as follows:
 
-> pwd
+```bash
+pwd
+```
 
 This example, you should type the command `pwd` into terminal and press enter. Whenever commands, folder or file names are mentioned in the text body, they are formatted in bold monospace. Similar to the `pwd` command, the Linux home folder for example is written as `home`.
 
@@ -96,7 +98,7 @@ source /app2/OpenFOAM/OpenFOAM-v2412/etc/bashrc
 Once enter is pressed, OpenFOAM will be sourced and ready for usage. Utilities and solvers can now be executed by typing their respective name in the terminal. However, typing this command inside each new terminal can be time consuming and prone to error. Therefore, an alias will be used instead. In order to create this alias, the following command has to be executed once in the terminal:
 
 ```
-echo 'alias of11="source /app2/OpenFOAM/OpenFOAM-v2412/etc/bashrc"' >> ~/.bashrc
+echo 'alias of2412="source /app2/OpenFOAM/OpenFOAM-v2412/etc/bashrc"' >> ~/.bashrc
 ```
 
 Now close this terminal. From this point forward, whenever you want to source OpenFOAM in a new terminal, you can simply type `of11` instead of typing the complex `source` command introduced earlier. This even persists after restarting the computer.
