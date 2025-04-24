@@ -1,3 +1,6 @@
+title: Introduction into Computational Fluid Dynamics
+url: "https://heinten.github.io"
+remote_theme: just-the-docs/just-the-docs
 plugins:
   - jekyll-relative-links
 relative_links:
