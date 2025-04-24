@@ -1,8 +1,10 @@
 ---
 layout: default
-title: Getting started
+title: Getting Started
 nav_order: 1
 ---
+
+# Getting Started
 
 ## Scope of the Seminar
 
@@ -37,6 +39,20 @@ This example, you should type the command `pwd` into terminal and press enter. W
 ### Notes and warnings
 
 Notes and warnings are coloured as a blue or red box. These contain useful additional information.
+
+{: .warning }
+> This website documents the features of the current `main` branch of the Just the Docs theme. See [the CHANGELOG]({% link CHANGELOG.md %}) for a list of releases, new features, and bug fixes.
+
+{: .note }
+> This website documents the features of the current `main` branch of the Just the Docs theme. See [the CHANGELOG]({% link CHANGELOG.md %}) for a list of releases, new features, and bug fixes.
+
+{: .tip }
+> This website documents the features of the current `main` branch of the Just the Docs theme. See [the CHANGELOG]({% link CHANGELOG.md %}) for a list of releases, new features, and bug fixes.
+
+{: .caution }
+> This website documents the features of the current `main` branch of the Just the Docs theme. See [the CHANGELOG]({% link CHANGELOG.md %}) for a list of releases, new features, and bug fixes.
+
+
 
 > [!NOTE]
 > Useful information that users should know, even when skimming content.

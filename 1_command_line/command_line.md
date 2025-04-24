@@ -1,11 +1,11 @@
 ---
 layout: default
-title: 1. Linux command Line
+title: 1. Linux Command Line
 nav_order: 2
 ---
 
 
-# The Linux command line for beginners
+# The Linux Command Line for Beginners
 
 ## Motivation
 
