@@ -26,7 +26,7 @@ This video explains the design of the shell and the following aspects:
 - The *working directory* is the directory, which the terminal is currently looking at.
 - The `~` symbol is a special directory shortcut refering to your `home` directory.
 
-<video width="640" height="480" controls preload="metadata" controls poster="videos/terminal-introduction-1.png">
+<video width="640" height="480" controls preload="metadata" controls poster="figures/terminal-introduction-1.png">
   <source src="videos/terminal-introduction-1.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
@@ -39,7 +39,10 @@ This video focuses on the following topics:
 - Listing the content of a directory using `ls`. Additional information can be shown when using the additional argument `-l`.
 - Changing the working directory using the command `cd`.
 
-[Video: terminal-introduction-2.mp4]
+<video width="640" height="480" controls preload="metadata" controls poster="figures/terminal-introduction-2.png">
+  <source src="videos/terminal-introduction-2.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 ## Current working directory
 
@@ -49,7 +52,10 @@ This video explains the following topics:
 - Print out the current working directory using `pwd`.
 - Special directory names are introduced: `..` stands for the parent directory; `.` for the current directory, and `~` for the home directory.
 
-[Video: terminal-introduction-3.mp4]
+<video width="640" height="480" controls preload="metadata" controls poster="figures/terminal-introduction-3.png">
+  <source src="videos/terminal-introduction-3.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 ## Organizing your files
 
@@ -61,7 +67,10 @@ This video emphasizes on the following topics:
 - Move files and folders around or rename them using `mv`.
 - Introduction of the wildcard `*`, which stands for one or more occurrences for any character.
 
-[Video: terminal-introduction-4.mp4]
+<video width="640" height="480" controls preload="metadata" controls poster="figures/terminal-introduction-4.png">
+  <source src="videos/terminal-introduction-4.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 ## Viewing files
 
@@ -71,7 +80,10 @@ This video focuses on the following topics:
 
 - Viewing files using `cat`, `less` and the top and bottom lines with `head` and `tail`, respectively.
 
-[Video: terminal-introduction-5.mp4]
+<video width="640" height="480" controls preload="metadata" controls poster="figures/terminal-introduction-5.png">
+  <source src="videos/terminal-introduction-5.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 ## Removing files or directories
 
@@ -83,6 +95,9 @@ This video shows the following aspects:
 - Deleting files with `rm` and directories recursively using the additional argument `-r`.
 - Deleting the content of all files and directories within a given directory using the wildcard `*`
 
-[Video: terminal-introduction-6.mp4]
+<video width="640" height="480" controls preload="metadata" controls poster="figures/terminal-introduction-6.png">
+  <source src="videos/terminal-introduction-6.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 > **Warning:** The `rm` command deletes files and directories without a waring and without using the Recycle Bin or Trash Can. Therefore, these files cannot be recovered. Be particularly careful when combining this command with wildcards, as complete folders and be deleted easily by mistake

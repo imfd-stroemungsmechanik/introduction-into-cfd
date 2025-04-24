@@ -38,17 +38,15 @@ This example, you should type the command `pwd` into terminal and press enter. W
 
 ### Notes and warnings
 
-Notes and warnings are coloured as a blue or red box. These contain useful additional information.
+Notes and warnings contain useful additional information:
 
-
-
-> [!NOTE]
+> **Note**
 > Useful information that users should know, even when skimming content.
 
-> [!TIP]
+> **Tip**
 > Helpful advice for doing things better or more easily.
 
-> [!CAUTION]
+> **Caution**
 > Advises about risks or negative outcomes of certain actions.
 
 ### Content of files and terminal output
