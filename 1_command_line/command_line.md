@@ -25,7 +25,7 @@ This video explains the design of the shell and the following aspects:
 - The *working directory* is the directory, which the terminal is currently looking at.
 - The `~` symbol is a special directory shortcut refering to your `home` directory.
 
-![Terminal Introduction](videos/terminal-introduction-1.mp4)
+https://github.com/user-attachments/assets/840412e3-f88e-41ed-bef9-99d15e894486
 
 ## Folder directories
 
