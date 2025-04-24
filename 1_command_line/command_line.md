@@ -1,3 +1,7 @@
+---
+id: command_line
+---
+
 # The Linux command line for beginners
 
 ## Motivation

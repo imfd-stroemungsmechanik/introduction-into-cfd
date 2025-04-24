@@ -1,3 +1,7 @@
+---
+id: getting_started
+---
+
 # Seminar Introduction into CFD
 
 ## Scope of the Seminar
