@@ -20,7 +20,7 @@ This repository complements the course Introduction into Computational Fluid Dyn
 
 This repository offeres a step-by-step introduction both into the Linux command line as well as OpenFOAM for simulation and ParaView for post-processing. If you are already familiar with the Linux command line, you can skip the first part and directly work on the second tutorial dealing with the mesh generation in OpenFOAM.
 
-Each OpenFOAM tutorial case is accompanied by an archive containing the pre-configured OpenFOAM cases. These archives can be downloaded from top of each tutorials page. Save the archive wherever you want to run your simulations (e.g. a new simulations directory inside your home), unzip it and keep it ready for the OpenFOAM tutorials.
+Each OpenFOAM tutorial case is accompanied by an archive containing the pre-configured OpenFOAM cases. These archives can be downloaded via the OPAL course site. Save the archive wherever you want to run your simulations (e.g. a new simulations directory inside your home), unzip it and keep it ready for the OpenFOAM tutorials.
 
 ## Guide style conventions
 
@@ -28,11 +28,9 @@ Throughout the tutorials, the user guide will show you the content of certain fi
 
 ### Linux and OpenFOAM commands
 
-Commands, which should be executed in the command line are formatted in green:
+Commands, which should be executed in the command line are formatted as follows:
 
-```
-pwd
-```
+> pwd
 
 This example, you should type the command `pwd` into terminal and press enter. Whenever commands, folder or file names are mentioned in the text body, they are formatted in bold monospace. Similar to the `pwd` command, the Linux home folder for example is written as `home`.
 
@@ -41,17 +39,20 @@ This example, you should type the command `pwd` into terminal and press enter. W
 Notes and warnings contain useful additional information:
 
 > **Note**
+>
 > Useful information that users should know, even when skimming content.
 
 > **Tip**
+>
 > Helpful advice for doing things better or more easily.
 
 > **Caution**
+>
 > Advises about risks or negative outcomes of certain actions.
 
 ### Content of files and terminal output
 
-Content of files within the user guide are shown in a border with grey background and line numbers as shown below. The output of commands in the terminal are formatted similarly but without the line numbers. For example, the `blockMeshDict` inside the `system` folder within a OpenFAOM case would start with the following lines:
+Content of files within the user guide are shown in a border with grey background as shown below. The output of commands in the terminal are formatted similarly but without the line numbers. For example, the `blockMeshDict` inside the `system` folder within a OpenFAOM case would start with the following lines:
 
 ```
 /*--------------------------------*- C++ -*----------------------------------*\
