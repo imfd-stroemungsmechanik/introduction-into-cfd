@@ -40,9 +40,6 @@ This example, you should type the command `pwd` into terminal and press enter. W
 
 Notes and warnings are coloured as a blue or red box. These contain useful additional information.
 
-{: .warning }
-> This website documents the features of the current `main` branch of the Just the Docs theme. See [the CHANGELOG]({% link CHANGELOG.md %}) for a list of releases, new features, and bug fixes.
-
 
 
 > [!NOTE]
