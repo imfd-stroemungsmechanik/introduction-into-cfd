@@ -1,3 +1,9 @@
+---
+layout: default
+title: 1. Linux command LineMy Page Title
+---
+
+
 # The Linux command line for beginners
 
 ## Motivation
