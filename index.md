@@ -1,3 +1,9 @@
+---
+layout: default
+title: Getting started
+nav_order: 1
+---
+
 ## Scope of the Seminar
 
 This repository complements the course Introduction into Computational Fluid Dynamics and provides currently three guided tutorials designed for familiarizing with the Linux command line, OpenFOAM, and post-processing tool ParaView:

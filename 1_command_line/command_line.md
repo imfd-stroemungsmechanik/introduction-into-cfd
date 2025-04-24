@@ -1,6 +1,7 @@
 ---
 layout: default
-title: 1. Linux command LineMy Page Title
+title: 1. Linux command Line
+nav_order: 2
 ---
 
 
