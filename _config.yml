@@ -12,6 +12,5 @@ include:
   - CONTRIBUTING.md
   - ISSUE_TEMPLATE.md
   - PULL_REQUEST_TEMPLATE.md
-sidebar:
-  - getting_started
-  - command_line
+header_pages:
+  - 1_command_line/command_line.md

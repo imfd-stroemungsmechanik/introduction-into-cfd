@@ -1,5 +1,5 @@
 ---
-id: command_line
+title: 1. Command Line
 ---
 
 # The Linux command line for beginners
