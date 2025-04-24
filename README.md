@@ -1,7 +1,3 @@
----
-Title: Getting Startet
----
-
 # Seminar Introduction into CFD
 
 ## Scope of the Seminar
