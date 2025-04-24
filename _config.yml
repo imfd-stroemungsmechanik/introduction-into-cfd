@@ -1,8 +1,5 @@
-theme: minima
 plugins:
   - jekyll-relative-links
-  - jekyll-feed
-  - jekyll-seo-tag
 relative_links:
   enabled: true
   collections: true
@@ -15,5 +12,3 @@ include:
   - CONTRIBUTING.md
   - ISSUE_TEMPLATE.md
   - PULL_REQUEST_TEMPLATE.md
-nav_pages:
-  - 1_command_line/command_line.md
