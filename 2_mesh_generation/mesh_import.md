@@ -158,6 +158,35 @@ The final output `Mesh OK.` indicates that no critical problems or errors were f
 > OpenFOAM always uses SI-units. Therefore, geometric dimensions shown here are in meter.
 
 
+
+
+## Mesh manipulation
+
+Once the mesh has been imported with `fluentMeshToFoam`, the tool `checkMesh` reveals a very good mesh quality. However, the mesh is incorrectly scaled as indicated by the bounding box. It shows an overall domain size of $64\,\text{m}$ in $x$-direction (from $0\,\text{m}$ to $64\,\text{m}$), $68.54\,\text{m}$ in $y$-direction (from $-4.54\,\text{m}$ to $+64\,\text{m}$), and $1.97\,\text{m}$ in $z$-direction:
+
+```
+Checking geometry...
+    Overall domain bounding box (0 -4.53853 -0.937738) (64 64 0.937738)
+    Mesh has 2 geometric (non-empty/wedge) directions (1 1 0)
+```
+
+In order to manipulate the mesh, e.g. scale, translate or rotate, the OpenFOAM utility `transformPoints` can be used. In this tutorial, the overall size of the bounding box must be scaled from $64\,\text{m}$ in $x$-direction down to $64\,\text{mm}$. This results in a scaling factor of 0.001 in all three dimensions. As a result, the `transformPoints` command has to be executed using the `scale` option as follows:
+
+```
+transformPoints -scale "(0.001 0.001 0.001)"
+```
+
+Once executed, the mesh will be scaled down by a factor of 1000.
+
+{: .warning }
+> If this command is executed twice, the mesh will be scaled by $0.001 \times 0.001=10^{-6}$.
+
+{: .tip }
+> It is impossible to memorize the syntax and functionality of all OpenFOAM solvers, utilities and post-processing tools. Therefore, you can always execute a command with the option `-help`. This will give you a detailed list of all options and how to use them, i.e. in this example how to use the `scale` option of the mesh manipulation utility `transformPoints`.
+
+
+
+
 ## Viewing the mesh
 
 Before the case is run it is a good idea to view the mesh to check for any errors. The mesh is viewed in ParaView, the post-processing tool supplied with OpenFOAM. The ParaView post-processing is conveniently launched on OpenFOAM case data by executing the `paraFoam` executable from within the case directory.
