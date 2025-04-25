@@ -46,6 +46,9 @@ Notes, tips, and warnings contain useful additional information:
 {: .tip }
 > Helpful advice for doing things better or more easily.
 
+{: .stuff }
+> Helpful advice for doing things better or more easily.
+
 {: .warning }
 > Advises about risks or negative outcomes of certain actions.
 

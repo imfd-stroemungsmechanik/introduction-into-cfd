@@ -25,4 +25,7 @@ callouts:
   tip:
     title: Tip
     color: green
+  stuff:
+    title: Stuff
+    color: yellow
 math: mathjax
