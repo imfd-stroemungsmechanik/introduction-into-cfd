@@ -38,7 +38,15 @@ This example, you should type the command `pwd` into terminal and press enter. W
 
 ### Notes and warnings
 
+$$ a^2 + b^2 = c^2 $$
+
 Notes and warnings contain useful additional information:
+
+{: .note }
+> Useful information that users should know, even when skimming content.
+
+{: .warning }
+> Advises about risks or negative outcomes of certain actions.
 
 > **Note**
 >
@@ -101,7 +109,7 @@ Once enter is pressed, OpenFOAM will be sourced and ready for usage. Utilities a
 echo 'alias of2412="source /app2/OpenFOAM/OpenFOAM-v2412/etc/bashrc"' >> ~/.bashrc
 ```
 
-Now close this terminal. From this point forward, whenever you want to source OpenFOAM in a new terminal, you can simply type `of11` instead of typing the complex `source` command introduced earlier. This even persists after restarting the computer.
+Now close this terminal. From this point forward, whenever you want to source OpenFOAM in a new terminal, you can simply type `of2412` instead of typing the complex `source` command introduced earlier. This even persists after restarting the computer.
 
 ## Disclaimer
 
