@@ -1,7 +1,8 @@
 ---
 layout: default
-title: 2. Mesh Generation
-nav_order: 4
+title: Mesh Import
+parent: 2. Mesh Generation
+nav_order: 1
 ---
 
 # Mesh Import
