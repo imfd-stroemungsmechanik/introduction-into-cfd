@@ -46,15 +46,12 @@ Notes, tips, and warnings contain useful additional information:
 {: .tip }
 > Helpful advice for doing things better or more easily.
 
-{: .stuff }
-> Helpful advice for doing things better or more easily.
-
 {: .warning }
 > Advises about risks or negative outcomes of certain actions.
 
 ### Content of files and terminal output
 
-Content of files within the user guide are shown in a border with grey background as shown below. The output of commands in the terminal are formatted similarly but without the line numbers. For example, the `blockMeshDict` inside the `system` folder within a OpenFAOM case would start with the following lines:
+Content of files within the user guide are shown in a border with grey background as shown below. The output of commands in the terminal are formatted similarly. For example, the `blockMeshDict` inside the `system` folder within a OpenFAOM case would start with the following lines:
 
 ```
 /*--------------------------------*- C++ -*----------------------------------*\
