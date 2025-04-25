@@ -38,26 +38,15 @@ This example, you should type the command `pwd` into terminal and press enter. W
 
 ### Notes and warnings
 
-$$ a^2 + b^2 = c^2 $$
-
-Notes and warnings contain useful additional information:
+Notes, tips, and warnings contain useful additional information:
 
 {: .note }
 > Useful information that users should know, even when skimming content.
 
-{: .warning }
-> Advises about risks or negative outcomes of certain actions.
-
-> **Note**
->
-> Useful information that users should know, even when skimming content.
-
-> **Tip**
->
+{: .tip }
 > Helpful advice for doing things better or more easily.
 
-> **Caution**
->
+{: .warning }
 > Advises about risks or negative outcomes of certain actions.
 
 ### Content of files and terminal output

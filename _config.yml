@@ -22,4 +22,7 @@ callouts:
   note:
     title: Note
     color: blue
+  tip:
+    title: Tip
+    color: green
 math: mathjax
