@@ -5,7 +5,11 @@ parent: 2. Mesh Generation
 nav_order: 2
 ---
 
-This third part explains how the OpenFOAM meshing tool snappyHexMesh can be used to create unstructured, hexahedral-dominated mesh of a motorbike. At the end, the mesh will be visualized using ParaView. The geometry of the case with the corresponding patch names looks as follows:
+# Hex-dominant Mesh Generation
+
+## Introduction
+
+This tutorial explains how the OpenFOAM meshing tool `cartesianMesh` is used to create unstructured, hexahedral-dominated mesh of a set of buildings. At the end, the mesh will be visualized using ParaView. The geometry of the case with the corresponding patch names looks as follows:
 
 ![Building case geometry](figures/buildings-geometry.png)
 
@@ -26,7 +30,7 @@ buildings
 |   └── meshDict
 └── buildings.obj
  
-3 directories, 5 files
+1 directory, 5 files
 ```
 
 The relevant files for this tutorial case are:
@@ -63,7 +67,7 @@ surfaceFile "buildings.obj";
 maxCellSize 10;
 ```
 
-There are only two entries required for creating a mesh:
+These two settings are at least required for creating a mesh:
  - `surfaceFile`: Name of the geometry file in the case folder, here `buildings.obj`.
  - `maxCellSize`: Maximum cell size in meters for creating the mesh.
 

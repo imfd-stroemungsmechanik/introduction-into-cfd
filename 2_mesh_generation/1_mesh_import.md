@@ -29,7 +29,7 @@ elbow
 |   └── fvSolution
 └── elbow.msh
 
-1 directories, 4 files
+1 directory, 4 files
 ```
 
 The relevant file for this tutorial case is:

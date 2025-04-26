@@ -26,8 +26,3 @@ Before starting, perform the following steps for preparation:
  1. Download the corresponding **OpenFOAM** cases for the meshing tutorial from the Downloads folder on the OPAL course page.
  2. Extract the `2_mesh_generation.zip` archive.
  3. Open a terminal, navigate to the newly created folder, and source **OpenFOAM**.
-
-Once finished, you can continue with the tutorials:
-
-1. [Mesh Import](1_mesh_import.md)
-2. [Hex-dominant Mesh Generation](2_cartesianMesh.md)
