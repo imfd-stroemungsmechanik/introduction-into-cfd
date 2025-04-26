@@ -9,11 +9,11 @@ nav_order: 1
 
 ## Introduction
 
-This first part explains the general OpenFOAM case structure, where the mesh information is stored and how to import a two-dimensional mesh created with an external software. At the end, the mesh will be visualized using ParaView. The geometry of the case looks as follows:
+This tutorial explains the general OpenFOAM case structure, where the mesh information is stored and how to import a two-dimensional mesh created with an external software. At the end, the mesh will be visualized using ParaView. The geometry of the case looks as follows:
 
 ![Elbow case geometry](figures/elbow-geometry.png)
 
-Navigate with your terminal to the extracted sub-directory `elbow` within the `1_mesh_generation` directory.
+Navigate with your terminal to the extracted sub-directory `elbow` within the `2_mesh_generation` directory.
 
 ## OpenFOAM case structure
 
@@ -135,40 +135,19 @@ Checking geometry...
 End
 ```
 
-This gives us all relevant mesh statistics and quality criteria of the mesh. Among others, this includes starting from top:
+This gives us all relevant mesh statistics and quality criteria of the mesh:
+ - `Mesh stats` contains all general statistics about the mesh, such as number of points, faces, cells, and patches, as well as cell types.
+ - `Checking topology` checks for the correct topology of the mesh both for cells and patches.
+ - `Checking geometry` reveals information regarding mesh quality with statistics such as maximum non-orthogonality, aspect ration, and skewness, repectively.
 
-- The mesh consists of 1074 points,
-- has 3290 faces in total,
-- has 918 cells with a prism shape,
-- has the six boundary patches named `wall-left`, `inlet-left`, `inlet-bottom`, `outlet`, `wall-right`, and `frontAndBackPlanes`
-- with 100, 8, 4, 8, 34, and 1836 faces, respectively.
-
-Below follow various relevant mesh quality criteria, such as:
-
-- Overall domain bounding box of `(0 -4.53853 -0.937738) (64 64 0.937738)`,
-- number of non-empty solution directions of 2 (e.g. a 2-dimensional case),
-- max cell aspect ratio of 2.40135,
-- a minimum and maximum cell volume of 0.521792 and 7.36354, respectively,
-- a maximum mesh non-orthogonality of 36.302, and
-- a max cell skewness of 0.500248.
-
-The final output `Mesh OK.` indicates that no critical problems or errors were found during `checkMesh`. Therefore, we can continue with this mesh and proceed with the simulation.
-
-{: .note }
-> OpenFOAM always uses SI-units. Therefore, geometric dimensions shown here are in meter.
+All critital mesh quality statistics are within the tolerable limits and the final output `Mesh OK.` indicates that no critical problems or errors were found during `checkMesh`. Therefore, we can continue with this mesh and proceed with the simulation.
 
 
 
 
 ## Mesh manipulation
 
-Once the mesh has been imported with `fluentMeshToFoam`, the tool `checkMesh` reveals a very good mesh quality. However, the mesh is incorrectly scaled as indicated by the bounding box. It shows an overall domain size of $64\,\text{m}$ in $x$-direction (from $0\,\text{m}$ to $64\,\text{m}$), $68.54\,\text{m}$ in $y$-direction (from $-4.54\,\text{m}$ to $+64\,\text{m}$), and $1.97\,\text{m}$ in $z$-direction:
-
-```
-Checking geometry...
-    Overall domain bounding box (0 -4.53853 -0.937738) (64 64 0.937738)
-    Mesh has 2 geometric (non-empty/wedge) directions (1 1 0)
-```
+`checkMesh` reveals one potential problem as the bounding box of the computational domain is $64\,\text{m}$ in $x$-direction, $68.54\,\text{m}$ in $y$-direction, and $1.97\,\text{m}$ in $z$-direction. This indicates that the mesh is incorrectly scaled.
 
 In order to manipulate the mesh, e.g. scale, translate or rotate, the OpenFOAM utility `transformPoints` can be used. In this tutorial, the overall size of the bounding box must be scaled from $64\,\text{m}$ in $x$-direction down to $64\,\text{mm}$. This results in a scaling factor of 0.001 in all three dimensions. As a result, the `transformPoints` command has to be executed using the `scale` option as follows:
 
