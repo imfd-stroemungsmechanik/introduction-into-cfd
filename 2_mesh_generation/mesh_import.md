@@ -147,9 +147,9 @@ All critital mesh quality statistics are within the tolerable limits and the fin
 
 ## Mesh manipulation
 
-`checkMesh` reveals one potential problem as the bounding box of the computational domain is $64\,\text{m}$ in $x$-direction, $68.54\,\text{m}$ in $y$-direction, and $1.97\,\text{m}$ in $z$-direction. This indicates that the mesh is incorrectly scaled.
+`checkMesh` reveals one potential problem as the bounding box of the computational domain is $$64\,\text{m}$$ in $$x$$-direction, $$68.54\,\text{m}$$ in $$y$$-direction, and $$1.97\,\text{m}$$ in $$z$$-direction. This indicates that the mesh is incorrectly scaled.
 
-In order to manipulate the mesh, e.g. scale, translate or rotate, the OpenFOAM utility `transformPoints` can be used. In this tutorial, the overall size of the bounding box must be scaled from $64\,\text{m}$ in $x$-direction down to $64\,\text{mm}$. This results in a scaling factor of 0.001 in all three dimensions. As a result, the `transformPoints` command has to be executed using the `scale` option as follows:
+In order to manipulate the mesh, e.g. scale, translate or rotate, the OpenFOAM utility `transformPoints` can be used. In this tutorial, the overall size of the bounding box must be scaled from $$64\,\text{m}$$ in $$x$$-direction down to $$64\,\text{mm}$$. This results in a scaling factor of 0.001 in all three dimensions. As a result, the `transformPoints` command has to be executed using the `scale` option as follows:
 
 ```
 transformPoints -scale "(0.001 0.001 0.001)"
@@ -158,7 +158,7 @@ transformPoints -scale "(0.001 0.001 0.001)"
 Once executed, the mesh will be scaled down by a factor of 1000.
 
 {: .warning }
-> If this command is executed twice, the mesh will be scaled by $0.001 \times 0.001=10^{-6}$.
+> If this command is executed twice, the mesh will be scaled by $$0.001 \times 0.001=10^{-6}$$.
 
 {: .tip }
 > It is impossible to memorize the syntax and functionality of all OpenFOAM solvers, utilities and post-processing tools. Therefore, you can always execute a command with the option `-help`. This will give you a detailed list of all options and how to use them, i.e. in this example how to use the `scale` option of the mesh manipulation utility `transformPoints`.
