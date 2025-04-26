@@ -87,7 +87,7 @@ The file structure follows the overall meshing process of `blockMesh`:
 
 ### Definition of the scaling factor
 
-In this example, the channel has a total length of $300\,\text{mm}$. Therefore, the vertices are defined in $\text{mm}$ and the mesh is scaled by a factor of 0.001 to maintain SI units of meters.
+In this example, the channel has a total length of $$300\,\text{mm}$$. Therefore, the vertices are defined in $$\text{mm}$$ and the mesh is scaled by a factor of 0.001 to maintain SI units of meters.
 
 ```
 14  // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -150,20 +150,21 @@ These vertices are used to define the three blocks of the block-structured mesh.
 55  );
 ```
 
-This means that the first block contains of vertices with the label `(0 3 4 1 8 11 12 9)`. The ordering of the vertices is important as the local coordinate system of each block must be oriented right-handed. The second entry for this block `(20 10 1)` gives the number of cells in each direction, e.g. the block contains 20 cells in $x$-direction, 10 cells in $y$-direction and 1 cell in $z$-direction. The third entry of the first block `simpleGrading (1 1 1)` defines the cell expansion ratios for each direction in the block. The expansion ratio enables the mesh to be graded, or refined, in specified directions. In this case, since we want an equidistant mesh, grading is set to 1 in all three directions.
+This means that the first block contains of vertices with the label `(0 3 4 1 8 11 12 9)`. The ordering of the vertices is important as the local coordinate system of each block must be oriented right-handed. The second entry for this block `(20 10 1)` gives the number of cells in each direction, e.g. the block contains 20 cells in $$x$$-direction, 10 cells in $$y$$-direction and 1 cell in $$z$$-direction. The third entry of the first block `simpleGrading (1 1 1)` defines the cell expansion ratios for each direction in the block. The expansion ratio enables the mesh to be graded, or refined, in specified directions. In this case, since we want an equidistant mesh, grading is set to 1 in all three directions.
 
-Based on the length of the first block of $50\,\text{mm}$ and a cell count of 20 cells in $x$-direction, a cell size of $2.5\,\text{mm}$ can be derived. The resulting block-structure is visualized in the following figure with the first block in violett, the second one in orange and the third one in green:
+Based on the length of the first block of $$50\,\text{mm}$$ and a cell count of 20 cells in $$x$$-direction, a cell size of $$2.5\,\text{mm}$$ can be derived. The resulting block-structure is visualized in the following figure with the first block in violett, the second one in orange and the third one in green:
 
 ![Backwards-facing case blocks](figures/backward-step-blocking.png)
 
-> **Note:** It is important that the resolution of the blocks is consistent. For example, the number of cells in $x$-direction for the second and third block must be the same! Otherwise, these blocks would not match.
+{: .note }
+> It is important that the resolution of the blocks is consistent. For example, the number of cells in $$x$$-direction for the second and third block must be the same! Otherwise, these blocks would not match.
 
 ### Definition of the boundaries
 
 The boundary of the mesh is given in a list named boundary. The boundary is broken into patches, where each patch in the list has its name as the keyword, which is the choice of the user; the name is used as an identifier for setting boundary conditions in the field data files. The patch information is then contained in sub-dictionary with:
 
-* `type`: the patch type, either a generic `patch` on which some boundary conditions are applied or a particular geometric condition, for example of type `wall`
-* `faces`: a list of block faces that make up the patch
+ - `type`: the patch type, either a generic `patch` on which some boundary conditions are applied or a particular geometric condition, for example of type `wall`
+ - `faces`: a list of block faces that make up the patch
 
 Each block face is defined by a list of 4 vertex numbers. The list can begin with any vertex in no particular order. For example, the `inlet` patch is made up of the vertices `(0 1 9 8)`, which is visualized in the following figure:
 
@@ -299,7 +300,7 @@ In the **Pipeline Browser** on the left, the user can see that ParaView has open
 
 ## Conclusion
 
-This concludes the second case in the **Meshing Tutorial**. We have:
+This concludes the third case **Meshing Tutorial**. We have:
 * Created a block-structured mesh of a backward facing step using `blockMesh`,
 * Checked the mesh quality with `checkMesh`,
 * Visualized the mesh with **ParaView**.
