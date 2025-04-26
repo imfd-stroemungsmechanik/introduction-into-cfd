@@ -10,7 +10,7 @@ nav_order: 1
 
 ## Introduction
 
-This tutorial explains the general OpenFOAM case structure, where the mesh information is stored and how to import a two-dimensional mesh created with an external software. At the end, the mesh will be visualized using ParaView. The geometry of the case looks as follows:
+This tutorial explains the general OpenFOAM case structure, where the mesh information is stored and how to import a two-dimensional mesh created with an external software using `fluentMeshToFoam`. At the end, the mesh will be visualized using ParaView. The geometry of the case looks as follows:
 
 ![Elbow case geometry](figures/elbow-geometry.png)
 
@@ -54,6 +54,21 @@ End
 ```
 
 The mesh has been successfully imported into the OpenFOAM format and stored within the `constant/polyMesh` folder.
+
+
+## The `polyMesh` directory
+
+The `polyMesh` subdirectory in the `constant` directory stores the computational mesh in OpenFOAM. There are five individual files with the following content:
+ - `points`: List of all nodes
+ - `faces`: List of all faces of the mesh
+ - `owner` and `neighbour`: Face-to-Cell relation of the mesh
+ - `boundary`: List of all patches with their respective name and fundamental patch types.
+
+The patch types specified in the boundary file, which are not associated with a geometric constraint are the generic `patch` and `wall`. The `patch` type is assigned to open boundaries such as an inlet or outlet which does not involve any special handling of geometric approximation or numerical connections.
+
+The `wall` type also provides no special geometric or numerical handling, but is used for patches which coincide with a solid wall. The wall tag is required by some models, e.g. wall functions in turbulence modelling which require the distance to nearest wall.
+
+OpenFOAM is designed as a code for 3D space and defines all meshes as such. However, 2D and axi-symmetric problems can be simulated in OpenFOAM by generating a mesh in 3 dimensions and then applying special boundary conditions on any patch in the plane(s) normal to the direction(s) of interest. 2D problems apply the `empty` patch type to the front and back patches, typically combined to a patch called `frontAndBackPlanes`.
 
 
 ## Mesh quality

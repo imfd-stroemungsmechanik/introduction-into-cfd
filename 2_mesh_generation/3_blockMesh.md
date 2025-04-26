@@ -7,16 +7,13 @@ nav_order: 3
 
 # Block-structured Mesh Generation
 
-
-# Block-structured Mesh Generation
-
 ## Introduction
 
 This tutorial explains how the OpenFOAM meshing tool `blockMesh` can be used to create block-structured meshes. At the end, the mesh will be visualized using ParaView. The geometry of the case looks as follows:
 
 ![Backwards-facing case geometry](figures/backward-step-geometry.png)
 
-Navigate with your terminal to the extracted sub-directory `backward-step` within the `1_mesh_generation` directory.
+Navigate with your terminal to the extracted sub-directory `backward-step` within the `2_mesh_generation` directory.
 
 ## OpenFOAM case structure
 
@@ -221,7 +218,7 @@ defaultPatch
 
 The two-dimensional mesh for this case can finally be created and stored in the `constant/polyMesh` folder. For this, execute the `blockMesh` command in the terminal with the current working directory being the backward-step folder:
 
-```
+```bash
 blockMesh
 ```
 
@@ -300,7 +297,7 @@ In the **Pipeline Browser** on the left, the user can see that ParaView has open
 
 ## Conclusion
 
-This concludes the third case **Meshing Tutorial**. We have:
+This concludes the third case in the **Meshing Tutorial**. We have:
 * Created a block-structured mesh of a backward facing step using `blockMesh`,
 * Checked the mesh quality with `checkMesh`,
 * Visualized the mesh with **ParaView**.
