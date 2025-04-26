@@ -5,6 +5,7 @@ parent: 2. Mesh Generation
 nav_order: 1
 ---
 
+
 # Mesh Import
 
 ## Introduction
@@ -15,28 +16,25 @@ This tutorial explains the general OpenFOAM case structure, where the mesh infor
 
 Navigate with your terminal to the extracted sub-directory `elbow` within the `2_mesh_generation` directory.
 
-## OpenFOAM case structure
 
-A case being simulated involves data for mesh, fields, properties, control parameters, etc. In OpenFOAM this data is stored in a set of files within a case directory rather than in a single case file, as in many other CFD packages. The case directory is given a suitably descriptive name, here `elbow`. This folder contains the following subfolders and files:
+## Case structure
+
+In OpenFOAM, the computational mesh, field data, model properties and numerical model parameters are stored in a set of files within a case directory. The case directory is given a suitably descriptive name, here `elbow`. This folder contains the following subfolders and files:
 
 ```
 elbow
-├── 0
-├── constant
-└── system
-    ├── controlDict
-    ├── fvSchemes
-    └── fvSolution
- 
-3 directories, 4 files
+├── system
+|   ├── controlDict
+|   ├── fvSchemes
+|   └── fvSolution
+└── elbow.msh
+
+1 directories, 4 files
 ```
 
- - `0`: This folder is a special time directory that contains the initial conditions and boundary conditions for starting the simulation. 
- - `constant`: This directory contains files that are related to the physics of the problem, including the mesh and any physical properties that are required for the solver.
- - `system`: This folder contains files related to how the simulation is to be solved:
-    - `controlDict` for setting control parameters including start/end time, time step size and parameters for data output.
-    - `fvSchemes` holds the discretisation schemes used in the solution selected during runtime.
-    - `fvSolution` for setting the equation solvers, tolerances, relaxation factors and other algorithm controls for the run.
+The relevant file for this tutorial case is:
+ - `elbow.msh`: The two-dimensional mesh created with ANSYS ICEM CFD.
+
 
 ## Mesh import
 
