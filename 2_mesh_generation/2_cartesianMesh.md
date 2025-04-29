@@ -19,10 +19,10 @@ Navigate with your terminal to the extracted sub-directory `2_buildings` within 
 
 ## Case structure
 
-In OpenFOAM, the computational mesh, field data, model properties and numerical model parameters are stored in a set of files within a case directory. The case directory is given a suitably descriptive name, here `buildings`. This folder contains the following subfolders and files:
+In OpenFOAM, the computational mesh, field data, model properties and numerical model parameters are stored in a set of files within a case directory. The case directory is given a suitably descriptive name, here `2_buildings`. This folder contains the following subfolders and files:
 
 ```
-buildings
+2_buildings
 ├── system
 |   ├── controlDict
 |   ├── fvSchemes

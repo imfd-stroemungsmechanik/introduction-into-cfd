@@ -19,10 +19,10 @@ Navigate with your terminal to the extracted sub-directory `1_elbow` within the 
 
 ## Case structure
 
-In OpenFOAM, the computational mesh, field data, model properties and numerical model parameters are stored in a set of files within a case directory. The case directory is given a suitably descriptive name, here `elbow`. This folder contains the following subfolders and files:
+In OpenFOAM, the computational mesh, field data, model properties and numerical model parameters are stored in a set of files within a case directory. The case directory is given a suitably descriptive name, here `1_elbow`. This folder contains the following subfolders and files:
 
 ```
-elbow
+1_elbow
 ├── system
 |   ├── controlDict
 |   ├── fvSchemes
@@ -38,7 +38,7 @@ The relevant file for this tutorial case is:
 
 ## Mesh import
 
-The mesh for this case has been created using an external software and is stored in the ANSYS Fluent mesh format `*.msh`. OpenFOAM offers a tool to import a mesh like this into the OpenFOAM format. In this case, when the terminal's working directory is the `elbow` case folder, the mesh can be imported using the following command:
+The mesh for this case has been created using an external software and is stored in the ANSYS Fluent mesh format `*.msh`. OpenFOAM offers a tool to import a mesh like this into the OpenFOAM format. In this case, when the terminal's working directory is the `1_elbow` case folder, the mesh can be imported using the following command:
 
 ```bash
 fluentMeshToFoam elbow.msh
