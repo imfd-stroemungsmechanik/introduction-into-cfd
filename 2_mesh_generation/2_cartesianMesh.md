@@ -100,6 +100,9 @@ This setting can be summarized as follows:
  - `additionalRefinementLevels` specifies how often the background mesh at the surface should be refined, e.g., split by two in all three directions in space.
  - `refinementThickness` defines how far the refinement from the surface should reach out into the volume mesh.
 
+{: .tip }
+> It is possible to refine multiple patches at once by adding their respective refinement settings based on patch the name to the `localRefinement` entry.
+
 So in this case, the cells at the patch `buildings` are refined twice (resulting cell size is then $$10/2^2 = 2.5\,\text{m}$$) and the refinement reaches out 10 meters into the volume mesh. In order to create the new mesh with the updated `meshDict`, the `cartesianMesh` utility has to be executed once again:
 
 ```bash
@@ -140,9 +143,17 @@ This setting can be summarized as follows:
  - `center` and `length` specify the center and the dimensions of the refinement box in all three directions in space.
  - `additionalRefinementLevels` specifies how often the background mesh at the surface should be refined, e.g., split by two in all three directions in space.
 
-So in this case, the refinement region is a box with the center coordinates `(200 0 0)` and the dimensions of 400 by 150 by 200 meters. The cells within this box are refined once (resulting cell size is then $$10/2^1 = 5\,\text{m}$$). In order to create the new mesh with the updated `meshDict`, the `cartesianMesh` utility has to be executed once again:
+{: .tip }
+> There are numerous different shape types for refinement, such as cone, sphere, or line.
+>
+> It is possible to have multiple refinement regions at once by adding their respective refinement settings based on the their given name to the `objectRefinements` entry.
+
+In this case, the refinement region is a box with the center coordinates `(200 0 0)` and the dimensions of 400 by 150 by 200 meters. The cells within this box are refined once (resulting cell size is then $$10/2^1 = 5\,\text{m}$$). In order to create the new mesh with the updated `meshDict`, the `cartesianMesh` utility has to be executed once again:
 
 ```bash
 cartesianMesh
 ```
 
+Once the mesh has been recreated, the visualization in ParaView can be updated by clicking the Refresh button the Properties Panel. In order to show wake region, show the `internalMesh` in the Properties Panel, then select the Clip filter and use a center of origin of (200 0 0) with a normal vector of (0 1 0). Selecting Crinkle clip does not cut the individual cells but rather shows them completely. The following figure shows the resulting clp through the volume mesh with the refinement region on the left of the buildings:
+
+![Building case geometry](figures/buildings-paraview-volume-mesh.png)
