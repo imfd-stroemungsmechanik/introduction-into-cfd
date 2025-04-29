@@ -13,7 +13,7 @@ This tutorial explains how the OpenFOAM meshing tool `cartesianMesh` is used to 
 
 ![Building case geometry](figures/buildings-geometry.png)
 
-Navigate with your terminal to the extracted sub-directory `buildings` within the `2_mesh_generation` directory.
+Navigate with your terminal to the extracted sub-directory `2_buildings` within the `2_mesh_generation` directory.
 
 
 
