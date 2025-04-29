@@ -28,14 +28,14 @@ buildings
 |   ├── fvSchemes
 |   ├── fvSolution
 |   └── meshDict
-└── buildings.obj
+└── geometry.obj
  
 1 directory, 5 files
 ```
 
 The relevant files for this tutorial case are:
  - `meshDict` in the `system` directory: Contains the configuration for the automated meshing process.
- - `buildings.obj`: The geometry file forming the boundaries of the computational domain.
+ - `geometry.obj`: The geometry file forming the boundaries of the computational domain.
 
 
 ## Automated Mesh Generation
@@ -53,13 +53,13 @@ The meshing process with `cartesianMesh` is solely controlled via the `meshDict`
 ```
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-surfaceFile "buildings.obj";
+surfaceFile "geometry.obj";
 
 maxCellSize 10;
 ```
 
 These two settings are at least required for creating a mesh:
- - `surfaceFile`: Name of the geometry file in the case folder, here `buildings.obj` which is located in the OpenFOAM case folder.
+ - `surfaceFile`: Name of the geometry file in the case folder, here `geometry.obj` which is located in the OpenFOAM case folder.
  - `maxCellSize`: Maximum cell size in meters for creating the background mesh.
 
 With this minimal example, the unstructured hexahedral-dominated mesh can be created using the following command:
@@ -74,9 +74,9 @@ Within a few seconds, the mesh is created automatically. In order to inspect the
 paraFoam &
 ```
 
-The mesh close to the surface of the buildings can then be visualized by only selecting the `bouldings` and `ground` patch at the Properties Panel in ParaView:
+The mesh close to the surface of the buildings can then be visualized by only selecting the `buildings` and `ground` patch at the Properties Panel in ParaView:
 
-![Building case geometry](figures/buildings-paraview-surface-mesh-step-1.png)
+![Building mesh](figures/buildings-paraview-surface-mesh-step-1.png)
 
 
 ### Surface-based mesh refinement
@@ -114,7 +114,7 @@ cartesianMesh
 
 Once the mesh has been recreated, the visualization in ParaView can be updated by clicking the Refresh button the Properties Panel. The following figure shows the resulting surface mesh close to the buildings with a significantly improved resolution:
 
-![Building case geometry](figures/buildings-surface-mesh-step-2.jpeg)
+![Building mesh with surface refinement](figures/buildings-surface-mesh-step-2.jpeg)
 
 
 ### Region-based mesh refinement
@@ -156,4 +156,50 @@ cartesianMesh
 
 Once the mesh has been recreated, the visualization in ParaView can be updated by clicking the Refresh button the Properties Panel. In order to show wake region, select the `internalMesh` in the Properties Panel, and then the Clip filter with a center of origin of `(200 0 0)` with a normal vector of `(0 1 0)`. Selecting Crinkle clip completely shows all intersected cells. The following figure shows the resulting clp through the volume mesh with the refinement region on the left of the buildings:
 
-![Building case geometry](figures/buildings-paraview-volume-mesh.png)
+![Building mesh with refinement region](figures/buildings-paraview-volume-mesh.png)
+
+
+
+### Inflation layer addition
+
+Although being hexahedral-dominant, the mesh still lacks inflation layers to accurately resolve the boundary layer. These can to be added to the patches `ground` and `buildings` with the following entry below the region-based refinement in `meshDict`:
+
+```
+boundaryLayers
+{
+    patchBoundaryLayers
+    {
+        buildings
+        {
+            nLayers           3;
+
+            thicknessRatio    1.3;
+        }
+        ground
+        {
+            nLayers           5;
+
+            thicknessRatio    1.3;
+        }
+    }
+}
+```
+
+This setting can be summarized as follows:
+ - `boundaryLayers` is the keyword for `cartesianMesh` to add inflation layers.
+ - `patchBoundaryLayers` collects all patches and their individual settings for inflation layers.
+ - `nLayers` is the number of inflation layers added.
+ - `thicknessRatio` is the growth ratio between two consequitive inflation layers.
+
+{: .note }
+> `cartesianMesh` automatically sets the thickness of the first inflation layer based on cell size and thickness ratio. It can optionally be specified using the entry `maxFirstLayerThickness`.
+
+In this case, three and five inflation layers are added to the patch `buildings` and `ground`, respectively, both with a growth ratio of 1.3. In order to create the new mesh with the updated `meshDict`, the `cartesianMesh` utility has to be executed once again:
+
+```bash
+cartesianMesh
+```
+
+Once the mesh has been recreated, the visualization in ParaView can be updated by clicking the Refresh button the Properties Panel. This results in the following cross-sectional view of the mesh:
+
+![Building mesh with inflation layers](figures/buildings-inflation-layers.png)
