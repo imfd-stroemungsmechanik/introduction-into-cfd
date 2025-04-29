@@ -74,12 +74,12 @@ Within a few seconds, the mesh is created automatically. In order to inspect the
 paraFoam &
 ```
 
-The surface mesh at the `buildings` surface can then be visualized with the following settings:
+The mesh close to the surface of the buildings can then be visualized by only selecting the `bouldings` and `ground` patch at the Properties Panel in ParaView:
 
 ![Building case geometry](figures/buildings-paraview-surface-mesh-step-1.png)
 
 
-#### Surface-based mesh refinement
+### Surface-based mesh refinement
 
 At this point, the mesh is too coarse to resolve either the geometric features of the buildings nor the flow field in the wake. Reducing the maximum cell size of the backgroud mesh would result in a disproportionately large mesh. Therefore, the mesh is locally refined at the surface of the building. This can be achieved by adding the following lines below the entry `maxCellSize` to the `meshDict`:
 
@@ -95,12 +95,12 @@ localRefinement
 ```
 
 This setting can be summarized as follows:
- - `localRefinement` is the keyword for `cartesianMesh` to apply a surface-based refinement
- - `buildings` is the name of the patch, at which a surface-based refinement should be applied
+ - `localRefinement` is the keyword for `cartesianMesh` to apply a surface-based refinement.
+ - `buildings` is the name of the patch, at which a surface-based refinement should be applied.
  - `additionalRefinementLevels` specifies how often the background mesh at the surface should be refined, e.g., split by two in all three directions in space.
  - `refinementThickness` defines how far the refinement from the surface should reach out into the volume mesh.
 
-So in this tutorial case, the cells at the patch `buildings` are refined twice and the refinement reaches out 10 meters into the volume mesh. In order to create the new mesh with the updated `meshDict`, the `cartesianMesh` utility has to be executed once again:
+So in this tutorial case, the cells at the patch `buildings` are refined twice (resulting cell size is then $$10/2^2 = 2.5\,\text{m}$$) and the refinement reaches out 10 meters into the volume mesh. In order to create the new mesh with the updated `meshDict`, the `cartesianMesh` utility has to be executed once again:
 
 ```bash
 cartesianMesh
@@ -109,9 +109,9 @@ cartesianMesh
 {: .warning }
 > Rerunning the meshing tool `cartesianMesh` again will **overwrite** the previous mesh!
 
-The following figure visualizes the resulting surface mesh at the buildings surface with the significantly improved resolution at the building surface:
+Once the mesh has been recreated, the visualization in ParaView can be updated by clicking the Refresh button the Properties Panel. The following figure shows the resulting surface mesh close to the buildings with a significantly improved resolution:
 
 ![Building case geometry](figures/buildings-surface-mesh-step-2.jpeg)
 
 
-#### Object-based mesh refinement
+### Object-based mesh refinement
