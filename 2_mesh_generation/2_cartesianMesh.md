@@ -146,7 +146,7 @@ This setting can be summarized as follows:
 {: .tip }
 > There are numerous different shape types for refinement, such as cone, sphere, or line.
 >
-> It is possible to have multiple refinement regions at once by adding their respective refinement settings based on the their given name to the `objectRefinements` entry.
+> It is possible to have multiple refinement regions at once by adding their respective refinement settings to the `objectRefinements` entry.
 
 In this case, the refinement region is a box with the center coordinates `(200 0 0)` and the dimensions of 400 by 150 by 200 meters. The cells within this box are refined once (resulting cell size is then $$10/2^1 = 5\,\text{m}$$). In order to create the new mesh with the updated `meshDict`, the `cartesianMesh` utility has to be executed once again:
 
@@ -154,6 +154,6 @@ In this case, the refinement region is a box with the center coordinates `(200 0
 cartesianMesh
 ```
 
-Once the mesh has been recreated, the visualization in ParaView can be updated by clicking the Refresh button the Properties Panel. In order to show wake region, show the `internalMesh` in the Properties Panel, then select the Clip filter and use a center of origin of (200 0 0) with a normal vector of (0 1 0). Selecting Crinkle clip does not cut the individual cells but rather shows them completely. The following figure shows the resulting clp through the volume mesh with the refinement region on the left of the buildings:
+Once the mesh has been recreated, the visualization in ParaView can be updated by clicking the Refresh button the Properties Panel. In order to show wake region, select the `internalMesh` in the Properties Panel, and then the Clip filter with a center of origin of `(200 0 0)` with a normal vector of `(0 1 0)`. Selecting Crinkle clip completely shows all intersected cells. The following figure shows the resulting clp through the volume mesh with the refinement region on the left of the buildings:
 
 ![Building case geometry](figures/buildings-paraview-volume-mesh.png)
