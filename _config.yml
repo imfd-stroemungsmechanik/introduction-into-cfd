@@ -6,6 +6,7 @@ plugins:
 relative_links:
   enabled: true
   collections: true
+nav_external_links_new_tab: true
 include:
   - CONTRIBUTING.md
   - README.md

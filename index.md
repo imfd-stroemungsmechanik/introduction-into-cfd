@@ -8,19 +8,16 @@ nav_order: 1
 
 ## Scope of the Seminar
 
-This repository complements the course Introduction into Computational Fluid Dynamics and provides currently three guided tutorials designed for familiarizing with the Linux command line, OpenFOAM, and post-processing tool ParaView:
+This repository complements the course Introduction into Computational Fluid Dynamics and provides guided tutorials designed for familiarizing with the Linux command line, OpenFOAM, and post-processing tool ParaView:
 
-1. An introduction into the Linux command line
-2. Meshing in OpenFOAM
-3. Simulating of an incompressible flow through an elbow
-4. Simulation of the transient, incompressible flow over a backward-facing step
-5. Comparison of different turbulence models for predicting the drag coefficient of the DrivAer fastback vehicle
+1. An introduction to the Linux command line
+2. Mesh generation in OpenFOAM
 
 ## How to use this guide
 
 This repository offeres a step-by-step introduction both into the Linux command line as well as OpenFOAM for simulation and ParaView for post-processing. If you are already familiar with the Linux command line, you can skip the first part and directly work on the second tutorial dealing with the mesh generation in OpenFOAM.
 
-Each OpenFOAM tutorial case is accompanied by an archive containing the pre-configured OpenFOAM cases. These archives can be downloaded via the OPAL course site. Save the archive wherever you want to run your simulations (e.g. a new simulations directory inside your home), unzip it and keep it ready for the OpenFOAM tutorials.
+Each OpenFOAM tutorial case is accompanied by an archive containing the pre-configured OpenFOAM cases. These archives can be downloaded via the [OPAL course](https://bildungsportal.sachsen.de/opal/auth/RepositoryEntry/19816513539). Save the archive wherever you want to run your simulations (e.g. a new simulations directory inside your home), unzip it and keep it ready for the OpenFOAM tutorials.
 
 ## Guide style conventions
 
@@ -79,26 +76,26 @@ The OpenFOAM software is used in research organisations, academic institutes and
 OpenFOAM is open-source software which is freely available and licensed under the GNU General Public License Version 3, with the following variants and their latest version:
 
 - [OpenFOAM 12](https://openfoam.org/) developed and maintained by the OpenFOAM Foundation with a sequence based identifier
-- [OpenFOAM v2412](https://www.openfoam.com/) developed and maintained mainly by the ESI Group with a date-of-release identifier (e.g. v2412)
-- The FOAM-Extend Project, mainly maintained by Wikki Ltd.
+- [OpenFOAM v2312](https://www.openfoam.com/) developed and maintained mainly by the ESI Group with a date-of-release identifier (e.g. v2312)
+- [The FOAM-Extend Project](http://wikki.co.uk/index.php/foam-extend/), mainly maintained by Wikki Ltd.
 
-OpenFOAM 12 and OpenFOAM v2412 are already installed on the PCs in the computer labs under the Linux operating system. **Throughout the seminar, we will exclusively be using OpenFOAM v2412**. Unfortunately, there are certain incompatibilities between the different OpenFOAM versions. Therefore, you cannot simply take the tutorial cases and execute them on OpenFOAM 12. Installation instructions for Windows, Mac and Linux can be found on the respective homepages.
+OpenFOAM 12 and OpenFOAM v2312 are already installed on the PCs in the computer labs under the Linux operating system. **Throughout the seminar, we will exclusively be using OpenFOAM v2312**. Unfortunately, there are certain incompatibilities between the different OpenFOAM versions. Therefore, you cannot simply take the tutorial cases and execute them on OpenFOAM 12. Installation instructions for Windows, Mac and Linux can be found on the respective homepages.
 
 ## Starting OpenFOAM in the computer labs
 
 Whenever OpenFOAM is going to be used, you have to source it at least once inside this terminal. This can be achieved by typing the following command inside the terminal:
 
 ```bash
-source /app2/OpenFOAM/OpenFOAM-v2412/etc/bashrc
+source /app2/OpenFOAM/OpenFOAM-v2312/etc/bashrc
 ```
 
 Once enter is pressed, OpenFOAM will be sourced and ready for usage. Utilities and solvers can now be executed by typing their respective name in the terminal. However, typing this command inside each new terminal can be time consuming and prone to error. Therefore, an alias will be used instead. In order to create this alias, the following command has to be executed once in the terminal:
 
 ```bash
-echo 'alias of2412="source /app2/OpenFOAM/OpenFOAM-v2412/etc/bashrc"' >> ~/.bashrc
+echo 'alias of2312="source /app2/OpenFOAM/OpenFOAM-v2312/etc/bashrc"' >> ~/.bashrc
 ```
 
-Now close this terminal. From this point forward, whenever you want to source OpenFOAM in a new terminal, you can simply type `of2412` instead of typing the complex `source` command introduced earlier. This even persists after restarting the computer.
+Now close this terminal. From this point forward, whenever you want to source OpenFOAM in a new terminal, you can simply type `of2312` instead of typing the complex `source` command introduced earlier. This even persists after restarting the computer.
 
 ## Disclaimer
 

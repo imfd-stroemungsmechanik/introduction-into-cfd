@@ -9,7 +9,11 @@ nav_order: 2
 
 ## Motivation
 
-The command line is an alternative to the GUI based interface you are so used to. Although GUI interfaces are quite easy to use, they are not as flexible and powerful as the command line. For simple operations, the GUI is probably favourable. However, the command line has several distinct advantages: (1) More complex operations can be performed, such as searching through thousands of files for a specific string and copy these files, or easily transferring files between your computer and a remote server. Secondly, (2) the command line is typically faster than a GUI since there is less overhead from the graphical user interface; (3) servers such as HPC clusters typically do not offer a graphical user interface, so the command line is the only way to operate there; and (4) commands can be scripted easily in order to automate tasks and complex operations.
+The command line is an alternative to the GUI based interface you are so used to. Although GUI interfaces are quite easy to use, they are not as flexible and powerful as the command line. For simple operations, the GUI is probably favourable. However, the command line has several distinct advantages:
+ 1. More complex operations can be performed, such as searching through thousands of files for a specific string and copy these files, or easily transferring files between your computer and a remote server. 
+ 2. The command line is typically faster than a GUI since there is less overhead from the graphical user interface.
+ 3. Servers such as HPC clusters typically do not offer a graphical user interface, so the command line is the only way to operate there.
+ 4. Commands can be scripted easily in order to automate tasks and complex operations.
 
 The Linux shell can be accessed by programs like the terminal. They come with a long list of commands by default which can be combined to build larger programs from smaller ones is what gives the command line its power and flexibility.
 
