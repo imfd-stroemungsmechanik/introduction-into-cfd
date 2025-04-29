@@ -258,13 +258,25 @@ The most relevant output from `checkMesh` can be summarized as follows:
  - A maximum aspect ratio of 12.78
  - A mesh non-orthogonality of less than 62.30
  - A maximum skewness of 2.48
+
 All these metrics are well below the critical thresholds for OpenFOAM and the mesh can be considered of high quality. 
 
 {: .note }
-> If the mesh quality is not be sufficient, `checkMesh` would notify the critical metric and the check mesh would fail.
+> If the mesh quality is not be sufficient, `checkMesh` would highlight the critical metric and the check mesh would fail.
 
 
-After refreshing the case in ParaView, all important quality metrics are available as field variables for visualization and inspection. For instance, the non-orthogonality (named `nonOrthoAngle`) is highest within the inflation layers around the buildings:
+After refreshing the case in ParaView, all important quality metrics are available as field variables for visualization and inspection. For instance, the non-orthogonality (as field named `nonOrthoAngle`) is highest within the inflation layers around the buildings:
 
 ![Building mesh with inflation layers](figures/buildings-mesh-quality-nonOrthoAngle.png)
 
+
+## Conclusion
+
+This concludes the second case in the **Meshing Tutorial**. We have:
+- Created a hexahedral-dominant mesh using the OpenFOAM utility `cartesianMesh` for the flow around a group of buildings with:
+    - Surface-based refinement around the buildings
+    - Region-based refinement in the wake of the buildings
+    - Inflation layers at both the ground and the buildings
+    - Correct patch type for the atmosphere.
+- Checked the mesh quality with `checkMesh`, and
+- Visualized the mesh with **ParaView**.
