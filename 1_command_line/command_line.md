@@ -21,9 +21,10 @@ In this lesson you learn about some of the most useful commands.
 
 ## Opening a terminal
 
-On a Debian 11, which is the version of the linux operating system used in the computer labs, you can find a launcher for the terminal by clicking on the **Applications** item at the top left of the screen, then **System Tools**, and there you will find an entry called **MATE Terminal**.
+On a Debian 11, which is the version of the linux operating system used in the computer labs, you can find a launcher for the terminal by clicking on the Applications item at the top left of the screen, then System Tools, and there you will find an entry called MATE Terminal.
 
-> **Note:** There are many different terminal versions installed, such as **LXTerminal**, **Terminator**, or **Xfce Terminal**. Except for some functionality and different design, they work all the same.
+{: .note }
+> There are many different terminal versions installed, such as LXTerminal, Terminator, or Xfce Terminal. Except for some functionality and different design, they work all the same.
 
 This video explains the design of the shell and the following aspects:
 
@@ -103,5 +104,5 @@ This video shows the following aspects:
   <source src="videos/terminal-introduction-6.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
-
-> **Warning:** The `rm` command deletes files and directories without a waring and without using the Recycle Bin or Trash Can. Therefore, these files cannot be recovered. Be particularly careful when combining this command with wildcards, as complete folders and be deleted easily by mistake
+{: .warning }
+> The `rm` command deletes files and directories without a waring and without using the Recycle Bin or Trash Can. Therefore, these files cannot be recovered. Be particularly careful when combining this command with wildcards, as complete folders and be deleted easily by mistake.

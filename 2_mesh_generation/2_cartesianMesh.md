@@ -68,7 +68,7 @@ With this minimal example, the unstructured hexahedral-dominated mesh can be cre
 cartesianMesh
 ```
 
-Within a few seconds, the mesh is created automatically. In order to inspect the mesh, start ParaView:
+Within a few seconds, the mesh is created automatically and stored inside the `constant/polyMesh` directory. In order to inspect the mesh, start ParaView:
 
 ```bash
 paraFoam &
@@ -110,7 +110,7 @@ cartesianMesh
 ```
 
 {: .warning }
-> Rerunning the meshing tool `cartesianMesh` again will **overwrite** the previous mesh!
+> Rerunning the meshing tool `cartesianMesh` again will overwrite the mesh previously stored in `constant/polyMesh`!
 
 Once the mesh has been recreated, the visualization in ParaView can be updated by clicking the Refresh button the Properties Panel. The following figure shows the resulting surface mesh close to the buildings with a significantly improved resolution:
 
