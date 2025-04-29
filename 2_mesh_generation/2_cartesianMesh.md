@@ -100,7 +100,7 @@ This setting can be summarized as follows:
  - `additionalRefinementLevels` specifies how often the background mesh at the surface should be refined, e.g., split by two in all three directions in space.
  - `refinementThickness` defines how far the refinement from the surface should reach out into the volume mesh.
 
-So in this tutorial case, the cells at the patch `buildings` are refined twice (resulting cell size is then $$10/2^2 = 2.5\,\text{m}$$) and the refinement reaches out 10 meters into the volume mesh. In order to create the new mesh with the updated `meshDict`, the `cartesianMesh` utility has to be executed once again:
+So in this case, the cells at the patch `buildings` are refined twice (resulting cell size is then $$10/2^2 = 2.5\,\text{m}$$) and the refinement reaches out 10 meters into the volume mesh. In order to create the new mesh with the updated `meshDict`, the `cartesianMesh` utility has to be executed once again:
 
 ```bash
 cartesianMesh
@@ -114,4 +114,35 @@ Once the mesh has been recreated, the visualization in ParaView can be updated b
 ![Building case geometry](figures/buildings-surface-mesh-step-2.jpeg)
 
 
-### Object-based mesh refinement
+### Region-based mesh refinement
+
+Although the surface of the buildings is refined well, the wake of the buildings is still too coarse to resolve the expected flow structures. This issue cannot be resolved by increasing the refinement thickness of the surface-based refinemt as this would result in a disproportionately large mesh. Therefore, a refinement region must be defined covering the wake, in which the mesh will also be refined. This can be accomplished by adding the following lines to `meshDict` below the previous entries:
+
+```
+objectRefinements
+{
+    wake
+    {
+        type        box;
+        centre      (200 0 0);
+        lengthX     400;
+        lengthY     150;
+        lengthZ     200;
+        additionalRefinementLevels    1;
+    }
+}
+```
+
+This setting can be summarized as follows:
+ - `objectRefinements` is the keyword for `cartesianMesh` to apply a region-based refinement.
+ - `wake` can be any name for this refinement.
+ - `type` specifies the shape of the region-based refinment.
+ - `center` and `length` specify the center and the dimensions of the refinement box in all three directions in space.
+ - `additionalRefinementLevels` specifies how often the background mesh at the surface should be refined, e.g., split by two in all three directions in space.
+
+So in this case, the refinement region is a box with the center coordinates `(200 0 0)` and the dimensions of 400 by 150 by 200 meters. The cells within this box are refined once (resulting cell size is then $$10/2^1 = 5\,\text{m}$$). In order to create the new mesh with the updated `meshDict`, the `cartesianMesh` utility has to be executed once again:
+
+```bash
+cartesianMesh
+```
+
