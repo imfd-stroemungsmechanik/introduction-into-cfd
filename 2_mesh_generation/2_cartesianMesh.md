@@ -68,9 +68,15 @@ With this minimal example, the unstructured hexahedral-dominated mesh can be cre
 cartesianMesh
 ```
 
-Within a few seconds, the mesh is created automatically. The following figure visualizes the resulting surface mesh at the buildings surface:
+Within a few seconds, the mesh is created automatically. In order to inspect the mesh, start ParaView:
 
-![Building case geometry](figures/buildings-surface-mesh-step-1.jpeg)
+```bash
+paraFoam &
+```
+
+The surface mesh at the `buildings` surface can then be visualized with the following settings:
+
+![Building case geometry](figures/buildings-paraview-surface-mesh-step-1.jpeg)
 
 At this point, the mesh is too coarse to resolve either the geometric features of the buildings nor the flow field in the wake. Reducing the maximum cell size of the backgroud mesh would result in a disproportionately large mesh. Therefore, the mesh is locally refined at the surface of the building. This can be achieved by adding the following lines below the entry `maxCellSize` to the `meshDict`:
 
@@ -91,8 +97,15 @@ This setting can be summarized as follows:
  - `additionalRefinementLevels` specifies how often the background mesh at the surface should be refined, e.g., split by two in all three directions in space.
  - `refinementThickness` defines how far the refinement from the surface should reach out into the volume mesh.
 
-So in this tutorial case, the cells at the patch `buildings` are refined twice and the refinement reaches out 10 meters into the volume mesh.  The following figure visualizes the resulting surface mesh at the buildings surface:
+So in this tutorial case, the cells at the patch `buildings` are refined twice and the refinement reaches out 10 meters into the volume mesh. In order to create the new mesh with the updated `meshDict`, the `cartesianMesh` utility has to be executed once again:
+
+```bash
+cartesianMesh
+```
+
+{: .warning }
+> Rerunning the meshing tool `cartesianMesh` again will **overwrite** the previous mesh!
+
+The following figure visualizes the resulting surface mesh at the buildings surface with the significantly improved resolution at the building surface:
 
 ![Building case geometry](figures/buildings-surface-mesh-step-2.jpeg)
-
-Compared to the previous mesh, the refinement at the buildings is apparent.
