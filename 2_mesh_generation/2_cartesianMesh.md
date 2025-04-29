@@ -260,7 +260,11 @@ The most relevant output from `checkMesh` can be summarized as follows:
  - A maximum skewness of 2.48
 All these metrics are well below the critical thresholds for OpenFOAM and the mesh can be considered of high quality. 
 
+{: .note }
+> If the mesh quality is not be sufficient, `checkMesh` would notify the critical metric and the check mesh would fail.
+
+
 After refreshing the case in ParaView, all important quality metrics are available as field variables for visualization and inspection. For instance, the non-orthogonality (named `nonOrthoAngle`) is highest within the inflation layers around the buildings:
 
-![Building mesh with inflation layers](figures/buildings-quality-nonOrthoAngle.png)
+![Building mesh with inflation layers](figures/buildings-mesh-quality-nonOrthoAngle.png)
 
