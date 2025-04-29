@@ -14,7 +14,7 @@ This tutorial explains the general OpenFOAM case structure, where the mesh infor
 
 ![Elbow case geometry](figures/elbow-geometry.png)
 
-Navigate with your terminal to the extracted sub-directory `elbow` within the `2_mesh_generation` directory.
+Navigate with your terminal to the extracted sub-directory `1_elbow` within the `2_mesh_generation` directory.
 
 
 ## Case structure
@@ -174,7 +174,7 @@ Once executed, the mesh will be scaled down by a factor of 1000.
 > If this command is executed twice, the mesh will be scaled by $$0.001 \times 0.001=10^{-6}$$.
 
 {: .tip }
-> It is impossible to memorize the syntax and functionality of all OpenFOAM solvers, utilities and post-processing tools. Therefore, you can always execute a command with the option `-help`. This will give you a detailed list of all options and how to use them, i.e. in this example how to use the `scale` option of the mesh manipulation utility `transformPoints`.
+> It is impossible to memorize the syntax and functionality of all OpenFOAM solvers, utilities and post-processing tools. Therefore, you can always execute a command with the optional parameter `-help`. This will give you a detailed list of all options and how to use them, i.e. in this example how to use the `scale` option of the mesh manipulation utility `transformPoints`.
 
 
 
