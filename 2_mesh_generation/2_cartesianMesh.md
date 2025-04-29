@@ -187,7 +187,7 @@ boundaryLayers
 
 This setting can be summarized as follows:
  - `boundaryLayers` is the keyword for `cartesianMesh` to add inflation layers.
- - `patchBoundaryLayers` collects all patches and their individual settings for inflation layers.
+ - `patchBoundaryLayers` collects all specified patches and their individual settings for inflation layers.
  - `nLayers` is the number of inflation layers added.
  - `thicknessRatio` is the growth ratio between two consequitive inflation layers.
 
@@ -203,3 +203,43 @@ cartesianMesh
 Once the mesh has been recreated, the visualization in ParaView can be updated by clicking the Refresh button the Properties Panel. This results in the following cross-sectional view of the mesh:
 
 ![Building mesh with inflation layers](figures/buildings-inflation-layers.png)
+
+
+
+### Renaming patches
+
+When using `cartesianMesh` for mesh generation, all patches by default are of type `wall`. This is obviously incorrect for the `atmosphere` patch, which should act like an inlet and outlet. Therefore, the patch type has to be changed. This can be accomplished by adding the following lines below the inflation layer setup within the `meshDict` as follows:
+
+```
+renameBoundary
+{
+    newPatchNames
+    {
+        atmosphere
+        {
+            type    patch;
+            newName atmosphere;
+        }
+    }
+}
+```
+
+This setting can be summarized as follows:
+ - `renameBoundary` is the keyword for `cartesianMesh` change patch names and types.
+ - `newPatchNames` collects all specified patches and their individual settings in question for change.
+ - `type` specifies the new patch type of the specified patch.
+ - `newName` defines the new patch name.
+
+In this case, only patch `atmosphere` will get the new patch type `patch` suitable for inlet and outlets. The new patch name is equal to the original one as it should not be changed. In order to create the new mesh with the updated `meshDict`, the `cartesianMesh` utility has to be executed once again:
+
+```bash
+cartesianMesh
+```
+
+At this point the mesh generation is complete. It consists of:
+ - Background mesh with a cell size of 10 m.
+ - Surface-based refinement at the `buildings` patch
+ - Region-based refinement in the wake of the buildings
+ - Inflation layers at both the ground and the buildings
+ - Correct patch type for the atmosphere.
+
