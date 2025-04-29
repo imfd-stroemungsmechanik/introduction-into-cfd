@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Hex-dominant Mesh
+title: Hex-dominant Mesh Generation
 parent: 2. Mesh Generation
 nav_order: 2
 ---
