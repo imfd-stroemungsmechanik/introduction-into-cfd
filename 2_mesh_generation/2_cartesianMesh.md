@@ -40,26 +40,17 @@ The relevant files for this tutorial case are:
 
 ## Automated Mesh Generation
 
-The `cartesianMesh` utility generates a 3-dimensional mesh containing hexahedra (hex) and split-hexahedra (split-hex) automatically from triangulated surface geometries, or tri-surfaces, in Stereolithography (STL) or Wavefront Object (OBJ) format. The mesh approximately conforms to the surface by iteratively refining a starting mesh and morphing the resulting split-hex mesh to the surface. An optional phase will shrink back the resulting mesh and insert cell layers. The specification of mesh refinement level is very ﬂexible and the surface handling is robust with a pre-specified final mesh quality. It runs in parallel with a load balancing step every iteration.
+The `cartesianMesh` utility automatically generates a hexahedral-dominant 3-dimensional mesh from a user-provided surface geometries. Supported surface formats are, among others, Stereolithography (STL) or Wavefront Object (OBJ). The meshing process is as follows:
+ 1. A structured background mesh is generated based on a user-defined maximum cell size.
+ 2. Local mesh refinement is applied on individual patches or regions within the solution domain (optional).
+ 3. The cells are snapped to the provided geometry to form a smooth mesh.
+ 3. Inflation layers are introduced on individual patches (optional).
 
 ### Meshing configuration
 
 The meshing process with `cartesianMesh` is solely controlled via the `meshDict` configuration file in the `system` directory. At the beginning of this tutorial, this file has the following minimal structure:
 
 ```
-/*--------------------------------*- C++ -*----------------------------------*\
- =========                 |
- \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-  \\    /   O peration     | Website:  https://openfoam.com
-   \\  /    A nd           | Version:  v2412
-    \\/     M anipulation  |
-\*---------------------------------------------------------------------------*/
-FoamFile
-{
-    format      ascii;
-    class       dictionary;
-    object      cartesianMesh;
-}
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 surfaceFile "buildings.obj";
@@ -68,8 +59,8 @@ maxCellSize 10;
 ```
 
 These two settings are at least required for creating a mesh:
- - `surfaceFile`: Name of the geometry file in the case folder, here `buildings.obj`.
- - `maxCellSize`: Maximum cell size in meters for creating the mesh.
+ - `surfaceFile`: Name of the geometry file in the case folder, here `buildings.obj` which is located in the OpenFOAM case folder.
+ - `maxCellSize`: Maximum cell size in meters for creating the background mesh.
 
 With this minimal example, the unstructured hexahedral-dominated mesh can be created using the following command:
 
@@ -77,3 +68,6 @@ With this minimal example, the unstructured hexahedral-dominated mesh can be cre
 cartesianMesh
 ```
 
+Within a few seconds, the mesh is created automatically. The following figure visualizes the resulting surface mesh at the buildings surface:
+
+![Building case geometry](figures/buildings-surface-mesh-step-1.png)
