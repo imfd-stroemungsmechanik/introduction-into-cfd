@@ -76,7 +76,10 @@ paraFoam &
 
 The surface mesh at the `buildings` surface can then be visualized with the following settings:
 
-![Building case geometry](figures/buildings-paraview-surface-mesh-step-1.jpeg)
+![Building case geometry](figures/buildings-paraview-surface-mesh-step-1.png)
+
+
+#### Surface-based mesh refinement
 
 At this point, the mesh is too coarse to resolve either the geometric features of the buildings nor the flow field in the wake. Reducing the maximum cell size of the backgroud mesh would result in a disproportionately large mesh. Therefore, the mesh is locally refined at the surface of the building. This can be achieved by adding the following lines below the entry `maxCellSize` to the `meshDict`:
 
@@ -109,3 +112,6 @@ cartesianMesh
 The following figure visualizes the resulting surface mesh at the buildings surface with the significantly improved resolution at the building surface:
 
 ![Building case geometry](figures/buildings-surface-mesh-step-2.jpeg)
+
+
+#### Object-based mesh refinement
