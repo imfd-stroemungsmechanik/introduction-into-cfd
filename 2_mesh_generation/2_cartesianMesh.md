@@ -70,4 +70,29 @@ cartesianMesh
 
 Within a few seconds, the mesh is created automatically. The following figure visualizes the resulting surface mesh at the buildings surface:
 
-![Building case geometry](figures/buildings-surface-mesh-step-1.png)
+![Building case geometry](figures/buildings-surface-mesh-step-1.jpeg)
+
+At this point, the mesh is too coarse to resolve either the geometric features of the buildings nor the flow field in the wake. Reducing the maximum cell size of the backgroud mesh would result in a disproportionately large mesh. Therefore, the mesh is locally refined at the surface of the building. This can be achieved by adding the following lines below the entry `maxCellSize` to the `meshDict`:
+
+```
+localRefinement
+{
+    buildings
+    {
+        additionalRefinementLevels  2;
+        refinementThickness         10;
+    }
+}
+```
+
+This setting can be summarized as follows:
+ - `localRefinement` is the keyword for `cartesianMesh` to apply a surface-based refinement
+ - `buildings` is the name of the patch, at which a surface-based refinement should be applied
+ - `additionalRefinementLevels` specifies how often the background mesh at the surface should be refined, e.g., split by two in all three directions in space.
+ - `refinementThickness` defines how far the refinement from the surface should reach out into the volume mesh.
+
+So in this tutorial case, the cells at the patch `buildings` are refined twice and the refinement reaches out 10 meters into the volume mesh.  The following figure visualizes the resulting surface mesh at the buildings surface:
+
+![Building case geometry](figures/buildings-surface-mesh-step-2.jpeg)
+
+Compared to the previous mesh, the refinement at the buildings is apparent.
