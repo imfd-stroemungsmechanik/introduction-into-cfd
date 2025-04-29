@@ -243,3 +243,24 @@ At this point the mesh generation is complete. It consists of:
  - Inflation layers at both the ground and the buildings
  - Correct patch type for the atmosphere.
 
+
+
+## Checking mesh quality
+
+Once the mesh generation is complete, the mesh quality must be checked using the OpenFOAM tool `checkMesh`. In order to visualize the mesh quality metrics in ParaView, the optional parameter `-writeAllFields` can be added to the command as follows:
+
+```bash
+checkMesh -writeAllFields
+```
+
+The most relevant output from `checkMesh` can be summarized as follows:
+ - Total cell count of 455804 cells
+ - A maximum aspect ratio of 12.78
+ - A mesh non-orthogonality of less than 62.30
+ - A maximum skewness of 2.48
+All these metrics are well below the critical thresholds for OpenFOAM and the mesh can be considered of high quality. 
+
+After refreshing the case in ParaView, all important quality metrics are available as field variables for visualization and inspection. For instance, the non-orthogonality (named `nonOrthoAngle`) is highest within the inflation layers around the buildings:
+
+![Building mesh with inflation layers](figures/buildings-quality-nonOrthoAngle.png)
+
