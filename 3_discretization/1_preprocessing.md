@@ -168,23 +168,23 @@ In this tutorial case, we are using the solver `pimpleFoam`, a pressure-based so
 
 The start/stop times and the time step for the run must be set. OpenFOAM oﬀers great flexibility with time/iteration control. In this tutorial the run starts at time 0, which means that OpenFOAM needs to read field data from a directory named 0. Therefore we set the `startFrom` keyword to `startTime` and then specify the `startTime` keyword to be 0. The simulation should run until a time of 1 second and then stop. Therefore, the `stopAt` entry is set to `endTime` and the `endTime` entry itself is set to `1`.
 
-The corresponding lines in the controlDict look as follows:
+The corresponding lines in the `controlDict` look as follows:
 
 ```
-    startFrom       startTime;
+startFrom       startTime;
 
-    startTime       0;
+startTime       0;
 
-    stopAt          endTime;
+stopAt          endTime;
 
-    endTime         1;
+endTime         1;
 ```
 
 ### Time Step Size
 
 The time step size is defined via the keyword `deltaT`. To achieve temporal accuracy and numerical stability when running `pimpleFoam`, a Courant number of $$\text{Co} \leq 0.5$$ is recommended. Based on the cell size $$\Delta x$$, flow velocity $$U$$, and time step size $$\Delta t$$, the Courant number is defined for a given cfell as:
 
-$$ \text{Co} = \frac{U \delta t}{\delta x}
+$$ \text{Co} = \frac{U \delta t}{\delta x} $$
 
 The flow velocity naturally varies across the domain and the Courant-number limitation must be kept in every cell. Therefore, we have to estimate the time step size based on known values. The cell size of this equidistant mesh is constant everywhere and can be estimated based on the channel height at the inlet $$H_\text{in}$$ and the corresponding cell count of $$n = 20$$ cells across the inlet as follows:
 
@@ -194,10 +194,24 @@ The characteristic velocity in the flow domain $$U$$ can be approximated to be e
 
 Based on these assumptions and using the equation for the Courant number, the following expression for the allowable time step size can be derived:
 
-$$ \Delta t = \frac{\text{Co \, \Delta x}}{U_\text{in}} = 6.25 \times 10^{-4}\,\text{s}$$
+$$ \Delta t = \frac{\text{Co} \, \Delta x}{U_\text{in}} = 6.25 \times 10^{-4}\,\text{s}$$
 
-The corresponding lines in the controlDict look as follows:
+The corresponding lines in the `controlDict` look as follows:
 
 ```
-    deltaT          6.25e-04;
+deltaT          6.25e-04;
+```
+
+
+### Writing out Results
+
+As the simulation progresses, results are written out at certain intervals of time that can later be analysed and visualized. The `writeControl` keyword presents several options for setting the iteration interval at which the results are written. Here, the `runTime option` is selected which specifies that results are written out at certain simulation time intervals. Here, the `writeInterval` keyword sets this interval to `0.02`, which means that every 0.02 seconds of simulation time a results folder will be written. Since the total simulation time is 1 second, this results in 50 results folders at different time steps. When OpenFOAM writes out results, it creates a new directory *named as the current time* containing a individual file for each field written out. There is an optional `purgeWrite` entry which specifies, whether only the last $$n$$ time steps are stored and the rest discarded. Setting this to 0 keeps all the results folders.
+
+The corresponding lines in the `controlDict` look as follows:
+```
+writeControl    runTime;
+
+writeInterval   0.02;
+
+purgeWrite      0;
 ```
