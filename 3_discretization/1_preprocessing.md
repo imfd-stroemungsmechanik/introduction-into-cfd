@@ -218,7 +218,7 @@ The discretization schemes used are specified in the `fvSchemes` file in the `sy
 
 ### Temporal Derivatives
 
-The discretization of the temporal derivatives is defined within the `ddtSchemes` keyword. In this case, all derivatives are discretized using the first order Euler Implicit scheme. Therefore, the `default` discretization is set to `Euler`.
+The discretization of the temporal derivatives is defined within the `ddtSchemes` keyword. In this case, all derivatives are discretized using the first order **Euler Implicit** scheme. Therefore, the `default` discretization is set to `Euler`.
 
 ```
 ddtSchemes
@@ -229,7 +229,7 @@ ddtSchemes
 
 ### Gradient terms
 
-The discretization of the gradient terms is defined within the `gradSchemes` keyword. All gradient schemes are discretized equally with a second order central differencing scheme. Hence, the `default` discretization is set to `Gauss linear`.
+The discretization of the gradient terms is defined within the `gradSchemes` keyword. All gradient schemes are discretized equally with a second order **central differencing scheme**. Hence, the `default` discretization is set to `Gauss linear`.
 
 ```
 gradSchemes
@@ -240,7 +240,7 @@ gradSchemes
 
 ### Convective terms
 
-The discretization of the convective terms, e.g., convective fluxes, is defined within the `divSchemes` keyword. Here, `div(phi,U)` referes to the discretization of the convective flux $$\partial(\u_i u_j)/\partial x_j$$ with `phi` being the (volumetric) flux and `U` the variable transported by the flux. In this case, the first order upwidn scheme is employed called `Gauss upwind`.
+The discretization of the convective terms, e.g., convective fluxes, is defined within the `divSchemes` keyword. Here, `div(phi,U)` referes to the discretization of the convective flux $$\partial(u_i u_j)/\partial x_j$$ with `phi` being the (volumetric) flux and `U` the variable transported by the flux. In this case, the **first order upwind scheme** is employed called `Gauss upwind`.
 
 Additionaly, `div((nuEff*dev2(T(grad(U)))))` denotes the divergence of the shear stress tensor in the momentum equation. Since this term is diffusive in nature, it is recommended to discretize it with a central differencing scheme, here `Gauss linear`.
 
@@ -255,7 +255,7 @@ divSchemes
 
 ### Laplacian terms
 
-The Laplacian terms, e.g., second order spatial derivatives $$\partial^2/\partial x_j^2$$, are discretized using a central differencing scheme corrected for non-orthogonal meshes called `Gauss linear corrected`.
+The Laplacian terms, e.g., second order spatial derivatives $$\partial^2/\partial x_j^2$$, are discretized using a **central differencing scheme** corrected for non-orthogonal meshes called `Gauss linear corrected`.
 
 ```
 laplacianSchemes
@@ -266,7 +266,7 @@ laplacianSchemes
 
 ### Interpolation discretization
 
-The interpolation of variables from cell centers to face centers is specified with the keyword `interpolationSchemes`. Here, all interpolation is done using a second order central differencing scheme called `linear`.
+The interpolation of variables from cell centers to face centers is specified with the keyword `interpolationSchemes`. Here, all interpolation is done using a second order **central differencing scheme** called `linear`.
 
 ```
 laplacianSchemes
