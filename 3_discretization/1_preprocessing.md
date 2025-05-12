@@ -13,7 +13,7 @@ nav_order: 1
 A case being simulated involves data for mesh, fields, properties, control parameters, etc. In OpenFOAM this data is stored in a set of files within a case directory rather than in a single case file, as in many other CFD packages. The case directory is given a suitably descriptive name, here `1_backward-step`. This folder contains the following subfolders and files:
 
 ```
-backward-step
+1_backward-step
 ├── 0
 │   ├── p
 │   └── U
@@ -34,6 +34,7 @@ The *relevant* files for this tutorial case are:
 - `system` - This folder contains files related to how the simulation is to be solved:
     - `controlDict` for setting control parameters including start/end time, time step size and parameters for data output.
     - `fvSchemes` holds the discretisation schemes used in the solution selected during runtime.
+- `backward-step.msh`: The two-dimensional mesh created with ANSYS ICEM CFD.
 
 
 ## Mesh Generation
@@ -44,7 +45,7 @@ The mesh for this case has been created using an external software and is stored
 fluentMeshToFoam backward-step.msh
 ```
 
-The utlitity sucessfully imports the mesh and confirms this with the output:
+The utility sucessfully imports the mesh and confirms this with the output:
 
 ```
 ...
@@ -129,17 +130,74 @@ The final output `Mesh OK.` indicates that no critical problems or errors were f
 
 ## Physical Properties
 
-The physical properties for the fluid, such as kinematic viscosity, are stored in the `transportProperties` file in the `constant` directory. In this tutorial, the Reynolds-number at the inlet should be 1250. Based on the inlet velocity of $$U_\text{in} = 1\,\text{m/s}$$ and the channel height at the inlet of $$H_\text{in} = 0.025\,\text{m}$$, the kinematic viscosity can be computed based on the equation for the Reynolds-number:
+The physical properties for the fluid, such as kinematic viscosity, are stored in the `transportProperties` file in the `constant` directory. In this tutorial, the Reynolds-number at the inlet should be 1250. Based on the inlet velocity of $$U_\text{in} = 1\,\text{m/s}$$ and the channel height at the inlet of $$H_\text{in} = 0.025\,\text{m}$$, the kinematic viscosity can be computed using the Reynolds-number:
 
 $$ \text{Re} = \frac{U_\text{in} \, H_\text{in}}{\nu} \quad \rightarrow \quad \nu = \frac{U_\text{in} \, H_\text{in}}{\text{Re}} = 2.5 \times 10^{-5}\,\text{m}^2\text{/s} $$
 
-This value has to be specified in SI-units in the `transportProperties` dictionary as follows:
+This value along side the rhological model of the fluid has to be specified in SI-units in the `transportProperties` dictionary as follows:
 
 ```
-16
-17  viscosityModel  Newtonian;
-18
-19  nu              2.5e-5;
-20
-21  // ************************************************************************* //
+
+viscosityModel  Newtonian;
+
+nu              2.5e-5;
+
+// ************************************************************************* //
+```
+
+
+
+## Simulation Control
+
+Settings related to the control of time (for transient simulations) or iterations (for steady-state simulations) and reading and writing of the solution data are read in from the `controlDict` file in the system folder.
+
+
+### Flow Solver
+
+The file starts with the corresponding solver to be used:
+
+```
+application     pimpleFoam;
+```
+
+In this tutorial case, we are using the solver `pimpleFoam`, a pressure-based solver for incompressible, transient or steady-state, laminar or turbulent single-phase flows.
+
+
+### Start and End Times
+
+
+The start/stop times and the time step for the run must be set. OpenFOAM oﬀers great flexibility with time/iteration control. In this tutorial the run starts at time 0, which means that OpenFOAM needs to read field data from a directory named 0. Therefore we set the `startFrom` keyword to `startTime` and then specify the `startTime` keyword to be 0. The simulation should run until a time of 1 second and then stop. Therefore, the `stopAt` entry is set to `endTime` and the `endTime` entry itself is set to `1`.
+
+The corresponding lines in the controlDict look as follows:
+
+```
+    startFrom       startTime;
+
+    startTime       0;
+
+    stopAt          endTime;
+
+    endTime         1;
+```
+
+### Time Step Size
+
+The time step size is defined via the keyword `deltaT`. To achieve temporal accuracy and numerical stability when running `pimpleFoam`, a Courant number of $$\text{Co} \leq 0.5$$ is recommended. Based on the cell size $$\Delta x$$, flow velocity $$U$$, and time step size $$\Delta t$$, the Courant number is defined for a given cfell as:
+
+$$ \text{Co} = \frac{U \delta t}{\delta x}
+
+The flow velocity naturally varies across the domain and the Courant-number limitation must be kept in every cell. Therefore, we have to estimate the time step size based on known values. The cell size of this equidistant mesh is constant everywhere and can be estimated based on the channel height at the inlet $$H_\text{in}$$ and the corresponding cell count of $$n = 20$$ cells across the inlet as follows:
+
+$$\Delta x = \frac{H_\text{in}}{n} = 1.25 \times 10^{-3}\,\text{m}$$
+
+The characteristic velocity in the flow domain $$U$$ can be approximated to be equal to the inlet velocity $$U_\text{in}$$. Although the actual flow velocity will probably be higher locally further downstream the inlet, this gives a sufficiently good estimate for the time step size $$\Delta t$$.
+
+Based on these assumptions and using the equation for the Courant number, the following expression for the allowable time step size can be derived:
+
+$$ \Delta t = \frac{\text{Co \, \Delta x}}{U_\text{in}} = 6.25 \times 10^{-4}\,\text{s}$$
+
+The corresponding lines in the controlDict look as follows:
+
+```
+    deltaT          6.25e-04;
 ```
