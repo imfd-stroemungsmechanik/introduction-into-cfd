@@ -33,7 +33,7 @@ In OpenFOAM, the computational mesh, field data, model properties and numerical 
 1 directory, 5 files
 ```
 
-The relevant files for this tutorial case are:
+The *relevant* files for this tutorial case are:
  - `meshDict` in the `system` directory: Contains the configuration for the automated meshing process.
  - `geometry.obj`: The geometry file forming the boundaries of the computational domain.
 

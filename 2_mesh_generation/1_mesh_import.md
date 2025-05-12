@@ -32,7 +32,7 @@ In OpenFOAM, the computational mesh, field data, model properties and numerical 
 1 directory, 4 files
 ```
 
-The relevant file for this tutorial case is:
+The *relevant* file for this tutorial case is:
  - `elbow.msh`: The two-dimensional mesh created with ANSYS ICEM CFD.
 
 
