@@ -34,10 +34,10 @@ The *relevant* files for this tutorial case are:
 - `system` - This folder contains files related to how the simulation is to be solved:
     - `controlDict` for setting control parameters including start/end time, time step size and parameters for data output.
     - `fvSchemes` holds the discretisation schemes used in the solution selected during runtime.
-- `backward-step.msh`: The two-dimensional mesh created with ANSYS ICEM CFD.
+- `backward-step.msh` - The two-dimensional mesh created with ANSYS ICEM CFD.
 
 
-## Mesh Generation
+## Mesh Import
 
 The mesh for this case has been created using an external software and is stored in the ANSYS Fluent mesh format `*.msh`. Similar to the previous seminar, the mesh can be imported using the OpenFOAM tool `fluentMeshToFoam` with the following command:
 
@@ -130,14 +130,13 @@ The final output `Mesh OK.` indicates that no critical problems or errors were f
 
 ## Physical Properties
 
-The physical properties for the fluid, such as kinematic viscosity, are stored in the `transportProperties` file in the `constant` directory. In this tutorial, the Reynolds-number at the inlet should be 1250. Based on the inlet velocity of $$U_\text{in} = 1\,\text{m/s}$$ and the channel height at the inlet of $$H_\text{in} = 0.025\,\text{m}$$, the kinematic viscosity can be computed using the Reynolds-number:
+The physical properties for the fluid, such as kinematic viscosity, are stored in the `transportProperties` file in the `constant` directory.
 
+In this tutorial, the Reynolds-number at the inlet should be 1250. Based on the inlet velocity of $$U_\text{in} = 1\,\text{m/s}$$ and the channel height at the inlet of $$H_\text{in} = 0.025\,\text{m}$$, the kinematic viscosity can be computed using the Reynolds-number:
 $$ \text{Re} = \frac{U_\text{in} \, H_\text{in}}{\nu} \quad \rightarrow \quad \nu = \frac{U_\text{in} \, H_\text{in}}{\text{Re}} = 2.5 \times 10^{-5}\,\text{m}^2\text{/s} $$
-
-This value along side the rhological model of the fluid has to be specified in SI-units in the `transportProperties` dictionary as follows:
+This value along side the rhological model of the fluid (here: Newtonian fluid) has to be specified in the `transportProperties` dictionary as follows:
 
 ```
-
 viscosityModel  Newtonian;
 
 nu              2.5e-5;
@@ -155,11 +154,9 @@ Settings related to the control of time (for transient simulations) or iteration
 ### Flow Solver
 
 The file starts with the corresponding solver to be used:
-
 ```
 application     pimpleFoam;
 ```
-
 In this tutorial case, we are using the solver `pimpleFoam`, a pressure-based solver for incompressible, transient or steady-state, laminar or turbulent single-phase flows.
 
 
@@ -205,13 +202,11 @@ deltaT          6.25e-04;
 
 ### Writing out Results
 
-As the simulation progresses, results are written out at certain intervals of time that can later be analysed and visualized. The `writeControl` keyword presents several options for setting the iteration interval at which the results are written. Here, the `runTime option` is selected which specifies that results are written out at certain simulation time intervals. Here, the `writeInterval` keyword sets this interval to `0.02`, which means that every 0.02 seconds of simulation time a results folder will be written. Since the total simulation time is 1 second, this results in 50 results folders at different time steps. When OpenFOAM writes out results, it creates a new directory *named as the current time* containing a individual file for each field written out. There is an optional `purgeWrite` entry which specifies, whether only the last $$n$$ time steps are stored and the rest discarded. Setting this to 0 keeps all the results folders.
+As the simulation progresses, results are written out at certain intervals of time that can later be analysed and visualized. The `writeControl` keyword presents several options for setting the iteration interval at which the results are written. Here, the `runTime` option is selected which specifies that results are written out at certain simulation time intervals. Here, the `writeInterval` keyword sets this interval to `0.02`, which means that every 0.02 seconds of simulation time a results folder will be written. When OpenFOAM writes out results, it creates a new directory *named as the current time* containing a individual file for each field written out.
 
 The corresponding lines in the `controlDict` look as follows:
 ```
 writeControl    runTime;
 
 writeInterval   0.02;
-
-purgeWrite      0;
 ```
