@@ -5,6 +5,8 @@ parent: 3. Discretization
 nav_order: 1
 ---
 
+# Solving
+
 
 ## Starting the Solver
 
