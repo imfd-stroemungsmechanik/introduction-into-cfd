@@ -16,7 +16,7 @@ pimpleFoam
 
 The progress of the job is written to the terminal window. It tells the user the current time step, the equations beeing solved, initial and final residuals for all fields and should look like follows:
 
-```bash
+```
 Courant Number mean: 0.287074 max: 0.730372
 Time = 0.029
 
@@ -41,7 +41,7 @@ The error of the conservation of mass is denoted as `continuity error`. Since it
 
 In order to track and monitor the simulation during its run, a function object is added at the bottom of the `controlDict`. These are used for e.g. writing out the residuals over the course of the simulation, perform certain post-processing tasks such as calculating the flow rate over a patch, compute maximum and average values of the flow field, compute forces and force coefficients on objects, compute derived fields such as heat transfer or shear stress rates, and generate images through cutPlanes or iso-surfaces. In this case, the `controlDict` looks as follows:
 
-```bash
+```
 functions
 {
     solverInfo

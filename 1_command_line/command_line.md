@@ -104,5 +104,6 @@ This video shows the following aspects:
   <source src="videos/terminal-introduction-6.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
+
 {: .warning }
 > The `rm` command deletes files and directories without a waring and without using the Recycle Bin or Trash Can. Therefore, these files cannot be recovered. Be particularly careful when combining this command with wildcards, as complete folders and be deleted easily by mistake.
