@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Pre-Processing
-parent: 3. Discretization
+parent: 3. Backward-Step
 nav_order: 1
 ---
 

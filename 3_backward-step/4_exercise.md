@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Exercise
-parent: 3. Discretization
+parent: 3. Backward-Step
 nav_order: 4
 ---
 

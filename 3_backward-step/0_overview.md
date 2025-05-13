@@ -1,6 +1,6 @@
 ---
 layout: default
-title: 3. Discretization
+title: 3. Backward-Step
 nav_order: 4
 ---
 
