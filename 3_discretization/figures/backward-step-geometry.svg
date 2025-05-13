@@ -10,8 +10,8 @@
    sodipodi:docname="backward-step-geometry.svg"
    inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
    inkscape:export-filename="backward-step-geometry.png"
-   inkscape:export-xdpi="96"
-   inkscape:export-ydpi="96"
+   inkscape:export-xdpi="300"
+   inkscape:export-ydpi="300"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -79,12 +79,12 @@
      inkscape:deskcolor="#d1d1d1"
      showgrid="false"
      inkscape:zoom="0.96195654"
-     inkscape:cx="412.70056"
-     inkscape:cy="249.49152"
+     inkscape:cx="505.22033"
+     inkscape:cy="432.45197"
      inkscape:window-width="1920"
-     inkscape:window-height="1120"
+     inkscape:window-height="1151"
      inkscape:window-x="1920"
-     inkscape:window-y="27"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="g8"
      inkscape:document-units="in" />
@@ -107,7 +107,7 @@
        sodipodi:nodetypes="ccccccc" />
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Arrow2);marker-end:url(#Arrow2)"
-       d="M 257.88899,70.870825 V 145.51617"
+       d="M 286.52349,70.870825 V 145.51617"
        id="path800"
        sodipodi:nodetypes="cc" />
     <path
@@ -165,24 +165,24 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:26.6667px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
-       x="275.89548"
+       x="304.52997"
        y="118.98038"
        id="text988"><tspan
          sodipodi:role="line"
          id="tspan986"
-         x="275.89548"
+         x="304.52997"
          y="118.98038"
          style="font-size:26.6667px">25 mm</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:32px;line-height:1.25;font-family:sans-serif;fill:#00d800;fill-opacity:1;stroke:none"
        x="23.098034"
-       y="120.78284"
+       y="119.14782"
        id="text992"><tspan
          sodipodi:role="line"
          id="tspan990"
          x="23.098034"
-         y="120.78284"
+         y="119.14782"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:32px;font-family:'Latin Modern Sans';-inkscape-font-specification:'Latin Modern Sans Bold';fill:#00d800;fill-opacity:1">inlet</tspan></text>
     <text
        xml:space="preserve"
@@ -259,5 +259,41 @@
          x="30.701704"
          y="487.83832"
          style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:'Latin Modern Sans';-inkscape-font-specification:'Latin Modern Sans Italic';stroke-linecap:round;stroke-linejoin:round">z</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2)"
+       d="m 101.2122,70.903574 h 26.66529"
+       id="path337"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2)"
+       d="m 101.2122,89.819173 h 26.66529"
+       id="path954"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2)"
+       d="m 101.2122,108.73477 h 26.66529"
+       id="path956"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2)"
+       d="m 101.2122,127.65037 h 26.66529"
+       id="path958"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2)"
+       d="m 101.2122,146.56597 h 26.66529"
+       id="path960"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:26.6667px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none"
+       x="146.2838"
+       y="118.98038"
+       id="text964"><tspan
+         sodipodi:role="line"
+         id="tspan962"
+         x="146.2838"
+         y="118.98038"
+         style="font-size:26.6667px">1 m/s</tspan></text>
   </g>
 </svg>
