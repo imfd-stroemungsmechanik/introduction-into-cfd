@@ -12,7 +12,7 @@ nav_order: 1
 As soon as results are written to time directories, they can be viewed using ParaView. Start ParaView in the background with the following command:
 
 ```bash
-paraview &
+paraFoam &
 ```
 To prepare ParaView to display the data of interest, the data at the required time step of 1 second must be loaded. If the case was run while ParaView was open, the output data in time directories will not be automatically loaded within ParaView. To load the data the user should click **Refresh** at the top **Properties** window (scroll up the panel if necessary).
 
@@ -88,4 +88,4 @@ At this point, the animation can easily be created by clicking the top menu: **F
 ## Conclusion
 
 
-This concludes the second seminar on the simulation of incompressible, laminar flow through a backward-facing step. A two-dimensional mesh was generated using `cartesian2DMesh` from a provided geometry file. The fluid properties were adjusted to match a specified Reynolds number, and the time step size was chosen to maintain an appropriate Courant number. The simulation was then run, and the residuals were plotted. Finally, the flow field was visualized in ParaView.
+This concludes the second seminar on the simulation of incompressible, laminar flow over a backward-facing step. A two-dimensional mesh was generated using `cartesian2DMesh` based on a geometry file. The fluid properties were adjusted to match a specified Reynolds number, and the time step size was chosen to maintain an appropriate Courant number. The simulation was then run, and the residuals were plotted. Finally, the flow field was visualized in ParaView.

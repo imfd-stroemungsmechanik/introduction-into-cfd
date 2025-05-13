@@ -10,12 +10,13 @@ nav_order: 4
 
 The objectives for this tutorial are as follows:
 
-- Recap of the the OpenFOAM case structure,
+- Recap of the OpenFOAM case structure,
 - Create a two-dimensional mesh in OpenFOAM with `cartesian2DMesh` and check its quality,
 - Set material properties based on Reynolds-number,
 - Estimate the correct time step size based on Courant number,
-- Perform a transient, incompressible simulation with `pimpleFoam`,
-- Adapt the discretization schemes,
+- Run a transient, incompressible simulation with `pimpleFoam`,
+- Perform a mesh dependency stucy,
+- Adapt the discretization schemes, and
 - Visualize the velocity field in ParaView.
 
 ## Overview
@@ -29,6 +30,6 @@ This tutorial will describe how to pre-process, run and post-process a case invo
 ## Preparation
 
 Before starting, perform the following steps for preparation:
- 1. Download the archive `3_discretization.zip` from the Downloads folder on the [OPAL course page](https://bildungsportal.sachsen.de/opal/auth/RepositoryEntry/19816513539).
+ 1. Download the archive `3_backward-step.zip` from the Downloads folder on the [OPAL course page](https://bildungsportal.sachsen.de/opal/auth/RepositoryEntry/19816513539).
  2. Extract the archive.
  3. Open a terminal, navigate to the newly created folder, and source OpenFOAM.

@@ -10,10 +10,10 @@ nav_order: 1
 
 ## OpenFOAM Case Structure
 
-A case being simulated involves data for mesh, fields, properties, control parameters, etc. In OpenFOAM this data is stored in a set of files within a case directory rather than in a single case file, as in many other CFD packages. The case directory is given a suitably descriptive name, here `1_backward-step`. This folder contains the following subfolders and files:
+A case being simulated involves data for mesh, fields, properties, control parameters, etc. In OpenFOAM this data is stored in a set of files within a case directory rather than in a single case file, as in many other CFD packages. The case directory is given a suitably descriptive name, here `backward-step`. This folder contains the following subfolders and files:
 
 ```
-1_backward-step
+backward-step
 ├── 0
 │   ├── p
 │   └── U
@@ -26,14 +26,15 @@ A case being simulated involves data for mesh, fields, properties, control param
 │   ├── fvSolution
 │   └── meshDict
 └── backward-step.stl     
-3 directories, 8 files
+3 directories, 9 files
 ```
 
 The *relevant* files for this tutorial case are:
 - `constant` - This directory contains files that are related to the physics of the problem, including the mesh and any physical properties that are required for the solver. In this case:
-    - `transportProperties` has the thermophysical properties of the fluid, e.g. viscosity.
+    - `transportProperties` has the physical properties of the fluid, e.g. viscosity.
 - `system` - This folder contains files related to how the simulation is to be solved:
     - `controlDict` for setting control parameters including start/end time, time step size and parameters for data output.
+    - `fvSchemes` for the discretization schemes used in the Finite Volume Method.
     - `meshDict` contains the configuration for the automated meshing process.
 - `backward-step.stl`: The geometry file forming the boundaries of the computational domain.
 
@@ -42,14 +43,14 @@ The *relevant* files for this tutorial case are:
 
 The hexahedral-dominant, two-dimensional mesh is created automatically with the meshing utility `cartesian2DMesh` from a user provided surface geometry named `backward-step.stl` in the case folder.
 
-Due to the simple geometry, the mesh has a uniform cell size of $$\Delta x = 1.25\,\text{m}$$ without any local refinement. Thus, the `meshDict` is as follows:
+Due to the simple geometry, the mesh has a uniform cell size of $$\Delta x = 2.5 \times 10^{-3}\,\text{m}$$ without any local refinement. Thus, the `meshDict` is as follows:
 
 ```
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 surfaceFile     "backward-step.stl";
 
-maxCellSize     1.25e-3;
+maxCellSize     2.5e-3;
 ```
 
 In order to make sure all corresponding patches are grouped together correctly using a suitable patch type, the following lines are added in the `meshDict`:
@@ -86,7 +87,7 @@ renameBoundary
 }
 ```
 
-Here, the `inlet` and `outlet` patches are of type `patch`, all `wall`-named surfaces of the surface geometry are grouped together in a patch named `walls` of type `wall`, and the front and back plane of the geometry is grouped together in a patch called `frontAndBackPlanes` of type `empty`.
+Here, the `inlet` and `outlet` patches are of type `patch`, all `wall`-named surfaces of the surface geometry are grouped together in a patch named `walls` of type `wall`, and the front and back plane of the geometry are grouped together in a patch called `frontAndBackPlanes` of type `empty`.
 
 In order to create the mesh, the `cartesian2DMesh` utility has to be executed:
 
@@ -95,8 +96,8 @@ cartesian2DMesh
 ```
 
 At this point the mesh generation is complete. It consists of:
- - Background mesh with a cell size of $$1.25\,10^{-3}\,\text{m}$$.
- - Correct patch type for inlet, outlet, walls and front and back planes.
+ - Background mesh with a cell size of $$2.5\,10^{-3}\,\text{m}$$.
+ - Correct patch types for inlet, outlet, walls and front and back planes.
 
 
 ## Mesh Quality
@@ -174,14 +175,16 @@ The final output `Mesh OK.` indicates that no critical problems or errors were f
 
 The physical properties for the fluid, such as kinematic viscosity, are stored in the `transportProperties` file in the `constant` directory.
 
-In this tutorial, the Reynolds-number at the inlet should be 250. Based on the inlet velocity of $$U_\text{in} = 1\,\text{m/s}$$ and the channel height at the inlet of $$H_\text{in} = 0.025\,\text{m}$$, the kinematic viscosity can be computed using the Reynolds-number:
-$$ \text{Re} = \frac{U_\text{in} \, H_\text{in}}{\nu} \quad \rightarrow \quad \nu = \frac{U_\text{in} \, H_\text{in}}{\text{Re}} = 1 \times 10^{-4}\,\text{m}^2\text{/s} $$
+In this tutorial, the Reynolds-number at the inlet should be 1250. Based on the inlet velocity of $$U_\text{in} = 1\,\text{m/s}$$ and the channel height at the inlet of $$H_\text{in} = 0.025\,\text{m}$$, the kinematic viscosity can be computed using the Reynolds-number:
+
+$$ \text{Re} = \frac{U_\text{in} \, H_\text{in}}{\nu} \quad \rightarrow \quad \nu = \frac{U_\text{in} \, H_\text{in}}{\text{Re}} = 2 \times 10^{-5}\,\text{m}^2\text{/s} $$
+
 This value along side the rhological model of the fluid (here: Newtonian fluid) has to be specified in the `transportProperties` dictionary as follows:
 
 ```
 viscosityModel  Newtonian;
 
-nu              1e-4;
+nu              2.5e-5;
 
 // ************************************************************************* //
 ```
@@ -225,20 +228,16 @@ The time step size is defined via the keyword `deltaT`. To achieve temporal accu
 
 $$ \text{Co} = \frac{U \delta t}{\delta x} $$
 
-The flow velocity naturally varies across the domain and the Courant-number limitation must be kept in every cell. Therefore, we have to estimate the time step size based on known values. The cell size of this equidistant mesh is constant everywhere and can be estimated based on the channel height at the inlet $$H_\text{in}$$ and the corresponding cell count of $$n = 20$$ cells across the inlet as follows:
-
-$$\Delta x = \frac{H_\text{in}}{n} = 1.25 \times 10^{-3}\,\text{m}$$
-
-The characteristic velocity in the flow domain $$U$$ can be approximated to be equal to the inlet velocity $$U_\text{in}$$. Although the actual flow velocity will probably be higher locally further downstream the inlet, this gives a sufficiently good estimate for the time step size $$\Delta t$$.
+The flow velocity naturally varies across the domain and the Courant-number limitation must be kept in every cell. Therefore, we have to estimate the time step size based on known values. The cell size of this nearly equidistant mesh is specified in the `meshDict` in the `system` folder as $$\Delta x = 2.5 \times 10^{-3}\,\text{m}$$. The characteristic velocity in the flow domain $$U$$ can be approximated to be equal to the inlet velocity $$U_\text{in}$$. Although the actual flow velocity will probably be higher locally further downstream the inlet, this gives a sufficiently good estimate for the time step size $$\Delta t$$.
 
 Based on these assumptions and using the equation for the Courant number, the following expression for the allowable time step size can be derived:
 
-$$ \Delta t = \frac{\text{Co} \, \Delta x}{U_\text{in}} = 3.125 \times 10^{-4}\,\text{s}$$
+$$ \Delta t = \frac{\text{Co} \, \Delta x}{U_\text{in}} = 6.25 \times 10^{-4}\,\text{s}$$
 
 The corresponding lines in the `controlDict` look as follows:
 
 ```
-deltaT          3.125e-04;
+deltaT          6.25e-04;
 ```
 
 
