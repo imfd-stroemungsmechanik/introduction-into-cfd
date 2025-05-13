@@ -74,8 +74,16 @@ The resulting vectors will be color coded by pressure, whereas a velocity color 
 
 A good way to visualize the transient flow behaviour is an animation created with ParaView. For this, hide the vector plot and show the cut plane of the velocity magnitude. Then display the velocity magnitude in a range from $$(0 - 1.2) \, \text{m/s}$$. By clicking the **Play** button at the **VCR Controls** at the very top, it is possible to automatically go through every time step and get a quick glance of how the transient flow field looks like:
 
+![Backward-facing step paraview velocity animation](figures/paraview-results-velocity.png}
+
+Before creating an animation, it is recommended to add more information to the view. First of all, a title could be added by clicking on the top menu: **Sources** $$\rightarrow$$ **Annotations** $$\rightarrow$$ **Text**. You can type any text in the text field inside the **Properties** panel, adjust font size and location of the text field. Secondly, you could add the current time step to the view, again by using the top menu: **Sources** $$\rightarrow$$ **Annotations** $$\rightarrow$$ **Annotate Time**. Choose a suitable time **Format**, such as `Time: {time:1.2f} s` to display the time with two digits and the unit in seconds. All in all, this could look like follows:
+
 ![Backward-facing step paraview velocity animation](figures/paraview-results-animation.gif)
 
 At this point, the animation can easily be created by clicking the top menu: **File** $$\rightarrow$$ **Save Animation...**, and choosing a suitable file name and format (preferably mp4). At the following **Animation Menu**, you can specify video resolution, compression, and frame rate. It is recommended to change the frame rate to a higher value, such as 10 - 15. Clicking **Okay** will create the animation for you.
 
 ![Backward-facing step paraview vector plot](figures/paraview-menu-animation-panel.png)
+
+
+## Conclusion
+
