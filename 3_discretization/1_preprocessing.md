@@ -184,7 +184,7 @@ This value along side the rhological model of the fluid (here: Newtonian fluid) 
 ```
 viscosityModel  Newtonian;
 
-nu              2.5e-5;
+nu              2e-5;
 
 // ************************************************************************* //
 ```
