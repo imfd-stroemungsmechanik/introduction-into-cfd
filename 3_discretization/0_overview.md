@@ -11,7 +11,7 @@ nav_order: 4
 The objectives for this tutorial are as follows:
 
 - Recap of the the OpenFOAM case structure,
-- Import a two-dimensional mesh into OpenFOAM and check its quality,
+- Create a two-dimensional mesh in OpenFOAM with `cartesian2DMesh` and check its quality,
 - Set material properties based on Reynolds-number,
 - Estimate the correct time step size based on Courant number,
 - Perform a transient, incompressible simulation with `pimpleFoam`,

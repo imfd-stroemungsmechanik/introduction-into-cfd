@@ -23,8 +23,9 @@ A case being simulated involves data for mesh, fields, properties, control param
 └── system
 │   ├── controlDict
 │   ├── fvSchemes
-│   └── fvSolution
-└── backward-step.msh     
+│   ├── fvSolution
+│   └── meshDict
+└── backward-step.stl     
 3 directories, 8 files
 ```
 
@@ -33,33 +34,74 @@ The *relevant* files for this tutorial case are:
     - `transportProperties` has the thermophysical properties of the fluid, e.g. viscosity.
 - `system` - This folder contains files related to how the simulation is to be solved:
     - `controlDict` for setting control parameters including start/end time, time step size and parameters for data output.
-    - `fvSchemes` holds the discretisation schemes used in the solution selected during runtime.
-- `backward-step.msh` - The two-dimensional mesh created with ANSYS ICEM CFD.
+    - `meshDict` contains the configuration for the automated meshing process.
+- `backward-step.stl`: The geometry file forming the boundaries of the computational domain.
 
 
-## Mesh Import
+## Mesh Generation
 
-The mesh for this case has been created using an external software and is stored in the ANSYS Fluent mesh format `*.msh`. Similar to the previous seminar, the mesh can be imported using the OpenFOAM tool `fluentMeshToFoam` with the following command:
+The hexahedral-dominant, two-dimensional mesh is created automatically with the meshing utility `cartesian2DMesh` from a user provided surface geometry named `backward-step.stl` in the case folder.
+
+Due to the simple geometry, the mesh has a uniform cell size of $$\Delta x = 1.25\,\text{m}$$ without any local refinement. Thus, the `meshDict` is as follows:
+
+```
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+surfaceFile     "backward-step.stl";
+
+maxCellSize     1.25e-3;
+```
+
+In order to make sure all corresponding patches are grouped together correctly using a suitable patch type, the following lines are added in the `meshDict`:
+
+```
+renameBoundary
+{
+    newPatchNames
+    {
+        "inlet"
+        {
+            type    patch;
+            newName inlet;
+        }
+
+        "outlet"
+        {
+            type    patch;
+            newName outlet;
+        }
+        
+        "wall.*"
+        {
+            type    wall;
+            newName walls;
+        }
+        
+        ".*Empty.*"
+        {
+            type    empty;
+            newName frontAndBackPlanes;
+        }
+    }
+}
+```
+
+Here, the `inlet` and `outlet` patches are of type `patch`, all `wall`-named surfaces of the surface geometry are grouped together in a patch named `walls` of type `wall`, and the front and back plane of the geometry is grouped together in a patch called `frontAndBackPlanes` of type `empty`.
+
+In order to create the mesh, the `cartesian2DMesh` utility has to be executed:
 
 ```bash
-fluentMeshToFoam backward-step.msh
+cartesian2DMesh
 ```
 
-The utility sucessfully imports the mesh and confirms this with the output:
-
-```
-...
-Writing mesh... to "constant/polyMesh"  done.
- 
-End
-```
-
-The mesh has been successfully imported into the OpenFOAM format and stored within the `constant/polyMesh` folder.
+At this point the mesh generation is complete. It consists of:
+ - Background mesh with a cell size of $$1.25\,10^{-3}\,\text{m}$$.
+ - Correct patch type for inlet, outlet, walls and front and back planes.
 
 
 ## Mesh Quality
 
-Once the mesh has been imported, it is always recommended to check the mesh statistics and quality. This can easily be done using the utility `checkMesh` from within the `backward-step` folder:
+Once the mesh has been created, it is always recommended to check the mesh statistics and quality. This can easily be done using the utility `checkMesh` from within the `backward-step` folder:
 
 ```
 checkMesh
@@ -76,11 +118,11 @@ Create polyMesh for time = 0
 Time = 0s
 
 Mesh stats
-    points:           18162
+    points:           19180
     internal points:  0
-    faces:            35480
-    internal faces:   17320
-    cells:            8800
+    faces:            37501
+    internal faces:   18323
+    cells:            9304
     faces per cell:   6
     boundary patches: 4
     point zones:      0
@@ -94,16 +136,17 @@ Checking geometry...
     Mesh has 2 geometric (non-empty/wedge) directions (1 1 0)
     Mesh has 2 solution (non-empty) directions (1 1 0)
     All edges aligned with or perpendicular to non-empty directions.
-    Boundary openness (-1.75855e-19 -1.41856e-17 1.87578e-18) OK.
-    Max cell openness = 1.35525e-16 OK.
-    Max aspect ratio = 1 OK.
-    Minimum face area = 1.5625e-06. Maximum face area = 2.5e-06.  Face area magnitudes OK.
-    Min volume = 3.125e-09. Max volume = 3.125e-09.  Total volume = 2.75e-05.  Cell volumes OK.
-    Mesh non-orthogonality Max: 0 average: 0
+    Boundary openness (7.18073e-19 1.63691e-17 -3.6231e-15) OK.
+    Max cell openness = 1.96243e-16 OK.
+    Max aspect ratio = 1.62464 OK.
+    Minimum face area = 5.16938e-07. Maximum face area = 3.09863e-06.  Face area magnitudes OK.
+    Min volume = 1.03388e-09. Max volume = 4.01961e-09.  Total volume = 2.75e-05.  Cell volumes OK.
+    Mesh non-orthogonality Max: 14.2836 average: 0.557759
     Non-orthogonality check OK.
     Face pyramids OK.
-    Max skewness = 2.19338e-13 OK.
+    Max skewness = 0.688247 OK.
     Coupled point location match (average 0) OK.
+
 
 
 Mesh OK.
@@ -113,15 +156,14 @@ End
 
 This gives us all relevant mesh statistics and quality criteria of the mesh:
 
-- The mesh consists of 8800 cells,
+- The mesh consists of 9304 cells,
 - has 4 different boundary patches.
 
 As this is a block-structured mesh with uniform cell size, the mesh quality is excellent with criteria such as:
 
-- max cell aspect ratio of 1,
-- a minimum and maximum cell volume of 3.125e-09,
-- a maximum mesh non-orthogonality of 0, and
-- a max cell skewness of 0.
+- max cell aspect ratio of 1.625,
+- a maximum mesh non-orthogonality of 14.28, and
+- a max cell skewness of 0.69.
 
 The final output `Mesh OK.` indicates that no critical problems or errors were found during `checkMesh`. Therefore, we can continue with this mesh and proceed with the simulation.
 
@@ -179,7 +221,7 @@ endTime         1;
 
 ### Time Step Size
 
-The time step size is defined via the keyword `deltaT`. To achieve temporal accuracy and numerical stability when running `pimpleFoam`, a Courant number of $$\text{Co} \leq 0.5$$ is recommended. Based on the cell size $$\Delta x$$, flow velocity $$U$$, and time step size $$\Delta t$$, the Courant number is defined for a given cfell as:
+The time step size is defined via the keyword `deltaT`. To achieve temporal accuracy and numerical stability when running `pimpleFoam`, we aim for a Courant number of $$\text{Co} \approx 0.25$$. Based on the cell size $$\Delta x$$, flow velocity $$U$$, and time step size $$\Delta t$$, the Courant number is defined for a given cfell as:
 
 $$ \text{Co} = \frac{U \delta t}{\delta x} $$
 
@@ -191,12 +233,12 @@ The characteristic velocity in the flow domain $$U$$ can be approximated to be e
 
 Based on these assumptions and using the equation for the Courant number, the following expression for the allowable time step size can be derived:
 
-$$ \Delta t = \frac{\text{Co} \, \Delta x}{U_\text{in}} = 6.25 \times 10^{-4}\,\text{s}$$
+$$ \Delta t = \frac{\text{Co} \, \Delta x}{U_\text{in}} = 3.125 \times 10^{-4}\,\text{s}$$
 
 The corresponding lines in the `controlDict` look as follows:
 
 ```
-deltaT          6.25e-04;
+deltaT          3.125e-04;
 ```
 
 
