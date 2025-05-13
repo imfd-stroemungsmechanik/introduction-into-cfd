@@ -19,24 +19,25 @@ pimpleFoam
 The progress of the job is written to the terminal window. It tells the user the current time step, the equations beeing solved, initial and final residuals for all fields and should look like follows:
 
 ```
-Courant Number mean: 0.287074 max: 0.730372
-Time = 0.029
+Courant Number mean: 0.148717 max: 0.590908
+Time = 0.081
 
 PIMPLE: iteration 1
-smoothSolver:  Solving for Ux, Initial residual = 0.00387855, Final residual = 1.23907e-06, No Iterations 2
-smoothSolver:  Solving for Uy, Initial residual = 0.00579144, Final residual = 2.81116e-06, No Iterations 2
-GAMG:  Solving for p, Initial residual = 0.0195106, Final residual = 0.000124988, No Iterations 3
-time step continuity errors : sum local = 2.85115e-08, global = 4.10384e-09, cumulative = 1.06477e-06
-GAMG:  Solving for p, Initial residual = 0.00419421, Final residual = 8.98766e-08, No Iterations 8
-time step continuity errors : sum local = 2.03893e-11, global = 1.79978e-12, cumulative = 1.06477e-06
-ExecutionTime = 0.72 s  ClockTime = 1 s
+smoothSolver:  Solving for Ux, Initial residual = 0.000976598, Final residual = 1.01157e-07, No Iterations 2
+smoothSolver:  Solving for Uy, Initial residual = 0.0020057, Final residual = 2.55499e-07, No Iterations 2
+GAMG:  Solving for p, Initial residual = 0.004064, Final residual = 1.60952e-05, No Iterations 4
+time step continuity errors : sum local = 1.04098e-09, global = 2.08309e-10, cumulative = 2.1952e-07
+GAMG:  Solving for p, Initial residual = 0.000712041, Final residual = 4.6156e-08, No Iterations 8
+time step continuity errors : sum local = 2.97078e-12, global = 4.48358e-13, cumulative = 2.19521e-07
+ExecutionTime = 4.04 s  ClockTime = 4 s
 ```
 
-This output at time step 0.029 seconds tells us in summary:
-- The maximum Courant number of the simulation is 0.732 with an average value of 0.287. Although larger than the initially estimated value of 0.5, it is smaller than 1.0 indicating a stable simulation.
+This output at time step 0.081 seconds tells us in summary:
+- The maximum Courant number of the simulation is 0.591 with an average value of 0.148. While being larger than the initially estimated value of 0.25, it, is still smaller than 1.0 indicating a stable and accurate simulation.
 - The `smoothSolver` (e.g., a Gauss Seidel solver) is used to solve the velocity components `Ux` and `Uy` in $$x$$- and $$y$$-direction. In this time step, it takes 2 iterations to reach the specified residual criteria.
 - The `GAMG` multigrid solver is used for solving the pressure poisson equation in the pressure-velocity coupling algorithm. For better stability and convergence, the pressure equation is solved twice per time step.
-The error of the conservation of mass is denoted as `continuity error`. Since its value is very small, conservation of mass is maintained.
+- The error of the conservation of mass is denoted as `continuity error`. Since its value is very small, conservation of mass is maintained.
+- The execution time for the simulation up until this time step is roughly 4 seconds as indicated by the `ExecutionTime`.
 
 
 ## Monitoring the Simulation
