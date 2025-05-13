@@ -67,5 +67,15 @@ In the resulting **Properties** panel, make sure the **Glyph Type** is set to **
 
 The resulting vectors will be color coded by pressure, whereas a velocity color code would make much more sense. Therefore, the user should colour the glyphs by velocity magnitude which, as usual, is controlled by setting **Color by** `U` in the **Properties** panel. The user can also select **Show Color Legend** in **Edit Color Map**. Additionaly, the `slice1` module in the **Pipeline Browser** can be made invisible by clicking the **Eye** symbol next to the module name. The resulting output is shown in the following figure:
 
-
 ![Backward-facing step paraview vector plot](figures/paraview-results-glyph-plot.png)
+
+
+## Velocity Animation
+
+A good way to visualize the transient flow behaviour is an animation created with ParaView. For this, hide the vector plot and show the cut plane of the velocity magnitude. Then display the velocity magnitude in a range from $$(0 - 1.2) \, \text{m/s}$$. By clicking the **Play** button at the **VCR Controls** at the very top, it is possible to automatically go through every time step and get a quick glance of how the transient flow field looks like:
+
+![Backward-facing step paraview velocity animation](figures/paraview-results-animation.gif)
+
+At this point, the animation can easily be created by clicking the top menu: **File** $$\rightarrow$$ **Save Animation...**, and choosing a suitable file name and format (preferably mp4). At the following **Animation Menu**, you can specify video resolution, compression, and frame rate. It is recommended to change the frame rate to a higher value, such as 10 - 15. Clicking **Okay** will create the animation for you.
+
+![Backward-facing step paraview vector plot](figures/paraview-menu-animation-panel.png)
