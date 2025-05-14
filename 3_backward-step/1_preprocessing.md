@@ -196,7 +196,7 @@ nu              2e-5;
 
 ## Simulation Control
 
-Settings related to the control of time (for transient simulations) or iterations (for steady-state simulations) and reading and writing of the solution data are read in from the `controlDict` file in the system folder.
+Settings related to the control of time (for transient simulations) or iterations (for steady-state simulations) and reading and writing of the solution data are read in from the `controlDict` file in the `system` folder.
 
 
 ### Flow Solver
