@@ -88,4 +88,4 @@ At this point, the animation can easily be created by clicking the top menu: **F
 ## Conclusion
 
 
-This concludes the second seminar on the simulation of incompressible, laminar flow over a backward-facing step. A two-dimensional mesh was generated using `cartesian2DMesh` based on a geometry file. The fluid properties were adjusted to match a specified Reynolds number, and the time step size was chosen to maintain an appropriate Courant number. The simulation was then run, and the residuals were plotted. Finally, the flow field was visualized in ParaView.
+This concludes the second seminar on the simulation of incompressible, laminar flow over a backward-facing step. A two-dimensional mesh was generated using `cartesian2DMesh` based on a geometry file. The fluid properties were adjusted to match a specified Reynolds number, and the time step size was chosen to maintain an appropriate Courant number. The simulation was then run using `pimpleFoam`, and the residuals were plotted. Finally, the flow field was visualized in ParaView.

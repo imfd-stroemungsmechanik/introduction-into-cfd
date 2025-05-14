@@ -96,7 +96,7 @@ cartesian2DMesh
 ```
 
 At this point the mesh generation is complete. It consists of:
- - Background mesh with a cell size of $$2.5\,10^{-3}\,\text{m}$$.
+ - Background mesh with a cell size of $$2.5 \times 10^{-3}\,\text{m}$$.
  - Correct patch types for inlet, outlet, walls and front and back planes.
 
 
@@ -119,11 +119,11 @@ Create polyMesh for time = 0
 Time = 0s
 
 Mesh stats
-    points:           19180
+    points:           5200
     internal points:  0
-    faces:            37501
-    internal faces:   18323
-    cells:            9304
+    faces:            9961
+    internal faces:   4763
+    cells:            2454
     faces per cell:   6
     boundary patches: 4
     point zones:      0
@@ -137,15 +137,15 @@ Checking geometry...
     Mesh has 2 geometric (non-empty/wedge) directions (1 1 0)
     Mesh has 2 solution (non-empty) directions (1 1 0)
     All edges aligned with or perpendicular to non-empty directions.
-    Boundary openness (7.18073e-19 1.63691e-17 -3.6231e-15) OK.
-    Max cell openness = 1.96243e-16 OK.
-    Max aspect ratio = 1.62464 OK.
-    Minimum face area = 5.16938e-07. Maximum face area = 3.09863e-06.  Face area magnitudes OK.
-    Min volume = 1.03388e-09. Max volume = 4.01961e-09.  Total volume = 2.75e-05.  Cell volumes OK.
-    Mesh non-orthogonality Max: 14.2836 average: 0.557759
+    Boundary openness (5.86182e-19 9.08582e-18 -1.63855e-15) OK.
+    Max cell openness = 1.92817e-16 OK.
+    Max aspect ratio = 1.62483 OK.
+    Minimum face area = 2.0672e-06. Maximum face area = 8.04129e-06.  Face area magnitudes OK.
+    Min volume = 4.13441e-09. Max volume = 1.60826e-08.  Total volume = 2.75e-05.  Cell volumes OK.
+    Mesh non-orthogonality Max: 14.2832 average: 1.1051
     Non-orthogonality check OK.
     Face pyramids OK.
-    Max skewness = 0.688247 OK.
+    Max skewness = 0.68929 OK.
     Coupled point location match (average 0) OK.
 
 
@@ -157,7 +157,7 @@ End
 
 This gives us all relevant mesh statistics and quality criteria of the mesh:
 
-- The mesh consists of 9304 cells,
+- The mesh consists of 2454 cells,
 - has 4 different boundary patches.
 
 As this is a block-structured mesh with uniform cell size, the mesh quality is excellent with criteria such as:
@@ -224,9 +224,9 @@ endTime         1;
 
 ### Time Step Size
 
-The time step size is defined via the keyword `deltaT`. To achieve temporal accuracy and numerical stability when running `pimpleFoam`, we aim for a Courant number of $$\text{Co} \approx 0.25$$. Based on the cell size $$\Delta x$$, flow velocity $$U$$, and time step size $$\Delta t$$, the Courant number is defined for a given cfell as:
+The time step size is defined via the keyword `deltaT`. To achieve temporal accuracy and numerical stability when running `pimpleFoam`, we aim for a Courant number of $$\text{Co} \approx 0.25$$. Based on the cell size $$\Delta x$$, flow velocity $$U$$, and time step size $$\Delta t$$, the Courant number is defined for a given cell as:
 
-$$ \text{Co} = \frac{U \delta t}{\delta x} $$
+$$ \text{Co} = \frac{U \Delta t}{\Delta x} $$
 
 The flow velocity naturally varies across the domain and the Courant-number limitation must be kept in every cell. Therefore, we have to estimate the time step size based on known values. The cell size of this nearly equidistant mesh is specified in the `meshDict` in the `system` folder as $$\Delta x = 2.5 \times 10^{-3}\,\text{m}$$. The characteristic velocity in the flow domain $$U$$ can be approximated to be equal to the inlet velocity $$U_\text{in}$$. Although the actual flow velocity will probably be higher locally further downstream the inlet, this gives a sufficiently good estimate for the time step size $$\Delta t$$.
 
