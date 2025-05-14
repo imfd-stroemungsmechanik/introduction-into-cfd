@@ -99,6 +99,9 @@ At this point the mesh generation is complete. It consists of:
  - Background mesh with a cell size of $$2.5 \times 10^{-3}\,\text{m}$$.
  - Correct patch types for inlet, outlet, walls and front and back planes.
 
+{: .note }
+> OpenFOAM always operates in a 3 dimensional Cartesian coordinate system and all geometries are generated in 3 dimensions. OpenFOAM solves the case in 3 dimensions by default but can be instructed to solve in 2 dimensions by specifying a special `empty` boundary condition on boundaries normal to the 3rd dimension for which no solution is required. Since the created mesh is two-dimensional, it will have a single cell layer in $$z$$-direction with the patch `frontAndBackPlanes` of type `empty`.
+
 
 ## Mesh Quality
 
