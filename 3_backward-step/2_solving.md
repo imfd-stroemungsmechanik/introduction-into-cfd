@@ -10,13 +10,13 @@ nav_order: 2
 
 ## Starting the Solver
 
-In order to start the simulation, we have to execute corresponding the OpenFOAM application. As defined in the `controlDict`, the solver `pimpleFoam` will be used suitable for transient, incompressible, laminar or turbulent flows. This application can be started by typing the appropriate command while the terminal is located inside the case directory:
+In order to start the simulation, we have to execute corresponding the OpenFOAM application. As defined in the `controlDict`, the solver `pimpleFoam` will be used, suitable for transient, incompressible, laminar or turbulent flows. This application can be started by typing the appropriate command in the terminal from within the case directory:
 
 ```bash
 pimpleFoam
 ```
 
-The progress of the job is written to the terminal window. It tells the user the current time step, the equations beeing solved, initial and final residuals for all fields and should look like follows:
+The progress of the job is written to the terminal window. It tells the user the current time step, the equations being solved, initial and final residuals for all fields and should look like follows:
 
 ```
 Courant Number mean: 0.148717 max: 0.590908
@@ -60,13 +60,13 @@ functions
 
 By default, the residuals are only printed to the terminal window. In order to visualize the residuals to help judge convergence, a function object has been added to the `controlDict`. This function object of type `solverInfo` saves the initial residuals of the fields `(p U)`, so pressure and velocity, during runtime. Therefore, a new folder called `postProcessing` is automatically created inside the case folder. So in this example, the residuals are stored under the following path: `postProcessing/solverInfo/0/solverInfo.dat`.
 
-Once the simulation has finished and all the time directories are written out, the data written by the function objects can be analyzed. This data can typically be plotted in a diagram using Microsoft Excel, Python, Gnuplot or any other tool. In order to quickly evaluate the monitored results from the function objects, a script is added to the backward-step case directory called `create_plots.py`. Executing it will automatically create the diagramms for residuals and average inlet pressure after the run. By typing the following command in the terminal, the diagrams are created using Python and stored as png file:
+Once the simulation has finished and all the time directories are written out, the data written by the function objects can be analyzed. This data can typically be plotted in a diagram using Microsoft Excel, Python, Gnuplot or any other tool. In order to quickly evaluate the monitored results from the function objects, a script is added to the backward-step case directory called `create_plots.py`. Executing it will automatically create the diagrams for residuals and average inlet pressure after the run. By typing the following command in the terminal, the diagrams are created using Python and stored as png file:
 
 ```bash
 python3 create_plots.py
 ```
 
-This creates the following diagram in the case folder:
+This creates the following diagram of the residuals on the $$y$$-axis plotted against the simulation time on the $$x$$-axis in the case folder:
 
 ![Backward-facing step case residuals](figures/backward-step-residuals.png)
 

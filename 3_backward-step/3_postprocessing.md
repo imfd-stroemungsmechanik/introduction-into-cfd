@@ -29,7 +29,7 @@ To color the mesh by velocity magnitude (i.e. the velocity contour) of the flow,
 
 ![Backward-facing step paraview velocity contour settings](figures/paraview-menu-velocity-contour-settings.png)
 
-The velocity field looks like expected: The velocity magnitude at the inlet is about  $$1\,\text{m/s}$$. The flow detaches as it goes over the backwards-facing step and reattached further downstream. Due to the increase in cross-sectional area, the flow decelerates slightly.
+The velocity field looks as expected: The velocity magnitude at the inlet is about  $$1\,\text{m/s}$$. The flow detaches as it goes over the backward-facing step and reattaches further downstream. Due to the increase in cross-sectional area, the flow decelerates slightly.
 
 ![Backward-facing step paraview velocity contour](figures/paraview-results-velocity-contour.png)
 
@@ -58,21 +58,21 @@ The cutting plane should be centred at $$(0, 0, 0)$$ and its normal should be se
 
 ## Vector Plot (Glyph)
 
-We now wish to generate a vector glyph for velocity at the cutting plane. With the `slice1` module highlighted in the **Pipeline Browser**, the user should select the **Glyph** filter from the **Common Data and Analytics** menu. The roperties window panel should appear as shown in the following figure:
+We now wish to generate a vector glyph for velocity at the cutting plane. With the `slice1` module highlighted in the **Pipeline Browser**, the user should select the **Glyph** filter from the **Common Data and Analytics** menu. The **Properties** window panel should appear as shown in the following figure:
 
 ![Backward-facing step paraview glyph menu](figures/paraview-menu-glyph.png)
 
 
 In the resulting **Properties** panel, make sure the **Glyph Type** is set to **Arrow**, and the **Orientation Array** is the velocity field `U`. Then, set the **Scale Array** to `U` and **Vector Scale Mode** to **Scale by Magnitude**. This way, the size of the vectors will be scaled by the velocity magnitude and with a **Scaling Factor** of 0.01 and the vectors will be clearly visible. At this point you can click **Apply** to show the vector plot on top of the Cutting plane defined previously.
 
-The resulting vectors will be color coded by pressure, whereas a velocity color code would make much more sense. Therefore, the user should colour the glyphs by velocity magnitude which, as usual, is controlled by setting **Color by** `U` in the **Properties** panel. The user can also select **Show Color Legend** in **Edit Color Map**. Additionaly, the `slice1` module in the **Pipeline Browser** can be made invisible by clicking the **Eye** symbol next to the module name. The resulting output is shown in the following figure:
+The resulting vectors will be color coded by pressure, whereas a velocity color code would make much more sense. Therefore, the user should colour the glyphs by velocity magnitude which, as usual, is controlled by setting **Color by** `U` in the **Properties** panel. The user can also select **Show Color Legend** in **Edit Color Map**. Additionally, the `slice1` module in the **Pipeline Browser** can be made invisible by clicking the **Eye** symbol next to the module name. The resulting output is shown in the following figure:
 
 ![Backward-facing step paraview vector plot](figures/paraview-results-glyph-plot.png)
 
 
 ## Velocity Animation
 
-A good way to visualize the transient flow behaviour is an animation created with ParaView. For this, hide the vector plot and show the cut plane of the velocity magnitude. Then display the velocity magnitude in a range from $$(0 - 1.2) \, \text{m/s}$$. By clicking the **Play** button at the **VCR Controls** at the very top, it is possible to automatically go through every time step and get a quick glance of how the transient flow field looks like:
+A good way to visualize the transient flow behaviour is an animation created with ParaView. For this, hide the vector plot and show the cut plane of the velocity magnitude. Then display the velocity magnitude in a range from $$(0 - 1.2) \, \text{m/s}$$. By clicking the **Play** button at the **VCR Controls** at the very top, it is possible to automatically go through every time step and see what the transient flow field looks like:
 
 ![Backward-facing step paraview velocity animation](figures/paraview-results-animation.gif)
 

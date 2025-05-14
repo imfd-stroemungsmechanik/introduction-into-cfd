@@ -15,7 +15,7 @@ The objectives for this tutorial are as follows:
 - Set material properties based on Reynolds-number,
 - Estimate the correct time step size based on Courant number,
 - Run a transient, incompressible simulation with `pimpleFoam`,
-- Perform a mesh dependency stucy,
+- Perform a mesh dependency study,
 - Adapt the discretization schemes, and
 - Visualize the velocity field in ParaView.
 

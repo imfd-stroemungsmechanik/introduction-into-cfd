@@ -9,7 +9,7 @@ nav_order: 4
 
 ## Introduction
 
-The simulation setup of the incompressible flow over a backward facing step had unresolved issues, namely:
+The simulation setup of the incompressible flow over a backward-facing step had unresolved issues, namely:
  - end time of 1 second might be too short,
  - influence of the mesh resolution was not investigated,
  - spatial and temporal accuracy was only of first order.
@@ -31,7 +31,7 @@ Change the `endTime` in the `controlDict` in the `system` directory from 1 to 2 
 
 ### 2. Increase Mesh Resolution
 
-Create a copy of the  `backward-step` case directory for a second simulation with a refined mesh. Reduce the maximum cell size from $$2.5 \times 10^{-3} \, \text{m}$$ to $$1.25 \times 10^{-3}\,\text{m}$$ in the `meshDict` in the `system` directory. Make sure that the time step size in the `controlDict` is also reduced accordingly to maintain a Courant number of below 1. Rerun the simulation.
+Create a copy of the `backward-step` case directory for a second simulation with a refined mesh. Reduce the maximum cell size from $$2.5 \times 10^{-3} \, \text{m}$$ to $$1.25 \times 10^{-3}\,\text{m}$$ in the `meshDict` in the `system` directory. Make sure that the time step size in the `controlDict` is also reduced accordingly to maintain a Courant number of below 1. Rerun the simulation.
 
 #### Questions
 
@@ -39,9 +39,9 @@ Create a copy of the  `backward-step` case directory for a second simulation wit
 2. How did the total computational time change between the coarse and the medium-sized mesh?
 
 
-### 3. Second Order Discretization
+### 3. Higher Order Discretization
 
-Create a copy of the previously created medium-sized mesh setup. In `fvSchemes` in the `system` folder, change the temporal discretiazion from first order `Euler` to second order `backward` and the discretization of the convective term in the momentum equation from first order `Gauss upwind` to second order `Gauss linear`. Rerun the simulation.
+Create a copy of the previously created medium-sized mesh setup. In `fvSchemes` in the `system` folder, change the temporal discretization from first order `Euler` to second order `backward` and the discretization of the convective term in the momentum equation from first order `Gauss upwind` to second order `Gauss linear`. Rerun the simulation.
 
 #### Questions
 

@@ -18,7 +18,7 @@ The objectives for this tutorial are as follows:
 
 ## Overview
 
-This tutorial will describe how to either import a existing mesh to OpenFOAM or create a mesh within OpenFOAM itself. The first mesh is a two-dimensional elbow named `elbow.msh` created with ANSYS ICEM CFD. The second mesh is a hexahedral-dominated mesh of group of buildings created with `cartesianMesh`. Once the meshes have been either imported or created, their quality will be checked using `checkMesh`. Finally, the meshes will be visualized with ParaView.
+This tutorial will describe how to either import an existing mesh to OpenFOAM or create a mesh within OpenFOAM itself. The first mesh is a two-dimensional elbow named `elbow.msh` created with ANSYS ICEM CFD. The second mesh is a hexahedral-dominated mesh of a group of buildings created with `cartesianMesh`. Once the meshes have been either imported or created, their quality will be checked using `checkMesh`. Finally, the meshes will be visualized with ParaView.
 
 ## Preparation
 

@@ -44,7 +44,7 @@ The mesh for this case has been created using an external software and is stored
 fluentMeshToFoam elbow.msh
 ```
 
-Here, `fluentMeshToFoam` is the executable for importing the mesh and `elbow.msh` is the argument pointing towards the mesh file inside the `elbow` case folder. The utlitity sucessfully imports the mesh and confirms this with the output:
+Here, `fluentMeshToFoam` is the executable for importing the mesh and `elbow.msh` is the argument pointing towards the mesh file inside the `elbow` case folder. The utlitity successfully imports the mesh and confirms this with the output:
 
 ```
 ...
@@ -125,7 +125,7 @@ Checking patch topology for multiply connected surfaces...
     inlet-bottom        4        10       ok (non-closed singly connected)  
     outlet              8        18       ok (non-closed singly connected)  
     wall-right          34       70       ok (non-closed singly connected)  
-     frontAndBackPlanes  1836     1074     ok (non-closed singly connected)  
+    frontAndBackPlanes  1836     1074     ok (non-closed singly connected)  
     
 Checking geometry...
     Overall domain bounding box (0 -4.53853 -0.937738) (64 64 0.937738)
@@ -151,9 +151,9 @@ End
 This gives us all relevant mesh statistics and quality criteria of the mesh:
  - `Mesh stats` contains all general statistics about the mesh, such as number of points, faces, cells, and patches, as well as cell types.
  - `Checking topology` checks for the correct topology of the mesh both for cells and patches.
- - `Checking geometry` reveals information regarding mesh quality with statistics such as maximum non-orthogonality, aspect ration, and skewness, repectively.
+ - `Checking geometry` reveals information regarding mesh quality with statistics such as maximum non-orthogonality, aspect ratio, and skewness, respectively.
 
-All critital mesh quality statistics are within the tolerable limits and the final output `Mesh OK.` indicates that no critical problems or errors were found during `checkMesh`. Therefore, we can continue with this mesh and proceed with the simulation.
+All critical mesh quality statistics are within the tolerable limits and the final output `Mesh OK.` indicates that no critical problems or errors were found during `checkMesh`. Therefore, we can continue with this mesh and proceed with the simulation.
 
 
 
@@ -203,6 +203,6 @@ In the **Pipeline Browser** on the left, the user can see that ParaView has open
 ## Conclusion
 
 This concludes the first case in the **Meshing Tutorial**. We have:
-- Successfully import a **ANSYS Fluent** mesh file `*.msh` into the OpenFOAM case structure using the command `fluentMeshToFoam`,
+- Successfully imported a **ANSYS Fluent** mesh file `*.msh` into the OpenFOAM case structure using the command `fluentMeshToFoam`,
 - Checked the mesh quality with `checkMesh`, and
 - Visualized the mesh with **ParaView**.

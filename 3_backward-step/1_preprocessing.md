@@ -179,7 +179,7 @@ In this tutorial, the Reynolds-number at the inlet should be 1250. Based on the 
 
 $$ \text{Re} = \frac{U_\text{in} \, H_\text{in}}{\nu} \quad \rightarrow \quad \nu = \frac{U_\text{in} \, H_\text{in}}{\text{Re}} = 2 \times 10^{-5}\,\text{m}^2\text{/s} $$
 
-This value along side the rhological model of the fluid (here: Newtonian fluid) has to be specified in the `transportProperties` dictionary as follows:
+This value along side the rheological model of the fluid (here: Newtonian fluid) has to be specified in the `transportProperties` dictionary as follows:
 
 ```
 viscosityModel  Newtonian;
@@ -310,7 +310,7 @@ laplacianSchemes
 The interpolation of variables from cell centers to face centers is specified with the keyword `interpolationSchemes`. Here, all interpolation is done using a second order **central differencing scheme** called `linear`.
 
 ```
-laplacianSchemes
+interpolationSchemes
 {
     default         linear;
 }
