@@ -4,13 +4,12 @@ title: 3. Backward-Step
 nav_order: 4
 ---
 
-# Meshing in OpenFOAM
+# Backward-facing Step
 
 ## Objectives
 
 The objectives for this tutorial are as follows:
 
-- Recap of the OpenFOAM case structure,
 - Create a two-dimensional mesh in OpenFOAM with `cartesian2DMesh` and check its quality,
 - Set material properties based on Reynolds-number,
 - Estimate the correct time step size based on Courant number,
@@ -21,7 +20,7 @@ The objectives for this tutorial are as follows:
 
 ## Overview
 
-This tutorial will describe how to pre-process, run and post-process a case involving a transient, isothermal, incompressible flow over a two-dimensional backward-facing step. The geometry is shown in the following figure with an inlet on the left, stationary walls on the top and bottom, and an outlet at the right. The flow will be solved using the OpenFOAM solver `pimpleFoam` the suitable for laminar and turbulent, isothermal, incompressible flows.
+This tutorial will describe how to pre-process, run and post-process a case involving a transient, isothermal, incompressible flow over a two-dimensional backward-facing step. The geometry is shown in the following figure with an inlet on the left, stationary walls on the top and bottom, and an outlet at the right. The flow will be solved using the OpenFOAM solver `pimpleFoam` the suitable for laminar and turbulent, isothermal, incompressible, transient flows.
 
 ![Backward-facing step case geometry](figures/backward-step-geometry.png)
 
