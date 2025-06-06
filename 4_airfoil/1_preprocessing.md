@@ -172,7 +172,6 @@ Mesh stats
     face zones:       0
     cell zones:       0
 
-
 ...
 
 Checking geometry...
@@ -203,9 +202,9 @@ This gives us all relevant mesh statistics and quality criteria of the mesh:
 
 As this is a hexa-dominant, unstructured mesh with inflation layers on the airfoil surface, the aspect ratio is relatively high, but other mesh quality metrics are very good:
 
-- max cell aspect ratio of 160.597,
-- a maximum mesh non-orthogonality of 31.8675, and
-- a max cell skewness of 1.32345.
+- max cell aspect ratio of 160.6,
+- a maximum mesh non-orthogonality of 31.9, and
+- a max cell skewness of 1.32.
 
 The final output `Mesh OK.` indicates that no critical problems or errors were found during `checkMesh`. Therefore, we can continue with this mesh and proceed with the simulation.
 
@@ -214,9 +213,7 @@ The final output `Mesh OK.` indicates that no critical problems or errors were f
 
 ## Physical Properties
 
-The physical properties for the fluid, such as kinematic viscosity, are stored in the `transportProperties` file in the `constant` directory.
-
-In this tutorial, air is considered as fluid, which as a kinematic viscosity of $$\nu = 10^{-5}\,\text{m}^2/\text{s}$$. Thus, the `transportProperties` dictionary reads:
+The physical properties for the fluid, such as kinematic viscosity, are stored in the `transportProperties` file in the `constant` directory. In this tutorial, air is considered as fluid, which as a kinematic viscosity of $$\nu = 10^{-5}\,\text{m}^2/\text{s}$$. Thus, the `transportProperties` dictionary reads:
 
 ```
 viscosityModel  Newtonian;
@@ -253,6 +250,8 @@ where each of the values corresponds to the power of each of the base units of m
 | 6         | Current               | ampere    |
 | 7         | Luminous intensity    | candela   |
 
+So for the example of kinematic pressure, the unit is $$\text{Length}^2 \times \text{Time}^{-2}$$.
+
 ### Internal Field
 
 The internal field stores all the cell center values for the complete mesh. At the beginning of a simulation, this often corresponds to a uniform field as initialization. As teh simulation is running, the internal field will become a non-uniform field with individual field values for each cell.
@@ -260,3 +259,54 @@ The internal field stores all the cell center values for the complete mesh. At t
 ### Boundary Field
 
 The boundary field data consists of a list of all patch names, each with an associated patch type and the corresponding entries.
+
+
+
+## Pressure and Velocity Boundaries
+
+We want to investigate the flow around the airfoil at a Reynolds-number of $$10^5$$. Therefore, we have to use a pressure-velocity boundary setup, where velocity is defined at the inlet while pressure is set at the outlet.
+
+### Velocity Field
+
+The velocity field as a unit of meter per second with an internal field of $$(0 0 0)$$, indicating a fluid at rest. The velocity at the inlet has to be determined using the Reynolds-number with an airfoil length of $$L = 1\,\text{m}$$ and a kinematic viscosity of $$\nu = 10^{-5}\,\text{m}^2\text{/s}$$:
+
+$$ \text{Re} = \frac{U_\text{in} L}{\nu} \quad \rightarrow \quad U_\text{in} = \frac{\text{Re} \, \nu}{L} = 1\,\text{m/s} $$
+
+Since the velocity at the inlet is assumed to be constant, a `fixedValue` boundary condition is employed with a uniform velocity of $$1\,\text{m/s}$$ in $$x$$-direction. The outlet is considered a zero-gradient boundary condition for velocity. The flow is considered viscid, which results in a no-slip condition for velocity at the airfoil, e.g. the velocity is zero directly at the airfoil surface. In order to minimize the effect of the top and bottom boundary, it is considered a slip wall, where the velocity gradient normal to the wall is zero. Finally, front and back of the computational domain are `empty` indicating a two-dimensional setup.
+
+The concrete file for velocity in the `0` directory looks as follows:
+
+```
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    inlet
+    {
+        type            fixedValue;
+        value           uniform (1 0 0);
+    }
+
+    outlet
+    {
+        type            zeroGradient;
+    }
+
+    airfoil
+    {
+        type            noSlip;
+    }
+
+    topAndBottom
+    {
+        type            slip;
+    }
+
+    frontAndBack
+    {
+        type            empty;
+    }
+}
+```
