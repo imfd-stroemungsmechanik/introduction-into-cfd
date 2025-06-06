@@ -50,7 +50,7 @@ The *relevant* files for this tutorial case are:
 
 The hexahedral-dominant, two-dimensional mesh is created automatically with the meshing utility `cartesian2DMesh` from a surface geometry file inside the `geometries` directory. Different geometries are provided for varying angle of attack of the airfoil.
 
-The airfoil has an overall length of $$1\,\text{m}$$. Therefore, the mesh has a maximum cell size of $$0.25\,\text{m}$$ and is refined towards the airfoil with a total of 5 circular, refinement regions around the airfoil. This adds 5 additional refinment levels resulting in a smallest cell size of about $$8\,\text{mm}$$.
+The airfoil has an overall length of $$1\,\text{m}$$. Therefore, the mesh has a maximum cell size of $$0.25\,\text{m}$$ and is refined towards the airfoil with a total of 5 circular, refinement regions around the airfoil with radius of $$1\,\text{m}$$ for the highest mesh refinement up to $$5\,\text{m}$$ for the lowest mesh refinement. This adds 5 additional refinment levels resulting in a smallest cell size of about $$8\,\text{mm}$$.
 
 ```
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -139,3 +139,124 @@ At this point the mesh generation is complete. It consists of:
 
 {: .note }
 > OpenFOAM always operates in a 3 dimensional Cartesian coordinate system and all geometries are generated in 3 dimensions. OpenFOAM solves the case in 3 dimensions by default but can be instructed to solve in 2 dimensions by specifying a special `empty` boundary condition on boundaries normal to the 3rd dimension for which no solution is required. Since the created mesh is two-dimensional, it will have a single cell layer in $$z$$-direction with the patch `frontAndBackPlanes` of type `empty`.
+
+
+
+## Mesh Quality
+
+Once the mesh has been created, it is always recommended to check the mesh statistics and quality. This can easily be done using the utility `checkMesh` from within the `backward-step` folder:
+
+```
+checkMesh
+```
+
+The most relevant output is as follows:
+
+```
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Create polyMesh for time = 0
+
+Time = 0s
+
+Mesh stats
+    points:           247780
+    internal points:  0
+    faces:            491906
+    internal faces:   245950
+    cells:            122672
+    faces per cell:   6.01487
+    boundary patches: 6
+    point zones:      0
+    face zones:       0
+    cell zones:       0
+
+
+...
+
+Checking geometry...
+    Overall domain bounding box (-10 -10 -0.5) (10 10 0.5)
+    Mesh has 2 geometric (non-empty/wedge) directions (1 1 0)
+    Mesh has 2 solution (non-empty) directions (1 1 0)
+    All edges aligned with or perpendicular to non-empty directions.
+    Boundary openness (5.92486e-18 -2.01429e-18 -3.98592e-14) OK.
+    Max cell openness = 4.42828e-15 OK.
+    Max aspect ratio = 160.597 OK.
+    Minimum face area = 4.49227e-08. Maximum face area = 0.27446.  Face area magnitudes OK.
+    Min volume = 4.49227e-08. Max volume = 0.0739181.  Total volume = 399.917.  Cell volumes OK.
+    Mesh non-orthogonality Max: 31.8675 average: 1.87581
+    Non-orthogonality check OK.
+    Face pyramids OK.
+    Max skewness = 1.32345 OK.
+    Coupled point location match (average 0) OK.
+
+Mesh OK.
+    
+End
+```
+
+This gives us all relevant mesh statistics and quality criteria of the mesh:
+
+- The mesh consists of 122672 cells,
+- has 6 different boundary patches.
+
+As this is a hexa-dominant, unstructured mesh with inflation layers on the airfoil surface, the aspect ratio is relatively high, but other mesh quality metrics are very good:
+
+- max cell aspect ratio of 160.597,
+- a maximum mesh non-orthogonality of 31.8675, and
+- a max cell skewness of 1.32345.
+
+The final output `Mesh OK.` indicates that no critical problems or errors were found during `checkMesh`. Therefore, we can continue with this mesh and proceed with the simulation.
+
+
+
+
+## Physical Properties
+
+The physical properties for the fluid, such as kinematic viscosity, are stored in the `transportProperties` file in the `constant` directory.
+
+In this tutorial, air is considered as fluid, which as a kinematic viscosity of $$\nu = 10^{-5}\,\text{m}^2/\text{s}$$. Thus, the `transportProperties` dictionary reads:
+
+```
+viscosityModel  Newtonian;
+
+nu              1e-5;
+
+// ************************************************************************* //
+```
+
+
+
+## Boundary Conditions
+
+Once the mesh generation is complete, the initial and boundary conditions for the fields are set up for this case. The case is set up to start at time $$t=0$$, so the initial field data is stored in a `0` sub-directory. This folder contains 2 files, `p` and `U`, one for each of the pressure and velocity fields whose initial values and boundary conditions must be set.
+
+Each file has three primitive entries for a given variable: (1) Specification of the dimensions, (2) the internal field, and (3) the boundary field.
+
+### Dimensions
+
+Specifies the dimensions of the field. In general, algebraic operations must be performed on properties using consistent units of measurement; in particular, addition, subtraction and equality are only physically meaningful for properties of the same dimensional units. The dimension set in OpenFOAM consists of 7 scalars delimited by square backets, e.g. for kinematic pressure:
+
+```
+[0 2 -2 0 0 0 0]
+```
+where each of the values corresponds to the power of each of the base units of measurement listed in the following table:
+
+| **No.**   | Property              | SI unit   |
+| --------- | --------------------- | --------- |
+| 1         | Mass                  | kilogram  |
+| 2         | Length                | meter     |
+| 3         | Time                  | second    |
+| 4         | Temperature           | kelvin    |
+| 5         | Quantity              | mole      |
+| 6         | Current               | ampere    |
+| 7         | Luminous intensity    | candela   |
+
+### Internal Field
+
+The internal field stores all the cell center values for the complete mesh. At the beginning of a simulation, this often corresponds to a uniform field as initialization. As teh simulation is running, the internal field will become a non-uniform field with individual field values for each cell.
+
+### Boundary Field
+
+The boundary field data consists of a list of all patch names, each with an associated patch type and the corresponding entries.

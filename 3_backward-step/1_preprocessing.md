@@ -151,8 +151,6 @@ Checking geometry...
     Max skewness = 0.68929 OK.
     Coupled point location match (average 0) OK.
 
-
-
 Mesh OK.
     
 End
