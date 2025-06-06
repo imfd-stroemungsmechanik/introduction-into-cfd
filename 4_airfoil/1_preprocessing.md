@@ -268,11 +268,11 @@ We want to investigate the flow around the airfoil at a Reynolds-number of $$10^
 
 ### Velocity Field
 
-The velocity field as a unit of meter per second with an internal field of $$(0 0 0)$$, indicating a fluid at rest. The velocity at the inlet has to be determined using the Reynolds-number with an airfoil length of $$L = 1\,\text{m}$$ and a kinematic viscosity of $$\nu = 10^{-5}\,\text{m}^2\text{/s}$$:
+The velocity field as a unit of $$\text{meter} \times \text{second}^{-1}$$ with an internal field of $$(0 0 0)$$, indicating a fluid at rest. The velocity at the inlet has to be determined using the Reynolds-number with an airfoil length of $$L = 1\,\text{m}$$ and a kinematic viscosity of $$\nu = 10^{-5}\,\text{m}^2\text{/s}$$:
 
 $$ \text{Re} = \frac{U_\text{in} L}{\nu} \quad \rightarrow \quad U_\text{in} = \frac{\text{Re} \, \nu}{L} = 1\,\text{m/s} $$
 
-Since the velocity at the inlet is assumed to be constant, a `fixedValue` boundary condition is employed with a uniform velocity of $$1\,\text{m/s}$$ in $$x$$-direction. The outlet is considered a zero-gradient boundary condition for velocity. The flow is considered viscid, which results in a no-slip condition for velocity at the airfoil, e.g. the velocity is zero directly at the airfoil surface. In order to minimize the effect of the top and bottom boundary, it is considered a slip wall, where the velocity gradient normal to the wall is zero. Finally, front and back of the computational domain are `empty` indicating a two-dimensional setup.
+Since the velocity at the inlet is assumed to be constant, a `fixedValue` boundary condition is employed with a uniform velocity of $$1\,\text{m/s}$$ in $$x$$-direction. The outlet is considered a zero-gradient boundary condition for velocity, which is named `zeroGradient` in OpenFOAM. The flow is considered viscid, which results in a `noSlip` condition for velocity at the airfoil, e.g. the velocity directly at the airfoil surface is zero. In order to minimize the effect of the top and bottom patch, it is considered a `slip` wall, where the velocity gradient normal to the wall is zero and thus no boundary layer forms. Finally, front and back of the computational domain are `empty` indicating a two-dimensional setup.
 
 The concrete file for velocity in the `0` directory looks as follows:
 
@@ -288,20 +288,67 @@ boundaryField
         type            fixedValue;
         value           uniform (1 0 0);
     }
-
     outlet
     {
         type            zeroGradient;
     }
-
     airfoil
     {
         type            noSlip;
     }
-
     topAndBottom
     {
         type            slip;
+    }
+    frontAndBack
+    {
+        type            empty;
+    }
+}
+```
+
+
+
+### Pressure Field
+
+The kinematic pressure field as a unit of $$\text{meter}^2 \times \text{second}^{-2}$$ an uniform internal field of 0. Since this is a pressure-velocity configuration, the pressure at the inlet is defined as zero-gradient boundary condition called `zeroGradient` and the static kinematic pressure at the outlet is specified uniformly as zero using a `fixedValue` boundary condition. On wall patches, pressure is always set to `zeroGradient` and front and back of the computational domain are `empty` consistent with the velocity boundary.
+
+{: .note }
+> OpenFOAM often uses a relative kinematic pressure of zero as initial value and at the outlet boundary as the absolute value of pressure is not of relevance for incompressible simulations.
+
+The concrete file for pressure in the `0` directory looks as follows:
+
+```
+dimensions      [0 2 -2 0 0 0 0];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    inlet
+    {
+        type            zeroGradient;
+    }
+
+    outlet
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+
+    airfoil
+    {
+        type            zeroGradient;
+    }
+
+    top
+    {
+        type            zeroGradient;
+    }
+
+    bottom
+    {
+        type            zeroGradient;
     }
 
     frontAndBack
