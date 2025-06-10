@@ -114,7 +114,7 @@ The most important settings here are the boundaries, on which the forces are eva
 $$
 C_D = \frac{F_D}{0.5 \, A_\text{ref} \, u_\text{inf}^2}
 $$
-with the drag force on the specified boundaries $F_D$.
+with the drag force on the specified boundaries $$F_D$$.
 
 Furthermore, the axis direction for drag (keyword `dragDir` with direction along the $$x$$-axis) and lift (keyword `liftDir` with direction along the $$y$$-axis) have to match the orientation of the airfoil. Using this function object, OpenFOAM automatically computes the drag forces acting on the airfoil and normalizes the result using the drag coefficient equation.
 

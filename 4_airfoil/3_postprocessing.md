@@ -20,8 +20,6 @@ The solution at the iteration 547 can be viewed by using the **VCR Controls** at
 
 ![Backward-facing step paraview vcr controls](figures/paraview-menu-VCR-controls.png)
 
-## Coloring Surfaces by Flow Property
-
 To color the mesh by velocity magnitude (i.e. the velocity contour) of the flow, the following settings must be selected in the **Properties** panel, as descriped in the following figure:
 1. Select **Surface** from the **Representation** menu,
 2. Select **Coloring** by velocity magnitude U at the cell centers, and
@@ -32,3 +30,25 @@ To color the mesh by velocity magnitude (i.e. the velocity contour) of the flow,
 We can clearly see the flow around the airfoil with the stagnation point at the leading edge (on the left), the regions of higher flow velocity at the upper and lower airfoil surface, and the small region of lower flow velocity in the wake.
 
 ![Backward-facing step paraview velocity contour](figures/airfoil-results-velocity-contour.png)
+
+
+## Force Coefficients
+
+We have used the force coefficients to judge convergence. However, we can also use the values for validation. However, the force coefficients plot is not suited for that since we cannot get exact values from it:
+
+![Airfoil case force coefficients](figures/airfoil-results-forceCoeffs.png)
+
+Instead, we can open the file `postProcessing/forceCoeffs/0/coefficient.dat` and get the raw coefficients and compare it with experimental or analytical values. Compared to the XFoil airfoil database, the results look like follows:
+
+
+| Coefficient   | Simulation    | XFoil     |
+| ------------- | --------------| --------- |
+| Drag          | 0.0169        | 0.0169    |
+| Lift          | -0.0007       | 0.0000    |
+
+The results reveal a very good agreement for the NACA 0012 airfoil simulation at zero angle of attack.
+
+
+## Conclusion
+
+This concludes the third seminar on the simulation of incompressible, laminar flow over around an airfoil. A two-dimensional mesh was generated using `cartesian2DMesh` based on a geometry file. The inlet boundary condition for velocity was adjusted to match a specified Reynolds number. The simulation was then run using `simpleFoam`, and residuals and force coefficients were plotted. Finally, the flow field was visualized in ParaView.
