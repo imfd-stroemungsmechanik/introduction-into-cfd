@@ -122,3 +122,4 @@ Similar to the residual plot, a diagram for drag and lift coefficient over the n
 
 ![Airfoil case force coefficients](figures/airfoil-results-forceCoeffs.png)
 
+Drag and lift coefficient converge nicely and are roughly constant after 200 iterations. This supports the claim of a converged solution together with the residuals.
