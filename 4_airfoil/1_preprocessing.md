@@ -381,7 +381,7 @@ In this tutorial case, we are using the solver `simpleFoam`, a pressure-based so
 
 ### Start and End Times
 
-The start/stop times and the time step for the run must be set. In this tutorial the run starts at time 0, which means that OpenFOAM needs to read field data from a directory named 0. Therefore we set the `startFrom` keyword to `startTime` and then specify the `startTime` keyword to be `0`. The simulation should run until a steady state solution is reached. Since it is unknown how many iterations are needed for this, it is assumed that 1000 iterations are sufficient. Therefore, the `stopAt` entry is set to `endTime` and the `endTime` entry to `1000`.
+In this tutorial the run starts at time 0, which means that OpenFOAM needs to read field data from a directory named 0. Therefore we set the `startFrom` keyword to `startTime` and then specify the `startTime` keyword to be `0`. The simulation should run until a steady state solution is reached. Since it is unknown how many iterations are needed for this, it is assumed that 1000 iterations are sufficient. Therefore, the `stopAt` entry is set to `endTime` and the `endTime` entry to `1000`.
 
 The corresponding lines in the `controlDict` look as follows:
 
@@ -395,23 +395,6 @@ stopAt          endTime;
 endTime         1000;
 ```
 
-
-
-
-
-The start/stop times and the time step for the run must be set. OpenFOAM oﬀers great flexibility with time/iteration control. In this tutorial the run starts at time 0, which means that OpenFOAM needs to read field data from a directory named 0. Therefore we set the `startFrom` keyword to `startTime` and then specify the `startTime` keyword to be 0. The simulation should run until a time of 1 second and then stop. Therefore, the `stopAt` entry is set to `endTime` and the `endTime` entry itself is set to `1`.
-
-The corresponding lines in the `controlDict` look as follows:
-
-```
-startFrom       startTime;
-
-startTime       0;
-
-stopAt          endTime;
-
-endTime         1;
-```
 
 
 ### Time step size

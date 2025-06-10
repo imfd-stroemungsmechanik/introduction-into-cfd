@@ -14,7 +14,7 @@ As soon as results are written to time directories, they can be viewed using Par
 ```bash
 paraFoam &
 ```
-To prepare ParaView to display the data of interest, the data at the required time step of 1 second must be loaded. If the case was run while ParaView was open, the output data in time directories will not be automatically loaded within ParaView. To load the data the user should click **Refresh** at the top **Properties** window (scroll up the panel if necessary).
+To prepare ParaView to display the data of interest, the data at the final time step of 1 second must be loaded. If the case was run while ParaView was open, the output data in time directories will not be automatically loaded within ParaView. To load the data the user should click **Refresh** at the top **Properties** window (scroll up the panel if necessary).
 
 The solution at the last time step of $$t = 1\,\text{s}$$ can be viewed by using the **VCR Controls** at the very top of the ParaView window and click the button for **Last Frame**
 
@@ -29,7 +29,10 @@ To color the mesh by velocity magnitude (i.e. the velocity contour) of the flow,
 
 ![Backward-facing step paraview velocity contour settings](figures/paraview-menu-velocity-contour-settings.png)
 
-The velocity field looks as expected: The velocity magnitude at the inlet is about  $$1\,\text{m/s}$$. The flow detaches as it goes over the backward-facing step and reattaches further downstream. Due to the increase in cross-sectional area, the flow decelerates slightly.
+The velocity field looks as expected: The velocity magnitude at the inlet is about  $$1\,\text{m/s}$$. The flow separates at the step corner and there is a recirculation zone immediately downstream of the step. The flow rattaches to the bottom wall further downstream, after which a recovery region follows.  The typical reattachment length is 6-8 step heights for a Reynolds number of 1250.
+
+
+
 
 ![Backward-facing step paraview velocity contour](figures/paraview-results-velocity-contour.png)
 

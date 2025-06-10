@@ -21,7 +21,7 @@ In order to resolve these issues, additional simulations should be performed.
 
 ### 1. Increase End Time
 
-Change the `endTime` in the `controlDict` in the `system` directory from 1 to 2 seconds and rerun the simulations.
+Change the `endTime` in the `controlDict` in the `system` directory from 1 to 2 seconds and rerun the simulation.
 
 #### Questions
 
@@ -31,7 +31,14 @@ Change the `endTime` in the `controlDict` in the `system` directory from 1 to 2 
 
 ### 2. Increase Mesh Resolution
 
-Create a copy of the `backward-step` case directory for a second simulation with a refined mesh. Reduce the maximum cell size from $$2.5 \times 10^{-3} \, \text{m}$$ to $$1.25 \times 10^{-3}\,\text{m}$$ in the `meshDict` in the `system` directory. Make sure that the time step size in the `controlDict` is also reduced accordingly to maintain a Courant number of below 1. Rerun the simulation.
+Create a copy of the `backward-step` case directory for a second simulation with a refined mesh:
+
+```bash
+cp -r backward-step backward-step-refined
+cd backward-step-refined
+```
+
+Reduce the maximum cell size (`maxCellSize`) from $$2.5 \times 10^{-3} \, \text{m}$$ to $$1.25 \times 10^{-3}\,\text{m}$$ in the `meshDict` in the `system` directory. Make sure that the time step size `deltaT` in the `controlDict` is also reduced accordingly from $$6.25 \, \times 10^{-4}\,\text{s}$$ to $$3.125 \, \times 10^{-4}\,\text{s}$$ to maintain a Courant number of below 1. Regenerate the mesh with `cartesian2DMesh` and rerun the simulation.
 
 #### Questions
 
