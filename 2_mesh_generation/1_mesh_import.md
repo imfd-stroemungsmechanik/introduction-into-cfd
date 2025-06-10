@@ -44,7 +44,7 @@ The mesh for this case has been created using an external software and is stored
 fluentMeshToFoam elbow.msh
 ```
 
-Here, `fluentMeshToFoam` is the executable for importing the mesh and `elbow.msh` is the argument pointing towards the mesh file inside the `elbow` case folder. The utlitity successfully imports the mesh and confirms this with the output:
+Here, `fluentMeshToFoam` is the executable for importing the mesh and `elbow.msh` is the argument pointing towards the mesh file inside the `elbow` case folder. The utility successfully imports the mesh and confirms this with the output:
 
 ```
 ...
@@ -73,7 +73,7 @@ OpenFOAM is designed as a code for 3D space and defines all meshes as such. Howe
 
 ## Mesh quality
 
-After importing or generating a computational grid it is always recommended to check the mesh statistics and quality criteria. This can easily be done using the utility `checkMesh` from within the `elbow` folder. Just type in the terminal:
+After importing or generating a computational grid, it is always recommended to check the mesh statistics and quality criteria. This can easily be done using the utility `checkMesh` from within the `elbow` folder. Just type in the terminal:
 
 ```bash
 checkMesh

@@ -9,7 +9,7 @@ nav_order: 2
 
 ## Introduction
 
-This tutorial explains how the OpenFOAM meshing tool `cartesianMesh` is used to create unstructured, hexahedral-dominated mesh of a set of buildings. At the end, the mesh will be visualized using ParaView. The geometry of the case with the corresponding patch names looks as follows:
+This tutorial explains how the OpenFOAM meshing tool `cartesianMesh` is used to create unstructured, hexahedral-dominant mesh of a set of buildings. At the end, the mesh will be visualized using ParaView. The geometry of the case with the corresponding patch names looks as follows:
 
 ![Building case geometry](figures/buildings-geometry.png)
 
@@ -40,7 +40,7 @@ The *relevant* files for this tutorial case are:
 
 ## Automated Mesh Generation
 
-The `cartesianMesh` utility automatically generates a hexahedral-dominant 3-dimensional mesh from a user-provided surface geometries. Supported surface formats are, among others, Stereolithography (STL) or Wavefront Object (OBJ). The meshing process is as follows:
+The `cartesianMesh` utility automatically generates a hexahedral-dominant 3-dimensional mesh from a user-provided surface geometry. Supported surface formats are, among others, Stereolithography (STL) or Wavefront Object (OBJ). The meshing process is as follows:
  1. A structured background mesh is generated based on a user-defined maximum cell size.
  2. Local mesh refinement is applied on individual patches or regions within the solution domain (optional).
  3. The cells are snapped to the provided geometry to form a smooth mesh.
@@ -62,7 +62,7 @@ These two settings are at least required for creating a mesh:
  - `surfaceFile`: Name of the geometry file in the case folder, here `geometry.obj` which is located in the OpenFOAM case folder.
  - `maxCellSize`: Maximum cell size in meters for creating the background mesh.
 
-With this minimal example, the unstructured hexahedral-dominated mesh can be created using the following command:
+With this minimal example, the unstructured hexahedral-dominant mesh can be created using the following command:
 
 ```bash
 cartesianMesh
@@ -103,7 +103,7 @@ This setting can be summarized as follows:
 {: .tip }
 > It is possible to refine multiple patches at once by adding their respective refinement settings based on patch the name to the `localRefinement` entry.
 
-So in this case, the cells at the patch `buildings` are refined twice (resulting cell size is then $$10/2^2 = 2.5\,\text{m}$$) and the refinement reaches out 10 meters into the volume mesh. In order to create the new mesh with the updated `meshDict`, the `cartesianMesh` utility has to be executed once again:
+So in this case, the cells at the patch `buildings` are refined twice (resulting cell size is then $$(10\,\text{m})/2^2 = 2.5\,\text{m}$$) and the refinement reaches out 10 meters into the volume mesh. In order to create the new mesh with the updated `meshDict`, the `cartesianMesh` utility has to be executed once again:
 
 ```bash
 cartesianMesh
@@ -114,12 +114,12 @@ cartesianMesh
 
 Once the mesh has been recreated, the visualization in ParaView can be updated by clicking the Refresh button the Properties Panel. The following figure shows the resulting surface mesh close to the buildings with a significantly improved resolution:
 
-![Building mesh with surface refinement](figures/buildings-surface-mesh-step-2.jpeg)
+![Building mesh with surface-based refinement](figures/buildings-surface-mesh-step-2.jpeg)
 
 
 ### Region-based mesh refinement
 
-Although the surface of the buildings is refined well, the wake of the buildings is still too coarse to resolve the expected flow structures. This issue cannot be resolved by increasing the refinement thickness of the surface-based refinemt as this would result in a disproportionately large mesh. Therefore, a refinement region must be defined covering the wake, in which the mesh will also be refined. This can be accomplished by adding the following lines to `meshDict` below the previous entries:
+Although the surface-based refinement around the buildings is adequate, the wake of the buildings is still too coarse to resolve the expected flow structures. This issue cannot be resolved by increasing the refinement thickness of the surface-based refinement as this would result in a disproportionately large mesh. Therefore, a refinement region must be defined covering the wake, in which the mesh will also be refined. This can be accomplished by adding the following lines to `meshDict` below the previous entries:
 
 ```
 objectRefinements
