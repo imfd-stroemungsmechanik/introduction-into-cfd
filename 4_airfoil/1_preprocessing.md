@@ -480,3 +480,79 @@ divSchemes
 
 {: .note }
 > The keyword `bounded` in front of the discretization scheme for the convective terms is only required in steady-state simulations. It helps to maintain boundedness of the solution variable and promotes a better convergence.
+
+
+
+## Linear Solver Settings
+
+The specification of the linear equation solvers, tolerances and other algorithm controls is made in the `fvSolution` dictionary in the `system` directory. These settings are as follows for the airfoil tutorial case.
+
+### Solver settings
+
+The pressure field in the pressure-velocity coupling is solved using a **Geometric agglomerated Algebraic MultiGrid** (short: GAMG) solver with a Gauss-Seidel solver for smoothing during the multi-grid steps. The absolute solver tolerance for each iteration is set to $10^{-6}$ with a relative tolerance of $0.1$: 
+
+
+```
+solvers
+{
+    p
+    {
+        solver          GAMG;
+        smoother        GaussSeidel;
+        tolerance       1e-06;
+        relTol          0.1;
+    }
+... 
+}
+```
+
+The momentum equation is solved using a Gauss Seidel solver **Preconditioned bi-Conjugate Gradient** solver with an simplified **Diagonal-based Incomplete LU** preconditioner (PBiCG solver with DILU preconditioner). The absolute tolerance for solving is $10^{-6}$ with a relative tolerance of $0.1$:
+
+```
+solvers
+{
+...
+
+    U
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       1e-06;
+        relTol          0.1;
+    }
+}
+```
+
+
+### Pressure-velocity coupling
+
+Pressure-based, steady-state simulations in OpenFOAM rely on the SIMPLE pressure-velocity coupling algorithm. Additional options for this algorithm are available within the `SIMPLE` entry in `fvSolutions`. In this tutorial, we will specify the final residual, at which the simulation should be stopped. This can be done in the `residualControl` entry for each variable solved separately. In this case, the simulation will automatically be stopped once the residual for pressure drops below $10^{-4}$ and for velocity below $10^{-5}$.
+
+```
+SIMPLE
+{
+    residualControl
+    {
+        p               1e-4;
+        U               1e-5;
+    }
+}
+```
+
+### Relaxation factors
+
+Steady state simultions are highly unstable, if no relaxation factors are used. Here, the pressure is relaxed with a factor of $0.3$ utilizing field relaxation and velocity with a factor of $0.7$ using equation relaxation.
+
+```
+relaxationFactors
+{
+    fields
+    {
+        p               0.3;
+    }
+    equations
+    {
+        U               0.7;
+    }
+}
+```
