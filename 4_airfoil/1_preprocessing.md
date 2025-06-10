@@ -489,7 +489,7 @@ The specification of the linear equation solvers, tolerances and other algorithm
 
 ### Solver settings
 
-The pressure field in the pressure-velocity coupling is solved using a **Geometric agglomerated Algebraic MultiGrid** (short: GAMG) solver with a Gauss-Seidel solver for smoothing during the multi-grid steps. The absolute solver tolerance for each iteration is set to $10^{-6}$ with a relative tolerance of $0.1$: 
+The pressure field in the pressure-velocity coupling is solved using a **Geometric agglomerated Algebraic MultiGrid** (short: GAMG) solver with a Gauss-Seidel solver for smoothing during the multi-grid steps. The absolute solver tolerance for each iteration is set to $$10^{-6}$$ with a relative tolerance of $$0.1$$: 
 
 
 ```
@@ -506,7 +506,7 @@ solvers
 }
 ```
 
-The momentum equation is solved using a Gauss Seidel solver **Preconditioned bi-Conjugate Gradient** solver with an simplified **Diagonal-based Incomplete LU** preconditioner (PBiCG solver with DILU preconditioner). The absolute tolerance for solving is $10^{-6}$ with a relative tolerance of $0.1$:
+The momentum equation is solved using a Gauss Seidel solver **Preconditioned bi-Conjugate Gradient** solver with an simplified **Diagonal-based Incomplete LU** preconditioner (PBiCG solver with DILU preconditioner). The absolute tolerance for solving is $$10^{-6}$$ with a relative tolerance of $$0.1$$:
 
 ```
 solvers
@@ -526,7 +526,7 @@ solvers
 
 ### Pressure-velocity coupling
 
-Pressure-based, steady-state simulations in OpenFOAM rely on the SIMPLE pressure-velocity coupling algorithm. Additional options for this algorithm are available within the `SIMPLE` entry in `fvSolutions`. In this tutorial, we will specify the final residual, at which the simulation should be stopped. This can be done in the `residualControl` entry for each variable solved separately. In this case, the simulation will automatically be stopped once the residual for pressure drops below $10^{-4}$ and for velocity below $10^{-5}$.
+Pressure-based, steady-state simulations in OpenFOAM rely on the SIMPLE pressure-velocity coupling algorithm. Additional options for this algorithm are available within the `SIMPLE` entry in `fvSolutions`. In this tutorial, we will specify the final residual, at which the simulation should be stopped. This can be done in the `residualControl` entry for each variable solved separately. In this case, the simulation will automatically be stopped once the residual for pressure drops below $$10^{-4}$$ and for velocity below $$10^{-5}$$.
 
 ```
 SIMPLE
@@ -541,7 +541,7 @@ SIMPLE
 
 ### Relaxation factors
 
-Steady state simultions are highly unstable, if no relaxation factors are used. Here, the pressure is relaxed with a factor of $0.3$ utilizing field relaxation and velocity with a factor of $0.7$ using equation relaxation.
+Steady state simultions are highly unstable, if no relaxation factors are used. Here, the pressure is relaxed with a factor of $$0.3$$ utilizing field relaxation and velocity with a factor of $$0.7$$ using equation relaxation.
 
 ```
 relaxationFactors
