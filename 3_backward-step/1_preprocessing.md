@@ -203,7 +203,7 @@ The file starts with the corresponding solver to be used:
 ```
 application     pimpleFoam;
 ```
-In this tutorial case, we are using the solver `pimpleFoam`, a pressure-based solver for incompressible, transient or steady-state, laminar or turbulent single-phase flows.
+In this tutorial case, we are using the solver `pimpleFoam`, a pressure-based solver for incompressible, transient, laminar or turbulent single-phase flows.
 
 
 ### Start and End Times

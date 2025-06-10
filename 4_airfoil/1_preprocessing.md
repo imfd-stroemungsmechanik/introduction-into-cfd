@@ -132,6 +132,11 @@ Finally, all corresponding patches are grouped together correctly using a suitab
 cartesian2DMesh
 ```
 
+The resulting mesh should look like follows:
+
+![Backward-facing step case geometry](figures/airfoil-mesh.png)
+
+
 At this point the mesh generation is complete. It consists of:
  - Background mesh with a cell size of $$0.25 \text{m}$$
  - A circular refinement around the airfoil with a smallest cell size of about $$8\,\text{mm}$$.
@@ -139,6 +144,7 @@ At this point the mesh generation is complete. It consists of:
 
 {: .note }
 > OpenFOAM always operates in a 3 dimensional Cartesian coordinate system and all geometries are generated in 3 dimensions. OpenFOAM solves the case in 3 dimensions by default but can be instructed to solve in 2 dimensions by specifying a special `empty` boundary condition on boundaries normal to the 3rd dimension for which no solution is required. Since the created mesh is two-dimensional, it will have a single cell layer in $$z$$-direction with the patch `frontAndBackPlanes` of type `empty`.
+
 
 
 
@@ -268,7 +274,7 @@ We want to investigate the flow around the airfoil at a Reynolds-number of $$10^
 
 ### Velocity Field
 
-The velocity field as a unit of $$\text{meter} \times \text{second}^{-1}$$ with an internal field of $$(0 0 0)$$, indicating a fluid at rest. The velocity at the inlet has to be determined using the Reynolds-number with an airfoil length of $$L = 1\,\text{m}$$ and a kinematic viscosity of $$\nu = 10^{-5}\,\text{m}^2\text{/s}$$:
+The velocity field as a unit of $$\text{meter} \times \text{second}^{-1}$$ with an internal field of $$(0 \, 0 \, 0)$$, indicating a fluid at rest. The velocity at the inlet has to be determined using the Reynolds-number with an airfoil length of $$L = 1\,\text{m}$$ and a kinematic viscosity of $$\nu = 10^{-5}\,\text{m}^2\text{/s}$$:
 
 $$ \text{Re} = \frac{U_\text{in} L}{\nu} \quad \rightarrow \quad U_\text{in} = \frac{\text{Re} \, \nu}{L} = 1\,\text{m/s} $$
 
@@ -357,3 +363,76 @@ boundaryField
     }
 }
 ```
+
+
+## Simulation Control
+
+Settings related to the control of time (for transient simulations) or iterations (for steady-state simulations) and reading and writing of the solution data are read in from the `controlDict` file in the `system` folder.
+
+
+### Flow Solver
+
+The file starts with the corresponding solver to be used:
+```
+application     simpleFoam;
+```
+In this tutorial case, we are using the solver `simpleFoam`, a pressure-based solver for incompressible, steady-state, laminar or turbulent single-phase flows.
+
+
+### Start and End Times
+
+The start/stop times and the time step for the run must be set. In this tutorial the run starts at time 0, which means that OpenFOAM needs to read field data from a directory named 0. Therefore we set the `startFrom` keyword to `startTime` and then specify the `startTime` keyword to be `0`. The simulation should run until a steady state solution is reached. Since it is unknown how many iterations are needed for this, it is assumed that 1000 iterations are sufficient. Therefore, the `stopAt` entry is set to `endTime` and the `endTime` entry to `1000`.
+
+The corresponding lines in the `controlDict` look as follows:
+
+```
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         1000;
+```
+
+
+
+
+
+The start/stop times and the time step for the run must be set. OpenFOAM oﬀers great flexibility with time/iteration control. In this tutorial the run starts at time 0, which means that OpenFOAM needs to read field data from a directory named 0. Therefore we set the `startFrom` keyword to `startTime` and then specify the `startTime` keyword to be 0. The simulation should run until a time of 1 second and then stop. Therefore, the `stopAt` entry is set to `endTime` and the `endTime` entry itself is set to `1`.
+
+The corresponding lines in the `controlDict` look as follows:
+
+```
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         1;
+```
+
+
+### Time step size
+
+The time step size is defined via the keyword `deltaT`. Since we are performing a steady-state simulation, the time step size has no physical meaning and is simply set to `1`. This way it acts as a iteration counter. The corresponding settings in `controlDict` look as follows:
+
+```
+deltaT          1;
+```
+
+{: .note }
+> Regardless of whether steady-state or transient simulations are performed, OpenFOAM always referes to `startTime`, `endTime` and `deltaT`. In transient simulations, these entries possess the physical meaning of time. However, in steady state simulations time is not considered. Therefore, these entries will simply correspond to the start and end of the simulation in terms of iterations.
+
+
+### Writing out results
+
+As the simulation progresses, results are written out at certain intervals of iterations that can later be analysed and visualized. The `writeControl` keyword presents several options for setting the iteration interval at which the results are written. Here, the `timeStep` option is selected which specifies that results are written every 100-th iteration where the value is specified under the `writeInterval` keyword. For this case, the entries in the `controlDict` are shown below:
+
+```
+writeControl    timeStep;
+
+writeInterval   100;
+```
+
