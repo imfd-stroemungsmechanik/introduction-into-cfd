@@ -16,7 +16,7 @@ In order to start the simulation, we have to execute corresponding the OpenFOAM 
 simpleFoam
 ```
 
-The progress of the job is written to the terminal window. It tells the user the current time step, the equations being solved, initial and final residuals for all fields and should look like follows:
+The progress of the job is written to the terminal window. It tells the user the current iteration, the equations being solved, initial and final residuals for all fields and should look like follows:
 
 ```
 Time = 218
@@ -29,12 +29,12 @@ ExecutionTime = 25.47 s  ClockTime = 26 s
 ```
 
 This output at iteration 218 tells us in summary:
-- The `DILUPBiCG` solver (short for bi-Conjugate Gradient solver with an simplified Diagonal-based Incomplete LU preconditioner) is used to solve the velocity components `Ux` and `Uy` in $$x$$- and $$y$$-direction. In this time step, it takes 2 iterations to reach the specified residual criteria.
+- The `DILUPBiCG` solver (short for bi-Conjugate Gradient solver with a simplified Diagonal-based Incomplete LU preconditioner) is used to solve the velocity components `Ux` and `Uy` in $$x$$- and $$y$$-direction. In this iteration, it takes 2 iterations to reach the specified residual criteria.
 - The `GAMG` multigrid solver is used for solving the pressure poisson equation in the pressure-velocity coupling algorithm.
 - The error of the conservation of mass is denoted as `continuity error`. Since its value is very small, conservation of mass is maintained.
-- The execution time for the simulation up until this time step is roughly 4 seconds as indicated by the `ExecutionTime`.
+- The execution time for the simulation up until this iteration is roughly 4 seconds as indicated by the `ExecutionTime`.
 
-After around 550 iterations, the simulation automatically stops with the following output:
+After 547 iterations, the simulation automatically stops with the following output:
 
 ```
 SIMPLE solution converged in 547 iterations
@@ -66,7 +66,7 @@ functions
 }
 ```
 
-Once the simulation has finished and all the time directories are written out, the data written by the function objects can be analyzed. This data can typically be plotted in a diagram using Microsoft Excel, Python, Gnuplot or any other tool. In order to quickly evaluate the monitored results from the function objects, a script is added to the backward-step case directory called `create_plots.py`. Executing it will automatically create the diagrams for residuals and average inlet pressure after the run. By typing the following command in the terminal, the diagrams are created using Python and stored as png file:
+Once the simulation has finished and all the time directories are written out, the data written by the function objects can be analyzed. This data can typically be plotted in a diagram using Microsoft Excel, Python, Gnuplot or any other tool. In order to quickly evaluate the monitored results from the function objects, a script is added to the airfoil case directory called `create_plots.py`. Executing it will automatically create the diagrams for residuals and average inlet pressure after the run. By typing the following command in the terminal, the diagrams are created using Python and stored as png file:
 
 ```bash
 python3 create_plots.py

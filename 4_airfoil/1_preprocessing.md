@@ -50,7 +50,7 @@ The *relevant* files for this tutorial case are:
 
 The hexahedral-dominant, two-dimensional mesh is created automatically with the meshing utility `cartesian2DMesh` from a surface geometry file inside the `geometries` directory. Different geometries are provided for varying angle of attack of the airfoil.
 
-The airfoil has an overall length of $$1\,\text{m}$$. Therefore, the mesh has a maximum cell size of $$0.25\,\text{m}$$ and is refined towards the airfoil with a total of 5 circular, refinement regions around the airfoil with radius of $$1\,\text{m}$$ for the highest mesh refinement up to $$5\,\text{m}$$ for the lowest mesh refinement. This adds 5 additional refinment levels resulting in a smallest cell size of about $$8\,\text{mm}$$.
+The airfoil has an overall length of $$1\,\text{m}$$. Therefore, the mesh has a maximum cell size of $$0.25\,\text{m}$$ and is refined towards the airfoil with a total of 5 circular, refinement regions around the airfoil with radius of $$1\,\text{m}$$ for the highest mesh refinement up to $$5\,\text{m}$$ for the lowest mesh refinement. This adds 5 additional refinment levels resulting in a smallest cell size of about $$8\,\text{mm}$$. These refinement regions are used to create a more homogeneous transition between the coarse mesh in the farfield and the strongly refined mesh at the airfoil.
 
 ```
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -134,7 +134,7 @@ cartesian2DMesh
 
 The resulting mesh should look like follows:
 
-![Backward-facing step case geometry](figures/airfoil-mesh.png)
+![Airfoil case geometry](figures/airfoil-mesh.png)
 
 
 At this point the mesh generation is complete. It consists of:
@@ -150,7 +150,7 @@ At this point the mesh generation is complete. It consists of:
 
 ## Mesh Quality
 
-Once the mesh has been created, it is always recommended to check the mesh statistics and quality. This can easily be done using the utility `checkMesh` from within the `backward-step` folder:
+Once the mesh has been created, it is always recommended to check the mesh statistics and quality. This can easily be done using the utility `checkMesh` from within the `airfoil` folder:
 
 ```
 checkMesh
@@ -173,7 +173,7 @@ Mesh stats
     internal faces:   245950
     cells:            122672
     faces per cell:   6.01487
-    boundary patches: 6
+    boundary patches: 5
     point zones:      0
     face zones:       0
     cell zones:       0
@@ -278,7 +278,7 @@ The velocity field as a unit of $$\text{meter} \times \text{second}^{-1}$$ with 
 
 $$ \text{Re} = \frac{U_\text{in} L}{\nu} \quad \rightarrow \quad U_\text{in} = \frac{\text{Re} \, \nu}{L} = 1\,\text{m/s} $$
 
-Since the velocity at the inlet is assumed to be constant, a `fixedValue` boundary condition is employed with a uniform velocity of $$1\,\text{m/s}$$ in $$x$$-direction. The outlet is considered a zero-gradient boundary condition for velocity, which is named `zeroGradient` in OpenFOAM. The flow is considered viscid, which results in a `noSlip` condition for velocity at the airfoil, e.g. the velocity directly at the airfoil surface is zero. In order to minimize the effect of the top and bottom patch, it is considered a `slip` wall, where the velocity gradient normal to the wall is zero and thus no boundary layer forms. Finally, front and back of the computational domain are `empty` indicating a two-dimensional setup.
+Since a uniform velocity profile is assumed at the inlet, a `fixedValue` boundary condition is employed with a uniform velocity of $$1\,\text{m/s}$$ in $$x$$-direction. The outlet is considered a zero-gradient boundary condition for velocity, which is named `zeroGradient` in OpenFOAM. The flow is considered viscous, which results in a `noSlip` condition for velocity at the airfoil, e.g. the velocity directly at the airfoil surface is zero. In order to minimize the effect of the `topAndbottom` patch, it is considered a `slip` wall, where the velocity gradient normal to the wall is zero and thus no boundary layer forms. Finally, front and back of the computational domain are `empty` indicating a two-dimensional setup.
 
 The concrete file for velocity in the `0` directory looks as follows:
 
@@ -317,7 +317,7 @@ boundaryField
 
 ### Pressure Field
 
-The kinematic pressure field as a unit of $$\text{meter}^2 \times \text{second}^{-2}$$ an uniform internal field of 0. Since this is a pressure-velocity configuration, the pressure at the inlet is defined as zero-gradient boundary condition called `zeroGradient` and the static kinematic pressure at the outlet is specified uniformly as zero using a `fixedValue` boundary condition. On wall patches, pressure is always set to `zeroGradient` and front and back of the computational domain are `empty` consistent with the velocity boundary.
+The kinematic pressure field has a unit of $$\text{meter}^2 \times \text{second}^{-2}$$ with a uniform internal field of 0. Since this is a pressure-velocity configuration, the pressure at the inlet is defined as zero-gradient boundary condition called `zeroGradient` and the static kinematic pressure at the outlet is specified uniformly as zero using a `fixedValue` boundary condition. On wall patches, pressure is always set to `zeroGradient` and front and back of the computational domain are `empty` consistent with the velocity boundary.
 
 {: .note }
 > OpenFOAM often uses a relative kinematic pressure of zero as initial value and at the outlet boundary as the absolute value of pressure is not of relevance for incompressible simulations.
@@ -347,12 +347,7 @@ boundaryField
         type            zeroGradient;
     }
 
-    top
-    {
-        type            zeroGradient;
-    }
-
-    bottom
+    topAndBottom
     {
         type            zeroGradient;
     }

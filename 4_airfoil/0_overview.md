@@ -19,7 +19,7 @@ The objectives for this tutorial are as follows:
 
 ## Overview
 
-This tutorial will describe how to pre-process, run and post-process a case involving a steady-state, isothermal, incompressible flow over a NACA 0012 airfoil. The geometry is shown in the following figure with an inlet on the left, the airfoil in the center, slip walls at the top and bottom, and an outlet at the right. The flow will be solved using the OpenFOAM solver `simpleFoam` the suitable for laminar and turbulent, isothermal, incompressible, steady-state flows.
+This tutorial will describe how to pre-process, run, and post-process a case involving a steady-state, isothermal, incompressible flow over a NACA 0012 airfoil. The geometry is shown in the following figure with an inlet on the left, the airfoil in the center, slip walls at the top and bottom, and an outlet at the right. The flow will be solved using the OpenFOAM solver `simpleFoam` the suitable for laminar and turbulent, isothermal, incompressible, steady-state flows.
 
 ![Backward-facing step case geometry](figures/airfoil-geometry.png)
 
