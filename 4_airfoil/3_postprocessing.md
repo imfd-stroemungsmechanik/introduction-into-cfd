@@ -31,4 +31,4 @@ To color the mesh by velocity magnitude (i.e. the velocity contour) of the flow,
 
 We can clearly see the flow around the airfoil with the stagnation point at the leading edge (on the left), the regions of higher flow velocity at the upper and lower airfoil surface, and the small region of lower flow velocity in the wake.
 
-
+![Backward-facing step paraview velocity contour](figures/airfoil-results-velocity-contour.png)
