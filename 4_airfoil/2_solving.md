@@ -63,6 +63,7 @@ functions
         fields          (p U);
     }
 ...
+}
 ```
 
 Once the simulation has finished and all the time directories are written out, the data written by the function objects can be analyzed. This data can typically be plotted in a diagram using Microsoft Excel, Python, Gnuplot or any other tool. In order to quickly evaluate the monitored results from the function objects, a script is added to the backward-step case directory called `create_plots.py`. Executing it will automatically create the diagrams for residuals and average inlet pressure after the run. By typing the following command in the terminal, the diagrams are created using Python and stored as png file:
@@ -71,8 +72,53 @@ Once the simulation has finished and all the time directories are written out, t
 python3 create_plots.py
 ```
 
-This creates the following diagram of the residuals on the $$y$$-axis plotted against the simulation time on the $$x$$-axis in the case folder:
+This creates the following diagram of the residuals on the $$y$$-axis plotted against the iteration on the $$x$$-axis in the case folder:
 
-![Backward-facing step case residuals](figures/airfoil-residuals.png)
+![Airfoil case residuals](figures/airfoil-results-residuals.png)
 
 The plot shows that the residuals fall throughout the simulation to below $$10^{-4}$$ for pressure and $$10^{-5}$$ for velocity. Since this is the specified residual criteria, the simulation stops automatically. We can assume this is a converged steady-state simulation.
+
+
+
+### Force coefficients
+
+Additionally, a second function object named `forceCoeffs` in the `controlDict` evaluates the drag and lift coefficients acting on the airfoil. Since this computation is done during runtime and stored in the `postProcessing` directory, it is just perfectly suited for checking convergence. The function object itself is configured as follows:
+
+```
+functions
+{
+...
+
+    forceCoeffs
+    {
+        type            forceCoeffs;
+        libs            (forces);
+
+        patches         (airfoil);
+        rho             rhoInf;
+        log             false;
+        rhoInf          1;
+        liftDir         (0 1 0);
+        dragDir         (1 0 0);
+        CofR            (0.5 0 0);
+        pitchAxis       (0 0 1);
+        magUInf         1;
+        lRef            1;
+        Aref            1;
+    }
+}
+```
+
+The most important settings here are the boundaries, on which the forces are evaluated (keyword `patches`), here set to `airfoil`, and the reference values for velocity $$u_\text{inf}$$ (`magUInf`), cross-sectional area of the airfoil $$A_\text{ref}$$ (`Aref`), and reference length $$l_\text{ref}$$ required for computing the momentum coefficient. The drag coefficient is then calculated as follows:
+
+$$
+C_D = \frac{F_D}{0.5 \, A_\text{ref} \, u_\text{inf}^2}
+$$
+with the drag force on the specified boundaries $F_D$.
+
+Furthermore, the axis direction for drag (keyword `dragDir` with direction along the $$x$$-axis) and lift (keyword `liftDir` with direction along the $$y$$-axis) have to match the orientation of the airfoil. Using this function object, OpenFOAM automatically computes the drag forces acting on the airfoil and normalizes the result using the drag coefficient equation.
+
+Similar to the residual plot, a diagram for drag and lift coefficient over the number of iterations is automatically created when executing the `create_plots.py` script. The resulting plot looks as follows:
+
+![Airfoil case force coefficients](figures/airfoil-results-forceCoeffs.png)
+
