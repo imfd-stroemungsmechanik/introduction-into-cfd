@@ -436,3 +436,47 @@ writeControl    timeStep;
 writeInterval   100;
 ```
 
+
+## Discretization
+
+The user specifies the choice of finite volume discretisation schemes in the `fvSchemes` dictionary in the `system` directory. Here, we will only cover the most relevant settings.
+
+### Temporal derivatives
+
+The discretization of the temporal derivatives $$(\partial / \partial t)$$ is defined within the `ddtSchemes` keyword. Since this is a steady-state simulation, the entry here is set to `steadyState`, e.g. the temporal derivative is set to zero.
+
+```
+ddtSchemes
+{
+    default         steadyState;
+}
+```
+
+### Gradient terms
+
+The discretization of the gradient terms is defined within the `gradSchemes` keyword. All gradient schemes are discretized equally with a second order **central differencing scheme**. Hence, the `default` discretization is set to `Gauss linear`.
+
+```
+gradSchemes
+{
+    default         Gauss linear;
+}
+```
+
+### Convective terms
+
+The discretization of the convective terms, e.g., convective fluxes, is defined within the `divSchemes` keyword. Here, `div(phi,U)` referes to the discretization of the convective flux $$\partial(u_i u_j)/\partial x_j$$ with `phi` being the (volumetric) flux and `U` the variable transported by the flux. In this case, the **second order upwind scheme** is employed called `Gauss linearUpwind` combined with a gradient limiter `cellLimited` acting on the second order gradient discretization `Gauss linear`.
+
+Additionaly, `div((nuEff*dev2(T(grad(U)))))` denotes the divergence of the shear stress tensor in the momentum equation. Since this term is diffusive in nature, it is recommended to discretize it with a central differencing scheme, here `Gauss linear`.
+
+```
+divSchemes
+{
+    div(phi,U)      bounded Gauss linearUpwind cellLimited Gauss linear 1.0;
+
+    div((nuEff*dev2(T(grad(U))))) Gauss linear;
+}
+```
+
+{: .note }
+> The keyword `bounded` in front of the discretization scheme for the convective terms is only required in steady-state simulations. It helps to maintain boundedness of the solution variable and promotes a better convergence.
