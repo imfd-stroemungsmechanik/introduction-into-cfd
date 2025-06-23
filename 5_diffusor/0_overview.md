@@ -27,6 +27,17 @@ The channel hight is defined to be $$H = 1\,\text{m}$$. Inlet and outlet are ext
 
 $$ \text{Re} = \frac{U_\text{in} \, H}{\nu} \quad \rightarrow \quad U_\text{in} = \frac{\text{Re} \, \nu }{H} = 0.3 \text{m/s} $$
 
+The case is used for validating the ability of turbulence models to predict separation and simulate flows under adverse pressure gradients correctly. It was published by Buice and Eaton in 2000:
+
+> Buice, C. U. and Eaton, J. K.
+> "Experimental Investigation of Flow Through an Asymmetric Plane Diffuser"
+> Journal of Fluids Engineering, Vol. 122, No. June, 2000, pp. 433-435.
+
+```
+Buice, C. U. and Eaton, J. K.
+"Experimental Investigation of Flow Through an Asymmetric Plane Diffuser"
+Journal of Fluids Engineering, Vol. 122, No. June, 2000, pp. 433-435.
+```
 
 
 ## Preparation
