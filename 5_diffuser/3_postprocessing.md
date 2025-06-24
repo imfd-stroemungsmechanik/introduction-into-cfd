@@ -7,7 +7,8 @@ nav_order: 3
 
 # Post-Processing
 
-## Visualizing the Results
+
+## Visualizing the Velocity Contour
 
 As soon as results are written to time directories, they can be viewed using ParaView. Start ParaView in the background with the following command:
 
@@ -27,7 +28,11 @@ To color the mesh by velocity magnitude (i.e. the velocity contour) of the flow,
 
 ![Diffuser paraview velocity contour settings](figures/paraview-menu-velocity-contour-settings.png)
 
-When inspecting the velocity field through the diffuser, the reduction in flow velocity due to the incresed cross-sectional area is apparent. Furthermore, no recirculation region is noticable at the lower end of the diffuser, something which would be expected due to the large opening angle of the diffuser.ine.
+When inspecting the velocity field through the diffuser, the reduction in flow velocity due to the incresed cross-sectional area is apparent. Furthermore, no recirculation is noticable at the lower end of the diffuser, something which would be expected due to the large opening angle of the diffuser.ine.
 
 ![Diffuser paraview velocity contour](figures/diffuser-results-velocity-contour.png)
 
+
+## Visualizing Flow Streamlines
+
+Streamlines of the flow are best suited for visualizing any possible recirculation.

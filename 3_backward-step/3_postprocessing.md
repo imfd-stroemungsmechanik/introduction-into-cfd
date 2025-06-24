@@ -7,7 +7,7 @@ nav_order: 3
 
 # Post-Processing
 
-## Visualizing the Results
+## Visualizing the Velocity Contour
 
 As soon as results are written to time directories, they can be viewed using ParaView. Start ParaView in the background with the following command:
 
@@ -19,6 +19,8 @@ To prepare ParaView to display the data of interest, the data at the final time 
 The solution at the last time step of $$t = 1\,\text{s}$$ can be viewed by using the **VCR Controls** at the very top of the ParaView window and click the button for **Last Frame**
 
 ![Backward-facing step paraview vcr controls](figures/paraview-menu-VCR-controls.png)
+
+
 
 ## Coloring Surfaces by Flow Property
 
