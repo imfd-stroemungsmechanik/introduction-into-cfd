@@ -58,6 +58,7 @@ functions
         libs            (utilityFunctionObjects);
         fields          (p U k epsilon);
     }
+
 ...
 }
 ```
@@ -74,3 +75,25 @@ This creates the following diagram of the residuals on the $$y$$-axis plotted ag
 
 The plot shows that the residuals fall throughout the simulation to below $$10^{-4}$$ for all monitored variables. Since this is the specified residual criteria, the simulation stops automatically. We can assume this is a converged steady-state simulation.
 
+
+
+### Dimensionless Wall Distance
+
+Additionally, a second function object named `yPlus` in the `controlDict` evaluates the dimensionless wall distance $$y^+$$ in order to assess the mesh resolution within the turbulent boundary layer. It writes out the minimum, maximum, and average $$y^+$$ value for wall patches of type `wall` in the `postProcessing` directory and also create a new field in the results folders called `yPlus` with the dimensionless wall distance for every boundary face for visualization. The computation is performed whenever a new results folder is written out (e.g., every 250 iterations as defined in `controlDict`) as the entry `writeControl` is set to `writeTime`.
+
+The function object itself is configured as follows:
+
+```
+functions
+{
+...
+    
+    yPlus
+    {
+        type                yPlus;
+        libs                (fieldFunctionObjects);
+
+        writeControl        writeTime;
+    }
+}
+```
