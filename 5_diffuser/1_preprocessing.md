@@ -79,7 +79,7 @@ Finally, all corresponding patches are grouped together correctly using a suitab
 cartesian2DMesh
 ```
 
-The resulting mesh around the diffuser should look like follows:
+The resulting mesh can be visualized with ParaView should look like follows around the diffuser:
 
 ![Diffuser coarse mesh](figures/diffuser-mesh-coarse.png)
 
