@@ -269,7 +269,7 @@ $$ \epsilon_\text{in} = \frac{C_\mu^{0.75} \, k^{1.5}}{L_\text{t}} $$
 
 This estimate is implemented in the `turbulentMixingLengthDissipationRateInlet` boundary condition with one additional entry `mixingLength`, which sets the turbulent length scale to $$L_\text{t} = 1.5 \times 10^{-3}\,\text{m}$$. At the walls, an all-$$y^+$$ wall function approach is used, which computes the effect of the turbulent boundary layer onto the turbulent dissipation rate. The boundary type is therefore set to `epsilonWallFunction`. Finally, at the outlet a patch normal zero gradient boundary condition is used.
 
-The complete `boundaryField` entry for the turbulent kinetic energy looks as follows:
+The complete `boundaryField` entry for the turbulent dissipation rate looks as follows:
 
 ```
 boundaryField
@@ -301,3 +301,41 @@ boundaryField
 ```
 
 #### Turbulent Viscosity
+
+Finally, the turbulent viscosity $$\nu_\text{t}$$ with unit $$\text{m}^2\text{/s}$$ has to be specified in particular at the walls. Since the turbulent viscosity will be calculated based on the turbulent quantities $$k$$ and $$\epsilon$$, the initial field values and the boundary conditions at anything other than walls is relevant. Therefore, the internal field is simply set to $$0\,\text{m}^2\text{/s}$$ and the boundary conditions for inlet and outlet are set to `calculated`.
+
+{: .note }
+> The `calculated` boundary type in OpenFOAM is always used, when the corresponding variable will be calculated by the CFD model itself and does not have to be specified. In case of turbulent viscosity, $$\nu_\text{t}$$ will be calculated by the turbulence model and thus does not have to be specified.
+
+The specification of the boundary condition at walls for $$\nu_\text{t}$$ is critical, though, as this defines the wall treatment approach. In this case, an all-$$y^+$$ wall function of type `nutUSpaldingWallFunction` is used which is both valid in the viscous sublayer with $$y^+ \approx 1$$, but also within the log-law region with $$y^+ > 30$$. This flexibility allows for mesh refinement without the need to change these boundary condition later.
+
+The complete `boundaryField` entry for the turbulent viscosity looks as follows:
+
+```
+boundaryField
+{
+    inlet
+    {
+        type            calculated;
+        value           uniform 0;
+    }
+
+    outlet
+    {
+        type            calculated;
+        value           uniform 0;
+    }
+
+    lowerWall
+    {
+        type            nutUSpaldingWallFunction;
+        value           uniform 0;
+    }
+
+    upperWall
+    {
+        type            nutUSpaldingWallFunction;
+        value           uniform 0;
+    }
+}
+```
