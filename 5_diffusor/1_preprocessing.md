@@ -48,7 +48,7 @@ The *relevant* files for this tutorial case are:
 
 The hexahedral-dominant, two-dimensional mesh is created automatically with the meshing utility `cartesian2DMesh` from a user provided surface geometry named `diffusor.stl, which is located in the case folder.
 
-The diffusor has an initial channel height of $$H = 1\,\text{m}$$ at the inlet and extends to $$4.7\,\text{m}$$ towards the outlet. In order to achieve 10 cells across the channel height (exluding inflation layers), the maximum cell size is set to $$0.1\,\text{m}$$. Additionally, the walls for the first mesh have a single inflation layer with a thickness ratio of 1.2. This way standard wall functions can be used by ensuring a dimensionless wall distance is $$y^+ > 30$$.
+The diffusor has an initial channel height of $$H = 1\,\text{m}$$ at the inlet and extends to $$4.7\,\text{m}$$ towards the outlet. In order to achieve 10 cells across the channel height (exluding inflation layers), the maximum cell size is set to $$0.1\,\text{m}$$. Additionally, the walls for the first mesh have a single inflation layer with a thickness ratio of 1.2. This way standard wall functions can be used by ensuring a dimensionless wall distance of $$y^+ > 30$$.
 
 The resulting `meshDict` looks as follows:
 
@@ -58,9 +58,6 @@ The resulting `meshDict` looks as follows:
 surfaceFile     "diffuser.stl";
 
 maxCellSize     0.1;
-
-objectRefinements
-{}
 
 boundaryLayers
 {
@@ -84,7 +81,7 @@ cartesian2DMesh
 
 The resulting mesh should look like follows:
 
-![Diffusor coarse mesh](figures/diffusor-mesh_coarse.png)
+![Diffusor coarse mesh](figures/diffusor-mesh-coarse.png)
 
 
 At this point the mesh generation is complete. It consists of:
@@ -169,7 +166,7 @@ The final output `Mesh OK.` indicates that no critical problems or errors were f
 
 The physical properties for the fluid, such as kinematic viscosity, are stored in the `transportProperties` file in the `constant` directory.
 
-Since the fluid is considered air, the kinematic viscosity is $$15 \times 10^{-6}\,\text{m}^2\text{/s} and set accordingly in the `transportProperties` dictionary as follows:
+Since the fluid is considered air, the kinematic viscosity is $$15 \times 10^{-6}\,\text{m}^2\text{/s}$$ and set accordingly in the `transportProperties` dictionary as follows:
 
 ```
 viscosityModel  Newtonian;
@@ -198,8 +195,10 @@ RAS
 }
 ```
 
-For this set of simulation the Reynolds-Averaged Navier-Stokes (RANS) equations should be solved. Therefore, the entry `simulationType` is set to `RAS`, which stands for **R**eynolds-**A**veraged **S**imulation. Now the actual turbulence model has to be specified in a `RAS` sub-dictionary with the keyword `RASModel` set to `kEpsilon`, which selects the standard $$k-\epsilon$$ turbulence model. The entries `turbulence` and `printCoeffs` then actually turn on turbulence modelling and print out all relevant coefficients of the chosen turbulence model, respectively.
-
+For this set of simulation the Reynolds-Averaged Navier-Stokes (RANS) equations should be solved. Therefore, the entry `simulationType` is set to `RAS`, which stands for **R**eynolds-**A**veraged **S**imulation. Within the `RAS` sub-dictionary, the following entries are set:
+ - The keyword `RASModel` set to `kEpsilon`, which selects the standard $$k-\epsilon$$ turbulence model.
+ - The entry `turbulence` turn on or off the turbulence model all together
+ - The keyword `printCoeffs` set to `on` prints out all relevant coefficients of the chosen turbulence model.
 
 
 ## Boundary Conditions
