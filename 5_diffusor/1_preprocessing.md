@@ -263,4 +263,41 @@ boundaryField
 
 #### Turbulent Dissipation Rate
 
+The turbulent dissipation rate has the unit $$\text{m}^2\text{/s}^3$$ and its initial value is set to $$100\,\text{m}^2\text{/s}^3$$. Similar to the turbulent kinetic energy, specifying resonable values for $$\epsilon$$ at the inlet is difficult. Therefore, the following empirical formula will be used instead based on turbulent kinetic energy $$k$$ at the inlet patch, modelling coefficient $$C_\mu$$, and a turbulent length scale $$L_\text{t}$$:
+
+$$ \epsilon_\text{in} = \frac{C_\mu^{0.75} \, k^{1.5}}{L_\text{t}} $$
+
+This estimate is implemented in the `turbulentMixingLengthDissipationRateInlet` boundary condition with one additional entry `mixingLength`, which sets the turbulent length scale to $$L_\text{t} = 1.5 \times 10^{-3}\,\text{m}$$. At the walls, an all-$$y^+$$ wall function approach is used, which computes the effect of the turbulent boundary layer onto the turbulent dissipation rate. The boundary type is therefore set to `epsilonWallFunction`. Finally, at the outlet a patch normal zero gradient boundary condition is used.
+
+The complete `boundaryField` entry for the turbulent kinetic energy looks as follows:
+
+```
+boundaryField
+{
+    inlet
+    {
+        type            turbulentMixingLengthDissipationRateInlet;
+        mixingLength    0.0015;
+        value           uniform 100;
+    }
+
+    outlet
+    {
+        type            zeroGradient;
+    }
+
+    lowerWall
+    {
+        type            epsilonWallFunction;
+        value           uniform 100;
+    }
+
+    upperWall
+    {
+        type            epsilonWallFunction;
+        value           uniform 100;
+    }
+}
+```
+
 #### Turbulent Viscosity
