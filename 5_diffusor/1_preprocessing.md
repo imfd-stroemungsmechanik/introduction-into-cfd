@@ -84,7 +84,7 @@ cartesian2DMesh
 
 The resulting mesh should look like follows:
 
-![Airfoil case geometry](figures/diffusor-mesh.png)
+![Diffusor coarse mesh](figures/diffusor-mesh_coarse.png)
 
 
 At this point the mesh generation is complete. It consists of:
@@ -163,4 +163,46 @@ As this is a hexa-dominant, unstructured mesh with a single layer of inflation c
 - a max cell skewness of 0.43.
 
 The final output `Mesh OK.` indicates that no critical problems or errors were found during `checkMesh`. Therefore, we can continue with this mesh and proceed with the simulation.
+
+
+## Physical Properties
+
+The physical properties for the fluid, such as kinematic viscosity, are stored in the `transportProperties` file in the `constant` directory.
+
+Since the fluid is considered air, the kinematic viscosity is $$15 \times 10^{-6}\,\text{m}^2\text{/s} and set accordingly in the `transportProperties` dictionary as follows:
+
+```
+viscosityModel  Newtonian;
+
+nu              2e-5;
+```
+
+
+
+
+
+## Turbulence Modelling
+
+The turbulence model is set in the `turbulenceProperties` file in the `constant` directory. The content of the file is as follows:
+
+```
+simulationType RAS;
+
+RAS
+{
+    RASModel        kEpsilon;
+
+    turbulence      on;
+
+    printCoeffs     on;
+}
+```
+
+For this set of simulation the Reynolds-Averaged Navier-Stokes (RANS) equations should be solved. Therefore, the entry `simulationType` is set to `RAS`, which stands for **R**eynolds-**A**veraged **S**imulation. Now the actual turbulence model has to be specified in a `RAS` sub-dictionary with the keyword `RASModel` set to `kEpsilon`, which selects the standard $$k-\epsilon$$ turbulence model. The entries `turbulence` and `printCoeffs` then actually turn on turbulence modelling and print out all relevant coefficients of the chosen turbulence model, respectively.
+
+
+
+## Boundary Conditions
+
+Since the simulation starts at time $$t=0$$, the boundary and initial field data is stored in the `0` sub-directory. This must be done for all variables solved for, in particular pressure `p`, velocity `U`, and additionally the turbulent quantities turbulent kinetic energy `k`, turbulent dissipation rate `epsilon`, and turbulent viscosity `nut`.
 

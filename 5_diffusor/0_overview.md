@@ -21,9 +21,9 @@ The objectives for this tutorial are as follows:
 
 This tutorial will describe how to pre-process, run, and post-process a case involving a steady-state, isothermal, incompressible flow through the Buice-Eaton 2D diffusor. The geometry is shown in the following figure with an inlet on the left, the top and bottom no-slip walls, and an outlet at the right. The flow will be solved using the OpenFOAM solver `simpleFoam` the suitable for laminar and turbulent, isothermal, incompressible, steady-state flows.
 
-![Backward-facing step case geometry](figures/diffusor-geometry.png)
+![Diffusor case geometry](figures/diffusor-geometry.png)
 
-The channel hight is defined to be $$H = 1\,\text{m}$$. Inlet and outlet are extended upstream and downstream, respectively, to reduce the influence of the boundary condition onto the solution. Air is considered as fluid with a kinematic viscosity of $$\nu = 10 \times 10^{-6}\,\text{m}^2\text{/s}$$. Based on a Reynolds-number of 20 000, the velocity at the inlet is:
+The channel hight is defined to be $$H = 1\,\text{m}$$. Inlet and outlet are extended upstream and downstream, respectively, to reduce the influence of the boundary condition onto the solution. Air is considered as fluid with a kinematic viscosity of $$\nu = 15 \times 10^{-6}\,\text{m}^2\text{/s}$$. Based on a Reynolds-number of 20 000, the velocity at the inlet is:
 
 $$ \text{Re} = \frac{U_\text{in} \, H}{\nu} \quad \rightarrow \quad U_\text{in} = \frac{\text{Re} \, \nu }{H} = 0.3 \text{m/s} $$
 
