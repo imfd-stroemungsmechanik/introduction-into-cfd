@@ -408,7 +408,7 @@ ddtSchemes
 
 ### Gradient terms
 
-The discretization of the gradient terms is defined within the `gradSchemes` keyword. All gradient schemes are discretized equally with a second order **central differencing scheme** with a cell-based gradient limiter to avoid exessively large gradient. Hence, the `default` discretization is set to `cellLimited Gauss linear 1.0`.
+The discretization of the gradient terms is defined within the `gradSchemes` keyword. All gradient schemes are discretized equally with a second order **central differencing scheme** with a cell-based gradient limiter to avoid exessively large gradients. Hence, the `default` discretization is set to `cellLimited Gauss linear 1.0`.
 
 ```
 gradSchemes
@@ -419,7 +419,7 @@ gradSchemes
 
 ### Convective terms
 
-The discretization of the convective terms, e.g., convective fluxes, is defined within the `divSchemes` keyword. Here, `div(phi,U)` referes to the discretization of the convective flux $$\partial(u_i u_j)/\partial x_j$$ with `phi` being the (volumetric) flux and `U` the variable transported by the flux. In this case, the **second order upwind scheme** is employed called `Gauss linearUpwindV` combined with the default gradient scheme defined under `gradSchemes`. Since a turbulence model is employed, the turbulent quantities in their respective transport equations also have to be discretized. Here, we also use the **second order upwind scheme** combined with the default gradient scheme defined under `gradSchemes`.
+The discretization of the convective terms, e.g., convective fluxes, is defined within the `divSchemes` keyword. Here, `div(phi,U)` referes to the discretization of the convective transport of momentum with `phi` being the (volumetric) flux and `U` the variable transported by the flux. In this case, the **second order upwind scheme** is employed called `Gauss linearUpwindV` combined with the default gradient scheme defined under `gradSchemes`. Since a turbulence model is employed, the convective transport of the turbulent quantities `k` and `epsilon` in their respective transport equations is also discretized with the **second order upwind scheme** combined with the default gradient scheme.
 
 Additionaly, `div((nuEff*dev2(T(grad(U)))))` denotes the divergence of the shear stress tensor in the momentum equation. Since this term is diffusive in nature, it is recommended to discretize it with a central differencing scheme, here `Gauss linear`.
 
@@ -437,3 +437,86 @@ divSchemes
 
 {: .note }
 > The keyword `bounded` in front of the discretization scheme for the convective terms is only required in steady-state simulations. It helps to maintain boundedness of the solution variable and promotes a better convergence.
+
+
+
+
+
+## Linear Solver Settings
+
+The specification of the linear equation solvers, tolerances and other algorithm controls is made in the `fvSolution` dictionary in the `system` directory. These settings are as follows for the airfoil tutorial case.
+
+### Solver settings
+
+The pressure field in the pressure-velocity coupling is solved using a **Geometric agglomerated Algebraic MultiGrid** (short: GAMG) solver with a Gauss-Seidel solver for smoothing during the multi-grid steps. The absolute solver tolerance for each iteration is set to $$10^{-6}$$ with a relative tolerance of $$0.1$$: 
+
+
+```
+solvers
+{
+    p
+    {
+        solver          GAMG;
+        smoother        GaussSeidel;
+        tolerance       1e-06;
+        relTol          0.1;
+    }
+... 
+}
+```
+
+The momentum equation and the transport equations for the turbulent properties is solved using a Gauss Seidel solver **Preconditioned bi-Conjugate Gradient** solver with an simplified **Diagonal-based Incomplete LU** preconditioner (PBiCG solver with DILU preconditioner). The absolute tolerance for solving is $$10^{-12}$$ with a relative tolerance of $$0.1$$:
+
+```
+solvers
+{
+...
+
+    "(U|k|epsilon)"
+    {
+        solver          PBiCG;
+        preconditioner  DILU;
+        tolerance       1e-12;
+        relTol          0.1;
+    }
+}
+```
+
+
+### Pressure-velocity coupling
+
+Pressure-based, steady-state simulations in OpenFOAM rely on the SIMPLE pressure-velocity coupling algorithm. Additional options for this algorithm are available within the `SIMPLE` entry in `fvSolutions`. In this tutorial, the consistent formulation of the algorithm is used called SIMPLEC with the keyword `consistent`. Additionally, the pressure correction equation is solved one additional time every iteration for improved convergence and stability with the `nNonOrthogonalCorrectors` entry set to `1`.
+
+The simulation will automatically be stopped as soon as the residual criteria are met specified in the `residualControl` sub-dictionary. In this case, these thresholds are set to $$10^{-4}$$ for all variables.
+
+```
+SIMPLE
+{
+    consistent      yes;
+    nNonOrthogonalCorrectors 1;
+
+    residualControl
+    {
+        p                   1e-4;
+        U                   1e-4;
+        k                   1e-4;
+        epsilon             1e-4;
+    }
+}
+```
+
+### Relaxation factors
+
+Steady state simultions are highly unstable, if no relaxation factors are used. Since the SIMPLEC algorithm is employed, no relaxation factor for pressure has to be set. However, velocity, turbulent kinetic energy and turbulent dissipation rate are relaxed with 0.8 and 0.5, respectively, using equation underrelaxation.
+
+```
+relaxationFactors
+{
+    equations
+    {
+        U               0.8;
+        k               0.5;
+        epsilon         0.5;
+    }
+}
+```
