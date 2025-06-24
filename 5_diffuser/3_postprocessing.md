@@ -52,10 +52,9 @@ For a better comparison with experimental data, a vertical velocity profile of t
 
 ![Diffuser paraview plot over line menu](figures/paraview-menu-plot-over-line.png)
 
-Similar to the streamlines, the coordinates of the start and end point of the sampling line should be $$(16.836 \,\, 0\,\, 0)$$ and $$(16.836 \,\, 4.7\,\, 0)$$, respectively, with a spatial **Resolution** of 1000 points along this line. Clicking **Apply** will open a separate window plotting all variables solved over the length of the line. This resulting diagram is very cluttered. Therefore, in the **Properties** window deselect all variables except the $$x$$-velocity component labelled `U_X`. In order to plot over the $$y$$-coordiantes of the line, uncheck **Use Index for X Axis** and set **X Array Name** to `Points_Y`. Finally, thile the $$x$$-velocity component is selected in the **Properties** window, change the **Line Thickness** to 5 for better readability. Optionally, chart title as well as axis can be specified. The **Properties** window should look like follows:
+Similar to the streamlines, the coordinates of the start and end point of the sampling line should be $$(16.836 \,\, 0\,\, 0)$$ and $$(16.836 \,\, 4.7\,\, 0)$$, respectively, with a spatial **Resolution** of 1000 points along this line. Clicking **Apply** will open a separate window plotting all variables solved over the length of the line. This resulting diagram is very cluttered. Therefore, in the **Properties** window deselect all variables except the $$x$$-velocity component labelled `U_X`. In order to plot over the $$y$$-coordiantes of the line, uncheck **Use Index for X Axis** and set **X Array Name** to `Points_Y`. Finally, thile the $$x$$-velocity component is selected in the **Properties** window, change the **Line Thickness** to 5 for better readability. Optionally, line color can be changed and chart title as well as axis can be specified. The **Properties** window should now look like follows:
 
-
-
+![Diffuser paraview plot over line menu](figures/paraview-menu-plot-over-line-clean.png)
 
 The resulting diagram should look like follows:
 
