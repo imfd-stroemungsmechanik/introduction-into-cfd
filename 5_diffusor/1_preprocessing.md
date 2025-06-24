@@ -255,8 +255,9 @@ boundaryField
     }
 }
 
+```
 
-```{: .note }
+{: .note }
 > When using advanced OpenFOAM boundary conditions like `totalPressure`, `turbulentIntensityKineticEnergyInlet` or wall functions for turbulent quantities, the entry `values` with an initial value has to be applied, although this value will be overwritten in the very first time step. Therefore, this `value` entry has no relevance for the course of the simulation.
 
 
