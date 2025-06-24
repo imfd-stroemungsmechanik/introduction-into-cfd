@@ -59,3 +59,7 @@ Similar to the streamlines, the coordinates of the start and end point of the sa
 The resulting diagram should look like follows:
 
 ![Diffuser paraview velocity profile](figures/diffuser-results-velocity-profile.png)
+
+
+
+## Validating the Results
