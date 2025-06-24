@@ -1,10 +1,10 @@
 ---
 layout: default
-title: 5. Diffusor
+title: 5. Diffuser
 nav_order: 6
 ---
 
-# Buice-Eaton 2D Diffusor
+# Buice-Eaton 2D Diffuser
 
 ## Objectives
 
@@ -19,9 +19,9 @@ The objectives for this tutorial are as follows:
 
 ## Overview
 
-This tutorial will describe how to pre-process, run, and post-process a case involving a steady-state, isothermal, incompressible flow through the Buice-Eaton 2D diffusor. The geometry is shown in the following figure with an inlet on the left, the top and bottom no-slip walls, and an outlet at the right. The flow will be solved using the OpenFOAM solver `simpleFoam` the suitable for laminar and turbulent, isothermal, incompressible, steady-state flows.
+This tutorial will describe how to pre-process, run, and post-process a case involving a steady-state, isothermal, incompressible flow through the Buice-Eaton 2D diffuser. The geometry is shown in the following figure with an inlet on the left, the top and bottom no-slip walls, and an outlet at the right. The flow will be solved using the OpenFOAM solver `simpleFoam` the suitable for laminar and turbulent, isothermal, incompressible, steady-state flows.
 
-![Diffusor case geometry](figures/diffusor-geometry.png)
+![Diffuser case geometry](figures/diffuser-geometry.png)
 
 The channel hight is defined to be $$H = 1\,\text{m}$$. Inlet and outlet are extended upstream and downstream, respectively, to reduce the influence of the boundary condition onto the solution. Air is considered as fluid with a kinematic viscosity of $$\nu = 15 \times 10^{-6}\,\text{m}^2\text{/s}$$. Based on a Reynolds-number of $$2 \times 10^4$$, the velocity at the inlet is:
 
@@ -38,6 +38,6 @@ Furthermore, a numerical study from NASA can be found [here](https://www.grc.nas
 ## Preparation
 
 Before starting, perform the following steps for preparation:
- 1. Download the archive `5_diffusor.zip` from the Downloads folder on the [OPAL course page](https://bildungsportal.sachsen.de/opal/auth/RepositoryEntry/19816513539).
+ 1. Download the archive `5_diffuser.zip` from the Downloads folder on the [OPAL course page](https://bildungsportal.sachsen.de/opal/auth/RepositoryEntry/19816513539).
  2. Extract the archive.
  3. Open a terminal, navigate to the newly created folder, and source OpenFOAM.

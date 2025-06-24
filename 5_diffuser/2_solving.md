@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Solving
-parent: 5. Diffusor
+parent: 5. Diffuser
 nav_order: 2
 ---
 
@@ -71,7 +71,7 @@ python3 create_plots.py
 
 This creates the following diagram of the residuals on the $$y$$-axis plotted against the iteration on the $$x$$-axis in the case folder:
 
-![Diffusor case residuals](figures/diffusor-results-residuals.png)
+![Diffuser case residuals](figures/diffuser-results-residuals.png)
 
 The plot shows that the residuals fall throughout the simulation to below $$10^{-4}$$ for all monitored variables. Since this is the specified residual criteria, the simulation stops automatically. We can assume this is a converged steady-state simulation.
 

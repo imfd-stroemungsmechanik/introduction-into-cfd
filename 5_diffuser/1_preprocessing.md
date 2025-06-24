@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Pre-Processing
-parent: 5. Diffusor
+parent: 5. Diffuser
 nav_order: 1
 ---
 
@@ -10,7 +10,7 @@ nav_order: 1
 
 ## OpenFOAM Case Structure
 
-A case being simulated involves data for mesh, fields, properties, control parameters, etc. In OpenFOAM this data is stored in a set of files within a case directory rather than in a single case file, as in many other CFD packages. The case directory is given a suitably descriptive name, here `diffusor`. This folder contains the following subfolders and files:
+A case being simulated involves data for mesh, fields, properties, control parameters, etc. In OpenFOAM this data is stored in a set of files within a case directory rather than in a single case file, as in many other CFD packages. The case directory is given a suitably descriptive name, here `diffuser`. This folder contains the following subfolders and files:
 
 ```
 ├── 0
@@ -27,7 +27,7 @@ A case being simulated involves data for mesh, fields, properties, control param
 │   ├── fvSchemes
 │   ├── fvSolution
 │   └── meshDict
-└── diffusor.stl
+└── diffuser.stl
 
 3 directories, 11 files
 ```
@@ -46,9 +46,9 @@ The *relevant* files for this tutorial case are:
 
 ## Mesh Generation
 
-The hexahedral-dominant, two-dimensional mesh is created automatically with the meshing utility `cartesian2DMesh` from a user provided surface geometry named `diffusor.stl, which is located in the case folder.
+The hexahedral-dominant, two-dimensional mesh is created automatically with the meshing utility `cartesian2DMesh` from a user provided surface geometry named `diffuser.stl, which is located in the case folder.
 
-The diffusor has an initial channel height of $$H = 1\,\text{m}$$ at the inlet and extends to $$4.7\,\text{m}$$ towards the outlet. In order to achieve 10 cells across the channel height (exluding inflation layers), the maximum cell size is set to $$0.1\,\text{m}$$. Additionally, the walls for the first mesh have a single inflation layer with a thickness ratio of 1.2. This way standard wall functions can be used by ensuring a dimensionless wall distance of $$y^+ > 30$$.
+The diffuser has an initial channel height of $$H = 1\,\text{m}$$ at the inlet and extends to $$4.7\,\text{m}$$ towards the outlet. In order to achieve 10 cells across the channel height (exluding inflation layers), the maximum cell size is set to $$0.1\,\text{m}$$. Additionally, the walls for the first mesh have a single inflation layer with a thickness ratio of 1.2. This way standard wall functions can be used by ensuring a dimensionless wall distance of $$y^+ > 30$$.
 
 The resulting `meshDict` looks as follows:
 
@@ -79,9 +79,9 @@ Finally, all corresponding patches are grouped together correctly using a suitab
 cartesian2DMesh
 ```
 
-The resulting mesh around the diffusor should look like follows:
+The resulting mesh around the diffuser should look like follows:
 
-![Diffusor coarse mesh](figures/diffusor-mesh-coarse.png)
+![Diffuser coarse mesh](figures/diffuser-mesh-coarse.png)
 
 
 At this point the mesh generation is complete. The mesh consists of:
@@ -97,7 +97,7 @@ At this point the mesh generation is complete. The mesh consists of:
 
 ## Mesh Quality
 
-Once the mesh has been created, it is always recommended to check the mesh statistics and quality. This can easily be done using the utility `checkMesh` from within the `diffusor` folder:
+Once the mesh has been created, it is always recommended to check the mesh statistics and quality. This can easily be done using the utility `checkMesh` from within the `diffuser` folder:
 
 ```
 checkMesh
@@ -166,12 +166,12 @@ The final output `Mesh OK.` indicates that no critical problems or errors were f
 
 The physical properties for the fluid, such as kinematic viscosity, are stored in the `transportProperties` file in the `constant` directory.
 
-Since the fluid is considered air, the kinematic viscosity is $$15 \times 10^{-6}\,\text{m}^2\text{/s}$$ and set accordingly in the `transportProperties` dictionary as follows:
+Since air is considered as fluid, the kinematic viscosity is $$15 \times 10^{-6}\,\text{m}^2\text{/s}$$ and set accordingly in the `transportProperties` dictionary as follows:
 
 ```
 viscosityModel  Newtonian;
 
-nu              2e-5;
+nu              15e-6;
 ```
 
 
@@ -209,17 +209,17 @@ Since the simulation starts at time $$t=0$$, the boundary and initial field data
 
 Since the Reynolds-number is set to $$\text{Re} = 2 \times 10^4$$, a pressure-velocity boundary setup will be employed, where velocity is defined at the inlet while pressure is set at the outlet.
 
-The velocity at the inlet is set to a uniform fixed value of $$U_\text{in} = 0.3\,\text{m/s}$$ and at the outlet to zero gradient in patch normal direction using a `fixedValue` and `zeroGradient` boundary condition, respectively. Walls are considered no-slip and thus set to the `noSlip` boundary condition.
+The velocity at the inlet is set to a uniform fixed value of $$U_\text{in} = 0.3\,\text{m/s}$$ and at the outlet to zero gradient using a `fixedValue` and `zeroGradient` boundary condition, respectively. Walls are considered no-slip and thus set to the `noSlip` boundary condition.
 
-The kinematic pressure at the outlet is set to a uniform value of $$p_\text{out} = 0\,\text{m}^2\text{/s}^2$$ using a `fixedValue` boundary condition, while walls and the inlet are treated as zero gradient in patch normal direction, thus set to `zeroGradient`.
+The kinematic pressure at the outlet is set to a uniform value of $$p_\text{out} = 0\,\text{m}^2\text{/s}^2$$ using a `fixedValue` boundary condition, while walls and the inlet are treated as zero gradient, thus set to `zeroGradient`.
 
 ### Turbulent Kinetic Energy
 
-The turbulent kinetic energy has the unit $$\text{m}^2\text{/s}^2$$ and its initial value is set to $$0.1\,\text{m}^2\text{/s}^2$$. Since the definition of specific values for $$k$$ at the inlet are difficult to predict, the turbulent kinetic energy will be estimated based on the turbulent intensity $$I_\text{t}$$ and the inlet velocity $$U_\text{in}$$ at the patch itself. Therefore, the following formula will be used:
+The turbulent kinetic energy has units of $$\text{m}^2\text{/s}^2$$ and its initial value is set to $$0.1\,\text{m}^2\text{/s}^2$$. Since defining specific values for $$k$$ at the inlet are difficult to predict, the turbulent kinetic energy will be estimated based on the turbulent intensity $$I_\text{t}$$ and the inlet velocity $$U_\text{in}$$ at the patch itself. Therefore, the following formula will be used:
 
 $$ k_\text{in} = 1.5 I_\text{in} |U_\text{in}|^2 $$
 
-This estimate is calculated by the `turbulentIntensityKineticEnergyInlet` boundary condition with one additional entry `intensity`, which sets the turbulent intensity $$I_\text{t}$$ to 0.01, which stands for a low turbulent intensity of 1 %. At the walls, an all-$$y^+$$ wall function approach is used, which computes the effect of the turbulent boundary layer onto the turbulent kinetic energy. The boundary type is therefore set to `kqRWallFunction`. Finally, at the outlet a patch normal zero gradient boundary condition is used.
+This estimate is calculated by the `turbulentIntensityKineticEnergyInlet` boundary condition with one additional entry `intensity`, which sets the turbulent intensity $$I_\text{t}$$ to 0.01, which stands for a low turbulent intensity of 1 %. At the walls, an all-$$y^+$$ wall function approach is used, which computes the effect of the turbulent boundary layer onto the turbulent kinetic energy. The boundary type is therefore set to `kqRWallFunction`. Finally, at the outlet a zero gradient boundary condition is used.
 
 The complete `boundaryField` entry for the turbulent kinetic energy looks as follows:
 
@@ -259,11 +259,11 @@ boundaryField
 
 ### Turbulent Dissipation Rate
 
-The turbulent dissipation rate has the unit $$\text{m}^2\text{/s}^3$$ and its initial value is set to $$100\,\text{m}^2\text{/s}^3$$. Similar to the turbulent kinetic energy, specifying resonable values for $$\epsilon$$ at the inlet is difficult. Therefore, the following empirical formula will be used instead based on turbulent kinetic energy $$k$$ at the inlet patch, modelling coefficient $$C_\mu$$, and a turbulent length scale $$L_\text{t}$$:
+The turbulent dissipation rate has units of $$\text{m}^2\text{/s}^3$$ and its initial value is set to $$100\,\text{m}^2\text{/s}^3$$. Similar to the turbulent kinetic energy, specifying resonable values for $$\epsilon$$ at the inlet is difficult. Therefore, the following empirical formula will be used instead based on turbulent kinetic energy $$k$$ at the inlet patch, modelling coefficient $$C_\mu$$, and a turbulent length scale $$L_\text{t}$$:
 
 $$ \epsilon_\text{in} = \frac{C_\mu^{0.75} \, k^{1.5}}{L_\text{t}} $$
 
-This estimate is implemented in the `turbulentMixingLengthDissipationRateInlet` boundary condition with one additional entry `mixingLength`, which sets the turbulent length scale to $$L_\text{t} = 1.5 \times 10^{-3}\,\text{m}$$. At the walls, an all-$$y^+$$ wall function approach is used, which computes the effect of the turbulent boundary layer onto the turbulent dissipation rate. The boundary type is therefore set to `epsilonWallFunction`. Finally, at the outlet a patch normal zero gradient boundary condition is used.
+This estimate is implemented in the `turbulentMixingLengthDissipationRateInlet` boundary condition with one additional entry `mixingLength`, which sets the turbulent length scale to $$L_\text{t} = 1.5 \times 10^{-3}\,\text{m}$$. At the walls, an all-$$y^+$$ wall function approach is used, which computes the effect of the turbulent boundary layer onto the turbulent dissipation rate. The boundary type is therefore set to `epsilonWallFunction`. Finally, at the outlet a zero gradient boundary condition is used.
 
 The complete `boundaryField` entry for the turbulent dissipation rate looks as follows:
 
@@ -303,7 +303,7 @@ Finally, the turbulent viscosity $$\nu_\text{t}$$ with unit $$\text{m}^2\text{/s
 {: .note }
 > The `calculated` boundary type in OpenFOAM is always used, when the corresponding variable will be calculated by the CFD model itself and does not have to be specified. In case of turbulent viscosity, $$\nu_\text{t}$$ will be calculated by the turbulence model and thus does not have to be specified.
 
-The specification of the boundary condition at walls for $$\nu_\text{t}$$ is critical, though, as this defines the wall treatment approach. In this case, an all-$$y^+$$ wall function of type `nutUSpaldingWallFunction` is used which is both valid in the viscous sublayer with $$y^+ \approx 1$$, but also within the log-law region with $$y^+ > 30$$. This flexibility allows for mesh refinement without the need to change these boundary condition later.
+The specification of the boundary condition at walls for $$\nu_\text{t}$$ is critical, though, as this defines the wall treatment approach. In this case, an all-$$y^+$$ wall function of type `nutUSpaldingWallFunction` is, which is designed to work across the entire $$y^+$$ range, making it more versatile, e.g. valid both in the viscous sublayer with $$y^+ \approx 1$$ and within the log-law region with $$y^+ > 30$$. This flexibility allows for mesh refinement without the need to change these boundary condition later.
 
 The complete `boundaryField` entry for the turbulent viscosity looks as follows:
 
@@ -342,23 +342,10 @@ boundaryField
 
 Settings related to the control of time (for transient simulations) or iterations (for steady-state simulations) and reading and writing of the solution data are read in from the `controlDict` file in the `system` folder.
 
-
-### Flow Solver
-
-The file starts with the corresponding solver to be used:
+The key settings for this steady-state turbulent simulation include:
 ```
 application     simpleFoam;
-```
-In this tutorial case, we are using the solver `simpleFoam`, a pressure-based solver for incompressible, steady-state, laminar or turbulent single-phase flows.
 
-
-### Start and End Times
-
-In this tutorial the run starts at time 0, which means that OpenFOAM needs to read field data from a directory named 0. Therefore we set the `startFrom` keyword to `startTime` and then specify the `startTime` keyword to be `0`. The simulation should run until a steady state solution is reached. Since it is unknown how many iterations are needed for this, it is assumed that 2500 iterations are sufficient. Therefore, the `stopAt` entry is set to `endTime` and the `endTime` entry to `2500`.
-
-The corresponding lines in the `controlDict` look as follows:
-
-```
 startFrom       startTime;
 
 startTime       0;
@@ -366,28 +353,15 @@ startTime       0;
 stopAt          endTime;
 
 endTime         2500;
-```
 
-### Time Step Size
-
-The time step size is defined via the keyword `deltaT`. Since we are performing a steady-state simulation, the time step size has no physical meaning and is simply set to `1`. This way it acts as a iteration counter. The corresponding settings in `controlDict` look as follows:
-
-```
 deltaT          1;
-```
 
-
-### Writing out Results
-
-As the simulation progresses, results are written out at certain intervals of iterations that can later be analysed and visualized. The `writeControl` keyword presents several options for setting the iteration interval at which the results are written. Here, the `timeStep` option is selected which specifies that results are written every 100-th iteration where the value is specified under the `writeInterval` keyword. For this case, the entries in the `controlDict` are shown below:
-
-```
 writeControl    timeStep;
 
 writeInterval   250;
 ```
 
-
+In this tutorial case, the solver `simpleFoam` is used, a pressure-based solver for incompressible, steady-state, laminar or turbulent single-phase flows. The simulation starts at time `0`. Therefore we set the `startFrom` keyword to `startTime` and then specify the `startTime` keyword to be `0`. The simulations runs for 2500 iterations, which is why the `endTime` entry is set to `2500`. Since time step size has no physical meaning in steady-state simulations, the time step size `deltaT` is set to 1, which functions as iteration counter rather than physical time. Finally, results are witten out every 250 iterations configured via the `writeInterval` keyword.
 
 
 
