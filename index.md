@@ -12,6 +12,9 @@ This repository complements the course Introduction into Computational Fluid Dyn
 
 1. An introduction to the Linux command line
 2. Mesh generation in OpenFOAM
+3. Transient flow over a backwards-facing step
+4. Steady-state flow around a NACA 0012 airfoil
+5. Steady-state, turbulent flow in a diffuser
 
 ## How to use this guide
 

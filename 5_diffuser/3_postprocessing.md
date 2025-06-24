@@ -35,4 +35,10 @@ When inspecting the velocity field through the diffuser, the reduction in flow v
 
 ## Visualizing Flow Streamlines
 
-Streamlines of the flow are best suited for visualizing any possible recirculation.
+Streamlines of the flow field are a great way of visualizing any possible recirculation. With the `para.foam` module highlighted in the **Pipeline Browser**, select the **Stream Tracer** filter from the **Common Data and Analytics** menu. The **Properties** window panel should appear as shown in the following figure:
+
+![Diffuser paraview stream tracer menu](figures/paraview-menu-stream-tracer.png)
+
+In the resulting **Properties** panel, make sure the stream lines are plotted according to the velocity vector field `U`. Streamlines are seeded along a straight line with the coordinates $$(16.836 \,\, 0\,\, 0)$$ and $$(16.836 \,\, 4.7\,\, 0)$$ with a seeding resolution of 25 streamlines along this straight line. Finally, color code the streamlines by pressure `p`. Click Apply to show the streamlines through the diffuser as follows:
+
+![Diffuser paraview stream tracer](figures/diffuser-results-stream-tracer.png)
