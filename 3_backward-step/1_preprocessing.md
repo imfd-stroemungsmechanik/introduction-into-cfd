@@ -96,7 +96,7 @@ In order to create the mesh, the `cartesian2DMesh` utility has to be executed:
 cartesian2DMesh
 ```
 
-At this point the mesh generation is complete. It consists of:
+At this point the mesh generation is complete. The mesh consists of:
  - Background mesh with a cell size of $$2.5 \times 10^{-3}\,\text{m}$$.
  - Correct patch types for inlet, outlet, walls and front and back planes.
 

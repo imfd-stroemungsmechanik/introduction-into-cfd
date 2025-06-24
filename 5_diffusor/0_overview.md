@@ -23,7 +23,7 @@ This tutorial will describe how to pre-process, run, and post-process a case inv
 
 ![Diffusor case geometry](figures/diffusor-geometry.png)
 
-The channel hight is defined to be $$H = 1\,\text{m}$$. Inlet and outlet are extended upstream and downstream, respectively, to reduce the influence of the boundary condition onto the solution. Air is considered as fluid with a kinematic viscosity of $$\nu = 15 \times 10^{-6}\,\text{m}^2\text{/s}$$. Based on a Reynolds-number of 20 000, the velocity at the inlet is:
+The channel hight is defined to be $$H = 1\,\text{m}$$. Inlet and outlet are extended upstream and downstream, respectively, to reduce the influence of the boundary condition onto the solution. Air is considered as fluid with a kinematic viscosity of $$\nu = 15 \times 10^{-6}\,\text{m}^2\text{/s}$$. Based on a Reynolds-number of $$2 \times 10^4$$, the velocity at the inlet is:
 
 $$ \text{Re} = \frac{U_\text{in} \, H}{\nu} \quad \rightarrow \quad U_\text{in} = \frac{\text{Re} \, \nu }{H} = 0.3 \text{m/s} $$
 

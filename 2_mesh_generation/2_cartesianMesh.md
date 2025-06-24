@@ -236,7 +236,7 @@ In this case, only patch `atmosphere` will get the new patch type `patch` suitab
 cartesianMesh
 ```
 
-At this point the mesh generation is complete. It consists of:
+At this point the mesh generation is complete. The mesh consists of:
  - Background mesh with a cell size of 10 m.
  - Surface-based refinement at the `buildings` patch
  - Region-based refinement in the wake of the buildings

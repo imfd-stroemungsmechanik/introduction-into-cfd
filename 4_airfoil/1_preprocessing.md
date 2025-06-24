@@ -137,7 +137,7 @@ The resulting mesh should look like follows:
 ![Airfoil case geometry](figures/airfoil-mesh.png)
 
 
-At this point the mesh generation is complete. It consists of:
+At this point the mesh generation is complete. The mesh consists of:
  - Background mesh with a cell size of $$0.25 \text{m}$$
  - A circular refinement around the airfoil with a smallest cell size of about $$8\,\text{mm}$$.
  - Correct patch types for inlet, outlet, walls and front and back planes.

@@ -79,12 +79,12 @@ Finally, all corresponding patches are grouped together correctly using a suitab
 cartesian2DMesh
 ```
 
-The resulting mesh should look like follows:
+The resulting mesh around the diffusor should look like follows:
 
 ![Diffusor coarse mesh](figures/diffusor-mesh-coarse.png)
 
 
-At this point the mesh generation is complete. It consists of:
+At this point the mesh generation is complete. The mesh consists of:
  - Background mesh with a cell size of $$0.1 \text{m}$$
  - A single inflation layer at the walls with a thickness ratio of 1.2.
  - Correct patch types for inlet, outlet, lower and upper walls and front and back planes.
@@ -205,3 +205,10 @@ For this set of simulation the Reynolds-Averaged Navier-Stokes (RANS) equations 
 
 Since the simulation starts at time $$t=0$$, the boundary and initial field data is stored in the `0` sub-directory. This must be done for all variables solved for, in particular pressure `p`, velocity `U`, and additionally the turbulent quantities turbulent kinetic energy `k`, turbulent dissipation rate `epsilon`, and turbulent viscosity `nut`.
 
+### Pressure and Velocity
+
+Since the Reynolds-number is set to $$2 \times 10^4$$, a pressure-velocity boundary setup will be employed, where velocity is defined at the inlet while pressure is set at the outlet.
+
+The velocity at the inlet is set to a uniform fixed value of $$U_\text{in} = 0.3\,\text{m/s}$$ and at the outlet to a zero gradient in patch normal direction using a `fixedValue` and `zeroGradient` boundary condition, respectively. Walls are considered no-slip and thus set to the `noSlip` boundary condition.
+
+The pressure at the outlet is set to a uniform value of $$p_\text{out} = 0\,\text{m}^2\text{/s}^2$$ using a `fixedValue` boundary condition, while walls and the inlet are treated as zero gradient, thus set to `zeroGradient`.
