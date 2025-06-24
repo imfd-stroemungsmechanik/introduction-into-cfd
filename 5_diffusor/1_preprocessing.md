@@ -207,8 +207,53 @@ Since the simulation starts at time $$t=0$$, the boundary and initial field data
 
 ### Pressure and Velocity
 
-Since the Reynolds-number is set to $$2 \times 10^4$$, a pressure-velocity boundary setup will be employed, where velocity is defined at the inlet while pressure is set at the outlet.
+Since the Reynolds-number is set to $$\text{Re} = 2 \times 10^4$$, a pressure-velocity boundary setup will be employed, where velocity is defined at the inlet while pressure is set at the outlet.
 
-The velocity at the inlet is set to a uniform fixed value of $$U_\text{in} = 0.3\,\text{m/s}$$ and at the outlet to a zero gradient in patch normal direction using a `fixedValue` and `zeroGradient` boundary condition, respectively. Walls are considered no-slip and thus set to the `noSlip` boundary condition.
+The velocity at the inlet is set to a uniform fixed value of $$U_\text{in} = 0.3\,\text{m/s}$$ and at the outlet to zero gradient in patch normal direction using a `fixedValue` and `zeroGradient` boundary condition, respectively. Walls are considered no-slip and thus set to the `noSlip` boundary condition.
 
-The pressure at the outlet is set to a uniform value of $$p_\text{out} = 0\,\text{m}^2\text{/s}^2$$ using a `fixedValue` boundary condition, while walls and the inlet are treated as zero gradient, thus set to `zeroGradient`.
+The kinematic pressure at the outlet is set to a uniform value of $$p_\text{out} = 0\,\text{m}^2\text{/s}^2$$ using a `fixedValue` boundary condition, while walls and the inlet are treated as zero gradient in patch normal direction, thus set to `zeroGradient`.
+
+### Turbulent Quantities
+
+Since the $$k-\epsilon$$ solves two additional transport equations for turbulent kinetic energy $$k$$ and turbulent dissipation rate $$\epsilon$$, initial and boundary conditions have to be provided for these variables. Additionally, the treatment of the turbulent viscosity $$\nu_\text{t}$$ and their initial value has to be specified as well.
+
+#### Turbulent Kinetic Energy
+
+The turbulent kinetic energy has the unit $$\text{m}^2\text{/s}^2$$ and its initial value is set to $$0.1\,\text{m}^2\text{/s}^2$$. Since the definition of specific values for $$k$$ at the inlet are difficult to predict, the turbulent kinetic energy will be estimated based on the turbulent intensity $$I_\text{t}$$ and the inlet velocity $$U_\text{in}$$ at the patch itself. Therefore, the following formula will be used:
+
+$$ k_\text{in} = 1.5 I_\text{in} |U_\text{in}|^2 $$
+
+This estimate is calculated by the `turbulentIntensityKineticEnergyInlet` boundary condition with one additional entry `intensity`, which stands for the turbulent intensity $$I_\text{t}$$ and is set to 0.01, which stands for a low turbulent intensity of 1\,%.
+
+```
+boundaryField
+{
+    inlet
+    {
+        type            turbulentIntensityKineticEnergyInlet;
+        intensity       0.01;
+        value           uniform 0.1;
+    }
+
+    outlet
+    {
+        type            zeroGradient;
+    }
+
+    lowerWall
+    {
+        type            kqRWallFunction;
+        value           uniform 0.1;
+    }
+
+    upperWall
+    {
+        type            kqRWallFunction;
+        value           uniform 0.1;
+    }
+}
+```
+
+#### Turbulent Dissipation Rate
+
+#### Turbulent Viscosity
