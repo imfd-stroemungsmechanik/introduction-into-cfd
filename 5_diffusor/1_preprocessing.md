@@ -402,7 +402,7 @@ The discretization of the temporal derivatives $$(\partial / \partial t)$$ is de
 ```
 ddtSchemes
 {
-    default         steadyState;
+    default             steadyState;
 }
 ```
 
@@ -413,20 +413,20 @@ The discretization of the gradient terms is defined within the `gradSchemes` key
 ```
 gradSchemes
 {
-    default         cellLimited Gauss linear 1.0;
+    default             cellLimited Gauss linear 1.0;
 }
 ```
 
 ### Convective terms
 
-The discretization of the convective terms, e.g., convective fluxes, is defined within the `divSchemes` keyword. Here, `div(phi,U)` referes to the discretization of the convective transport of momentum with `phi` being the (volumetric) flux and `U` the variable transported by the flux. In this case, the **second order upwind scheme** is employed called `Gauss linearUpwindV` combined with the default gradient scheme defined under `gradSchemes`. Since a turbulence model is employed, the convective transport of the turbulent quantities `k` and `epsilon` in their respective transport equations is also discretized with the **second order upwind scheme** combined with the default gradient scheme.
+The discretization of the convective transport terms is defined within the `divSchemes` keyword. Here, `div(phi,U)` referes to the discretization of the convective transport of momentum with `phi` being the (volumetric) flux and `U` the variable transported by the flux. In this case, the **second order upwind scheme** is employed called `Gauss linearUpwindV` combined with the default gradient scheme defined under `gradSchemes`. Since a turbulence model is employed, the convective transport of the turbulent quantities `k` and `epsilon` in their respective transport equations is also discretized with the **second order upwind scheme** combined with the default gradient scheme.
 
 Additionaly, `div((nuEff*dev2(T(grad(U)))))` denotes the divergence of the shear stress tensor in the momentum equation. Since this term is diffusive in nature, it is recommended to discretize it with a central differencing scheme, here `Gauss linear`.
 
 ```
 divSchemes
 {
-    div(phi,U)      bounded Gauss linearUpwindV Gauss linear;
+    div(phi,U)          bounded Gauss linearUpwindV default;
 
     div(phi,k)          bounded Gauss linearUpwind default;
     div(phi,epsilon)    bounded Gauss linearUpwind default;
@@ -492,15 +492,15 @@ The simulation will automatically be stopped as soon as the residual criteria ar
 ```
 SIMPLE
 {
-    consistent      yes;
-    nNonOrthogonalCorrectors 1;
+    consistent                  yes;
+    nNonOrthogonalCorrectors    1;
 
     residualControl
     {
-        p                   1e-4;
-        U                   1e-4;
-        k                   1e-4;
-        epsilon             1e-4;
+        p                       1e-4;
+        U                       1e-4;
+        k                       1e-4;
+        epsilon                 1e-4;
     }
 }
 ```

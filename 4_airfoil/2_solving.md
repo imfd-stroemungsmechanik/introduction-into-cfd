@@ -34,20 +34,12 @@ This output at iteration 218 tells us in summary:
 - The error of the conservation of mass is denoted as `continuity error`. Since its value is very small, conservation of mass is maintained.
 - The execution time for the simulation up until this iteration is roughly 4 seconds as indicated by the `ExecutionTime`.
 
-After 547 iterations, the simulation automatically stops with the following output:
-
-```
-SIMPLE solution converged in 547 iterations
-
-End
-```
-
-The reason is that the specified residual criteria for pressure and velocity specified in `fvSolution` is met.
+After 547 iterations, the simulation automatically stops as the residuals fall below the specified residual criteria in `fvSolution`.
 
 
 ## Monitoring the Simulation
 
-In order to track and monitor the simulation during its run, two function objects are added at the bottom of the `controlDict`. These are used for e.g. writing out the residuals over the course of the simulation, perform certain post-processing tasks such as calculating the flow rate over a patch, compute maximum and average values of the flow field, compute forces and force coefficients on objects, compute derived fields such as heat transfer or shear stress rates, and generate images through cutPlanes or iso-surfaces.
+In order to monitor the simulation during its run, two function objects are added at the bottom of the `controlDict`. These are used for e.g. writing out the residuals over the course of the simulation, perform certain post-processing tasks such as calculating the flow rate over a patch, compute maximum and average values of the flow field, compute forces and force coefficients on objects, compute derived fields such as heat transfer or shear stress rates, and generate images through cutPlanes or iso-surfaces.
 
 ### Residuals
 
@@ -80,7 +72,7 @@ The plot shows that the residuals fall throughout the simulation to below $$10^{
 
 
 
-### Force coefficients
+### Force Coefficients
 
 Additionally, a second function object named `forceCoeffs` in the `controlDict` evaluates the drag and lift coefficients acting on the airfoil. Since this computation is done during runtime and stored in the `postProcessing` directory, it is just perfectly suited for checking convergence. The function object itself is configured as follows:
 
