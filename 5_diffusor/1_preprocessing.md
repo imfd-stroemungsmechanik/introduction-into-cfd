@@ -223,7 +223,9 @@ The turbulent kinetic energy has the unit $$\text{m}^2\text{/s}^2$$ and its init
 
 $$ k_\text{in} = 1.5 I_\text{in} |U_\text{in}|^2 $$
 
-This estimate is calculated by the `turbulentIntensityKineticEnergyInlet` boundary condition with one additional entry `intensity`, which stands for the turbulent intensity $$I_\text{t}$$ and is set to 0.01, which stands for a low turbulent intensity of 1\,%.
+This estimate is calculated by the `turbulentIntensityKineticEnergyInlet` boundary condition with one additional entry `intensity`, which sets the turbulent intensity $$I_\text{t}$$ to 0.01, which stands for a low turbulent intensity of 1 %. At the walls, an all-$$y^+$$ wall function approach is used, which computes the effect of the turbulent boundary layer onto the turbulent kinetic energy. The boundary type is therefore set to `kqRWallFunction`. Finally, at the outlet a patch normal zero gradient boundary condition is used.
+
+The complete `boundaryField` entry for the turbulent kinetic energy looks as follows:
 
 ```
 boundaryField
@@ -252,7 +254,11 @@ boundaryField
         value           uniform 0.1;
     }
 }
-```
+
+
+```{: .note }
+> When using advanced OpenFOAM boundary conditions like `totalPressure`, `turbulentIntensityKineticEnergyInlet` or wall functions for turbulent quantities, the entry `values` with an initial value has to be applied, although this value will be overwritten in the very first time step. Therefore, this `value` entry has no relevance for the course of the simulation.
+
 
 #### Turbulent Dissipation Rate
 
