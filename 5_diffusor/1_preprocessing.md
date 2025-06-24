@@ -203,7 +203,7 @@ For this set of simulation the Reynolds-Averaged Navier-Stokes (RANS) equations 
 
 ## Boundary Conditions
 
-Since the simulation starts at time $$t=0$$, the boundary and initial field data is stored in the `0` sub-directory. This must be done for all variables solved for, in particular pressure `p`, velocity `U`, and additionally the turbulent quantities turbulent kinetic energy `k`, turbulent dissipation rate `epsilon`, and turbulent viscosity `nut`.
+Since the simulation starts at time $$t=0$$, the boundary and initial field data is stored in the `0` sub-directory. This must be done for all variables solved for, such as pressure `p` and velocity `U`. Furthermore, the $$k-\epsilon$$ solves two additional transport equations for turbulent kinetic energy $$k$$ and turbulent dissipation rate $$\epsilon$$. Therefore, initial and boundary conditions have to be provided for these variables as well. Finally, the treatment of the turbulent viscosity $$\nu_\text{t}$$ at the walls has to be specified as well.
 
 ### Pressure and Velocity
 
@@ -213,11 +213,7 @@ The velocity at the inlet is set to a uniform fixed value of $$U_\text{in} = 0.3
 
 The kinematic pressure at the outlet is set to a uniform value of $$p_\text{out} = 0\,\text{m}^2\text{/s}^2$$ using a `fixedValue` boundary condition, while walls and the inlet are treated as zero gradient in patch normal direction, thus set to `zeroGradient`.
 
-### Turbulent Quantities
-
-Since the $$k-\epsilon$$ solves two additional transport equations for turbulent kinetic energy $$k$$ and turbulent dissipation rate $$\epsilon$$, initial and boundary conditions have to be provided for these variables. Additionally, the treatment of the turbulent viscosity $$\nu_\text{t}$$ and their initial value has to be specified as well.
-
-#### Turbulent Kinetic Energy
+### Turbulent Kinetic Energy
 
 The turbulent kinetic energy has the unit $$\text{m}^2\text{/s}^2$$ and its initial value is set to $$0.1\,\text{m}^2\text{/s}^2$$. Since the definition of specific values for $$k$$ at the inlet are difficult to predict, the turbulent kinetic energy will be estimated based on the turbulent intensity $$I_\text{t}$$ and the inlet velocity $$U_\text{in}$$ at the patch itself. Therefore, the following formula will be used:
 
@@ -261,7 +257,7 @@ boundaryField
 > When using advanced OpenFOAM boundary conditions like `totalPressure`, `turbulentIntensityKineticEnergyInlet` or wall functions for turbulent quantities, the entry `values` with an initial value has to be applied, although this value will be overwritten in the very first time step. Therefore, this `value` entry has no relevance for the course of the simulation.
 
 
-#### Turbulent Dissipation Rate
+### Turbulent Dissipation Rate
 
 The turbulent dissipation rate has the unit $$\text{m}^2\text{/s}^3$$ and its initial value is set to $$100\,\text{m}^2\text{/s}^3$$. Similar to the turbulent kinetic energy, specifying resonable values for $$\epsilon$$ at the inlet is difficult. Therefore, the following empirical formula will be used instead based on turbulent kinetic energy $$k$$ at the inlet patch, modelling coefficient $$C_\mu$$, and a turbulent length scale $$L_\text{t}$$:
 
@@ -300,7 +296,7 @@ boundaryField
 }
 ```
 
-#### Turbulent Viscosity
+### Turbulent Viscosity
 
 Finally, the turbulent viscosity $$\nu_\text{t}$$ with unit $$\text{m}^2\text{/s}$$ has to be specified in particular at the walls. Since the turbulent viscosity will be calculated based on the turbulent quantities $$k$$ and $$\epsilon$$, the initial field values and the boundary conditions at anything other than walls is relevant. Therefore, the internal field is simply set to $$0\,\text{m}^2\text{/s}$$ and the boundary conditions for inlet and outlet are set to `calculated`.
 
@@ -339,3 +335,105 @@ boundaryField
     }
 }
 ```
+
+
+
+## Simulation Control
+
+Settings related to the control of time (for transient simulations) or iterations (for steady-state simulations) and reading and writing of the solution data are read in from the `controlDict` file in the `system` folder.
+
+
+### Flow Solver
+
+The file starts with the corresponding solver to be used:
+```
+application     simpleFoam;
+```
+In this tutorial case, we are using the solver `simpleFoam`, a pressure-based solver for incompressible, steady-state, laminar or turbulent single-phase flows.
+
+
+### Start and End Times
+
+In this tutorial the run starts at time 0, which means that OpenFOAM needs to read field data from a directory named 0. Therefore we set the `startFrom` keyword to `startTime` and then specify the `startTime` keyword to be `0`. The simulation should run until a steady state solution is reached. Since it is unknown how many iterations are needed for this, it is assumed that 2500 iterations are sufficient. Therefore, the `stopAt` entry is set to `endTime` and the `endTime` entry to `2500`.
+
+The corresponding lines in the `controlDict` look as follows:
+
+```
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         2500;
+```
+
+### Time Step Size
+
+The time step size is defined via the keyword `deltaT`. Since we are performing a steady-state simulation, the time step size has no physical meaning and is simply set to `1`. This way it acts as a iteration counter. The corresponding settings in `controlDict` look as follows:
+
+```
+deltaT          1;
+```
+
+
+### Writing out Results
+
+As the simulation progresses, results are written out at certain intervals of iterations that can later be analysed and visualized. The `writeControl` keyword presents several options for setting the iteration interval at which the results are written. Here, the `timeStep` option is selected which specifies that results are written every 100-th iteration where the value is specified under the `writeInterval` keyword. For this case, the entries in the `controlDict` are shown below:
+
+```
+writeControl    timeStep;
+
+writeInterval   250;
+```
+
+
+
+
+
+## Discretization
+
+The user specifies the choice of finite volume discretisation schemes in the `fvSchemes` dictionary in the `system` directory. Here, we will only cover the most relevant settings.
+
+### Temporal derivatives
+
+The discretization of the temporal derivatives $$(\partial / \partial t)$$ is defined within the `ddtSchemes` keyword. Since this is a steady-state simulation, the entry here is set to `steadyState`, e.g. the temporal derivative is set to zero.
+
+```
+ddtSchemes
+{
+    default         steadyState;
+}
+```
+
+### Gradient terms
+
+The discretization of the gradient terms is defined within the `gradSchemes` keyword. All gradient schemes are discretized equally with a second order **central differencing scheme** with a cell-based gradient limiter to avoid exessively large gradient. Hence, the `default` discretization is set to `cellLimited Gauss linear 1.0`.
+
+```
+gradSchemes
+{
+    default         cellLimited Gauss linear 1.0;
+}
+```
+
+### Convective terms
+
+The discretization of the convective terms, e.g., convective fluxes, is defined within the `divSchemes` keyword. Here, `div(phi,U)` referes to the discretization of the convective flux $$\partial(u_i u_j)/\partial x_j$$ with `phi` being the (volumetric) flux and `U` the variable transported by the flux. In this case, the **second order upwind scheme** is employed called `Gauss linearUpwindV` combined with the default gradient scheme defined under `gradSchemes`. Since a turbulence model is employed, the turbulent quantities in their respective transport equations also have to be discretized. Here, we also use the **second order upwind scheme** combined with the default gradient scheme defined under `gradSchemes`.
+
+Additionaly, `div((nuEff*dev2(T(grad(U)))))` denotes the divergence of the shear stress tensor in the momentum equation. Since this term is diffusive in nature, it is recommended to discretize it with a central differencing scheme, here `Gauss linear`.
+
+```
+divSchemes
+{
+    div(phi,U)      bounded Gauss linearUpwindV Gauss linear;
+
+    div(phi,k)          bounded Gauss linearUpwind default;
+    div(phi,epsilon)    bounded Gauss linearUpwind default;
+
+    div((nuEff*dev2(T(grad(U))))) Gauss linear;
+}
+```
+
+{: .note }
+> The keyword `bounded` in front of the discretization scheme for the convective terms is only required in steady-state simulations. It helps to maintain boundedness of the solution variable and promotes a better convergence.
