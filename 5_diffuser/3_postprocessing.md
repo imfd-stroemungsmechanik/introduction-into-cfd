@@ -75,3 +75,10 @@ Fortunately, experimental measurements are availabel in order to assess the accu
 The resulting diagram should look like follows:
 
 ![Diffuser paraview velocity profile](figures/diffuser-results-velocity-profile-experiment.png)
+
+This results confirms the huge discrepancy between the experimentally measured velocity profile and the numerically simulated one. First, no flow separation and thus recirculation is predicted by the numerical model. Second, the maximum flow velocity in $$x$$-direction is significantly underpredicted. This confirms the previous statement that the standard $$k-\epsilon$$ turbulence model is a poor choice for this flow problem.
+
+
+## Conclusion
+
+This concludes the fourth seminar on the simulation of an incompressible, turbulent flow through a diffuser. A two-dimensional mesh was generated using `cartesian2DMesh` based on a geometry file. The boundary conditions were adjusted for the standard $$k-\epsilon$$ turbulence model. The simulation was then run using `simpleFoam`, and residuals was plotted and dimensionless wall distance $$y^+$$ evaluated. Finally, the flow field was visualized in ParaView and the velocity profile within the diffuser compared with experimental measurements revealing a huge modelling error due to the turbulence model.

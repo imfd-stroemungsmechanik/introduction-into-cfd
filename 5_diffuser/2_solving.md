@@ -97,3 +97,5 @@ functions
     }
 }
 ```
+
+When analysing the the results it is revealed that the average dimensionless wall distance for the final time step is in the range of 20 with a maximum value of 51. This indicates that the mesh is slightly to fine for using standard wall functions, which require a dimensionless wall distance of at least 30. Therefore, the first cell is located in the buffer region of the turbulent boundary layer leading to an incresed numerical error. Nevertheless, for now this mesh is sufficient for this seminar.
