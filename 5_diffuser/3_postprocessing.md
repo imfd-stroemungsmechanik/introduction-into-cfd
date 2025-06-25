@@ -35,7 +35,7 @@ When inspecting the velocity field through the diffuser, the reduction in flow v
 
 ## Visualizing Flow Streamlines
 
-Streamlines of the flow field are a great way of visualizing any possible recirculation. With the `para.foam` module highlighted in the **Pipeline Browser**, select the **Stream Tracer** filter from the **Common Data and Analytics** menu. The **Properties** window panel should appear as shown in the following figure:
+Streamlines of the flow field are a great way of visualizing any possible recirculation. With the `diffuser.foam` module highlighted in the **Pipeline Browser**, select the **Stream Tracer** filter from the **Common Data and Analytics** menu. The **Properties** window panel should appear as shown in the following figure:
 
 ![Diffuser paraview stream tracer menu](figures/paraview-menu-stream-tracer.png)
 
@@ -48,7 +48,7 @@ The adverse pressure gradient with an increase in pressure along the streamlines
 
 ## Plotting the Velocity Profile
 
-For a better comparison with experimental data, a vertical velocity profile of the $$x$$-velocity component is recommended. For this, hide the `StreamTracer` filter in the **Pipeline Browser** by clicking the eye icon next to it and only show the original case named `para.foam` (the name originates from the name of the file, which was used to open the OpenFOAM case). Now, select the **Plot over Line** filter from the **Domain** $$\rightarrow$$ **Data Analysis**. The **Properties** window panel should appear as shown in the following figure:
+For a better comparison with experimental data, a vertical velocity profile of the $$x$$-velocity component is recommended. For this, hide the `StreamTracer` filter in the **Pipeline Browser** by clicking the eye icon next to it and only show the original case named `diffuser.foam`. Now, select the **Plot over Line** filter from the **Domain** $$\rightarrow$$ **Data Analysis**. The **Properties** window panel should appear as shown in the following figure:
 
 ![Diffuser paraview plot over line menu](figures/paraview-menu-plot-over-line.png)
 
