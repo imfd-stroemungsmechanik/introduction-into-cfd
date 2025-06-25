@@ -54,9 +54,16 @@ Repeat the simulations with the SST $$k-\omega$$ turbulence model instead of the
     - Change the dimensions of the variable to $$\text{seconds}^{-1}$$.
     - The inlet boundary condition must be of type `turbulentMixingLengthFrequencyInlet`.
     - Replace the `epsilonWallFunction` at the wall patches with `omegaWallFunction`.
-5. Both in `fvSchemes` and `fvSolution` in the `system` directory, replace all instances of `epsilon` with `omega` to use the same discretization schemes, solver settings, residual criteria, and relaxation factors for the $$\omega$$ transport equation as for the $$\epsilon$$ transport equation in the previous simulations.
-6. Rerun the simulation with the solver `simpleFoam`.
-7. Analyse the simulation results with ParaView similar to the first simulation.
+5. In `controlDict`, `fvSchemes`, and `fvSolution` in the `system` directory, replace all instances of `epsilon` with `omega` to use the same discretization schemes, solver settings, residual criteria, and relaxation factors for the $$\omega$$ transport equation as for the $$\epsilon$$ transport equation in the previous simulations.
+6. Add the following entry in the `fvSchemes` file, which specifies how the SST $$k-\omega$$ turbulence model computes the distance from a cell to the next wall:
+```
+wallDist
+{
+    method              meshWave;
+}
+```
+7. Rerun the simulation with the solver `simpleFoam`.
+8. Analyse the simulation results with ParaView similar to the first simulation.
 
 
 #### Questions
