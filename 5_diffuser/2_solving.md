@@ -35,7 +35,7 @@ This output at iteration 1023 tells us in summary:
 - The `DILUPBiCG` solver (short for bi-Conjugate Gradient solver with a simplified Diagonal-based Incomplete LU preconditioner) is used to solve the velocity components `Ux` and `Uy` in $$x$$- and $$y$$-direction. In this iteration, it takes 3 and 2 iterations to reach the specified residual criteria.
 - The `GAMG` multigrid solver is used for solving the pressure correction equation *twice* in the pressure-velocity coupling algorithm.
 - The error of the conservation of mass is denoted as `continuity error`. Since its value is very small, conservation of mass is maintained.
-- The `DILUPBiCG` solver (short for bi-Conjugate Gradient solver with a simplified Diagonal-based Incomplete LU preconditioner) is finally used to solve the transport equations of the turbulence model for turbulent kinetic energy and turbulent dissipation rate.
+- The `DILUPBiCG` solver (short for bi-Conjugate Gradient solver with a simplified Diagonal-based Incomplete LU preconditioner) is finally used to solve the turbulence model transport equations for turbulent kinetic energy and dissipation rate.
 - The execution time for the simulation up until this iteration is roughly 57 seconds as indicated by the `ExecutionTime`.
 
 After 1078 iterations, the simulation automatically stops as the residuals fall below the specified residual criteria in `fvSolution`.

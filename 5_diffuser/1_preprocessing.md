@@ -166,7 +166,7 @@ The final output `Mesh OK.` indicates that no critical problems or errors were f
 
 The physical properties for the fluid, such as kinematic viscosity, are stored in the `transportProperties` file in the `constant` directory.
 
-Since air is considered as fluid, the kinematic viscosity is $$15 \times 10^{-6}\,\text{m}^2\text{/s}$$ and set accordingly in the `transportProperties` dictionary as follows:
+Since the fluid is air, the kinematic viscosity is $$15 \times 10^{-6}\,\text{m}^2\text{/s}$$ and set accordingly in the `transportProperties` dictionary as follows:
 
 ```
 viscosityModel  Newtonian;
@@ -411,7 +411,7 @@ divSchemes
 
 ## Linear Solver Settings
 
-The specification of the linear equation solvers, tolerances and other algorithm controls is made in the `fvSolution` dictionary in the `system` directory. These settings are as follows for the airfoil tutorial case.
+The specification of the linear equation solvers, tolerances and other algorithm controls is made in the `fvSolution` dictionary in the `system` directory. These settings are as follows for the diffuser case.
 
 ### Solver settings
 

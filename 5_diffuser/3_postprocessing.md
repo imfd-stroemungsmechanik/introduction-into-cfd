@@ -68,7 +68,7 @@ Fortunately, experimental measurements are availabel in order to assess the accu
 
 1. Click on **Open...** in the **Files** menu and select the file `experiment.csv`. Confirm the **CSV Reader** with **OK** and click **Apply**. A new **Spreadsheet View** should open showing the content of the file: Three columns of data with Row ID, velocity in meter per second, and $$y$$-coordinate.
 2. Select on the previously created diagram in ParaView and click on the **Eye** icon next to the **experiment.csv** entry in the **Pipeline Browser** to show the content of the CSV-file in the diagram.
-3. In order to plot velocity over $$y$$-coordiante, select the **experiment.csv** entry in the **Pipeline Browser**, set the **X Array Name** to `# y-coordiante`, only select the `velocity` in the **Series Parameter** list, set **Line Style** to **None**, **Marker Style** to **Square**, and **Marker Size** to 25. These settings are summarized in the following figure:
+3. In order to plot velocity over $$y$$-coordiante, select the **experiment.csv** entry in the **Pipeline Browser**, set the **X Array Name** to `# y-coordiante`, only select the `velocity` in the **Series Parameter** list, set **Line Style** to **None**, **Marker Style** to **Square**, and **Marker Size** to 20. These settings are summarized in the following figure:
 
 ![Diffuser paraview plot over line experiment menu](figures/paraview-menu-plot-over-line-experiment.png)
 
