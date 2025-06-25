@@ -188,17 +188,10 @@ simulationType RAS;
 RAS
 {
     RASModel        kEpsilon;
-
-    turbulence      on;
-
-    printCoeffs     on;
 }
 ```
 
-For this set of simulation the Reynolds-Averaged Navier-Stokes (RANS) equations should be solved. Therefore, the entry `simulationType` is set to `RAS`, which stands for **R**eynolds-**A**veraged **S**imulation. Within the `RAS` sub-dictionary, the following entries are set:
- - The keyword `RASModel` set to `kEpsilon`, which selects the standard $$k-\epsilon$$ turbulence model.
- - The entry `turbulence` turn on or off the turbulence model all together
- - The keyword `printCoeffs` set to `on` prints out all relevant coefficients of the chosen turbulence model.
+For this set of simulation the Reynolds-Averaged Navier-Stokes (RANS) equations should be solved. Therefore, the entry `simulationType` is set to `RAS`, which stands for **R**eynolds-**A**veraged **S**imulation. Within the `RAS` sub-dictionary, the keyword `RASModel` set to `kEpsilon` selects the standard $$k-\epsilon$$ turbulence model.
 
 
 ## Boundary Conditions
