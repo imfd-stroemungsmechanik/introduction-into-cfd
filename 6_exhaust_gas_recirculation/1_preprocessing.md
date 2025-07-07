@@ -184,7 +184,11 @@ transformPoints -scale "(0.001 0.001 0.001)"
 
 ## Physical Properties
 
-Thermophysical models are concerned with: thermodynamics, e.g. relating internal energy $$e$$ to temperature $$T$$; transport, e.g. the dependence of properties such as viscosity $$\mu$$ on temperature; and state, e.g. dependence of density on temperature $$T$$ and pressure $$p$$. Unlike the setup for incompressible flows, these thermophysical properties are stored in the `thermophysicalProperties` file in the `constant` directory.
+Thermophysical models are concerned with:
+- Thermodynamics, e.g. relating internal energy $$e$$ to temperature $$T$$
+- Transport, e.g. the dependence of properties such as viscosity $$\mu$$ on temperature
+- State, e.g. dependence of density on temperature $$T$$ and pressure $$p$$.
+Unlike the setup for incompressible flows, these thermophysical properties are stored in the `thermophysicalProperties` file in the `constant` directory.
 
 A thermophysical model required an entry named ´thermoType´ which specifies the package of thermophysical modelling that is used in the simulation. OpenFOAM includes a large set of pre-compiled combinations of modelling, built within the code using C++ templates.
 
