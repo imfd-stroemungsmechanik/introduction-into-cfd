@@ -184,17 +184,68 @@ transformPoints -scale "(0.001 0.001 0.001)"
 
 ## Physical Properties
 
-The physical properties for the fluid, such as kinematic viscosity, are stored in the `transportProperties` file in the `constant` directory.
+Thermophysical models are concerned with: thermodynamics, e.g. relating internal energy $$e$$ to temperature $$T$$; transport, e.g. the dependence of properties such as viscosity $$\mu$$ on temperature; and state, e.g. dependence of density on temperature $$T$$ and pressure $$p$$. Unlike the setup for incompressible flows, these thermophysical properties are stored in the `thermophysicalProperties` file in the `constant` directory.
 
-Since the fluid is air, the kinematic viscosity is $$15 \times 10^{-6}\,\text{m}^2\text{/s}$$ and set accordingly in the `transportProperties` dictionary as follows:
+A thermophysical model required an entry named ´thermoType´ which specifies the package of thermophysical modelling that is used in the simulation. OpenFOAM includes a large set of pre-compiled combinations of modelling, built within the code using C++ templates.
+
+The individual submodels chosen for this case are as follows:
 
 ```
-viscosityModel  Newtonian;
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-nu              15e-6;
+thermoType
+{
+    type            hePsiThermo;
+    mixture         pureMixture;
+    transport       const;
+    thermo          hConst;
+    equationOfState perfectGas;
+    specie          specie;
+    energy          sensibleEnthalpy;
+}
 ```
 
+Depending on these submodels, specific fluid properties have to be specified. These settings are within the `mixture` dictionary in the `thermophysicalProperties` file:
 
+```
+mixture
+{
+    specie
+    {
+        molWeight   28.9;
+    }
+    thermodynamics
+    {
+        Cp          1007;
+        Hf          0;
+    }
+    transport
+    {
+        mu          1.8e-5;
+        Pr          0.7;
+    }
+}
+```
+
+#### Composition of each constituent
+
+There is currently only one option for the specie model which specifies the composition of each constituent. That model is itself named `specie`, which is specified by the entry `molWeight`, which specifies the grams per mole of the given species. Here, air is considered with a mol weight of $$28.9\,\text{g/mol}$$.
+
+#### Thermodynamics model
+
+The thermodynamic models are concerned with evaluating the specific heat $$c_p$$ from which other properties are derived. The thermodynamics model selected here is of type `hConst`, which assumes a constant $$c_p$$ and heat of fusion $$H_f$$, which is simply specified by two keywords, `cp` set to $$1007\,\text{J/(kg K)}$$ and `Hf` set to $$0$$.
+
+#### Equation of state
+
+The equation of state for the given fluid is set to perfect gas. Therefore, density is calculated based on the following relation without the need of any additional material parameter:
+
+$$ \rho = \frac{p}{R\,T} $$
+
+with the specific gas constant for air $$R$$.
+
+#### Transport model
+
+The transport modelling concerns evaluating dynamic viscosity $$\mu$$, thermal conductivity $$\kappa$$, and thermal diffusivity $$\alpha$$. In this case, a `const` transport model is specified, which assumes a constant dynamic viscosity $$\mu$$ and Prandtl number $$\text{Pr}$$. These two variables are specified by the keywords `mu` set to $$1.8 \times 10^{-5}$$ and `Pr` to $$0.7$$. Since thermal conductivity and thermal diffusivity can be derived from these quantities, they do not have to be specified.
 
 
 
@@ -207,11 +258,11 @@ simulationType RAS;
 
 RAS
 {
-    RASModel        kEpsilon;
+    RASModel        kOmegaSST;
 }
 ```
 
-For this set of simulation the Reynolds-Averaged Navier-Stokes (RANS) equations should be solved. Therefore, the entry `simulationType` is set to `RAS`, which stands for **R**eynolds-**A**veraged **S**imulation. Within the `RAS` sub-dictionary, the keyword `RASModel` set to `kEpsilon` selects the standard $$k-\epsilon$$ turbulence model.
+For this set of simulation the Reynolds-Averaged Navier-Stokes (RANS) equations should be solved. Therefore, the entry `simulationType` is set to `RAS`, which stands for **R**eynolds-**A**veraged **S**imulation. Within the `RAS` sub-dictionary, the keyword `RASModel` set to `kOmegaSST` selects the  $$\text{SST} \, \, k-\omega$$ turbulence model.
 
 
 ## Boundary Conditions
