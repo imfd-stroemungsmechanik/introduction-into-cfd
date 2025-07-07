@@ -275,13 +275,28 @@ For this set of simulation the Reynolds-Averaged Navier-Stokes (RANS) equations 
 
 Since the simulation starts at time $$t=0$$, the boundary and initial field data is stored in the `0` sub-directory. This must be done for all variables solved for, such as pressure `p`, velocity `U` and temperature `T` as this is a compressible case. Furthermore, the SST $$k-\omega$$ solves two additional transport equations for turbulent kinetic energy $$k$$ and specific dissipation rate $$\omega$$. Therefore, initial and boundary conditions have to be provided for these variables as well. Finally, the treatment of the turbulent viscosity $$\nu_\text{t}$$ and turbulent thermal diffusivity $$\alpha_\text{t}$$ at the walls have to be specified as well.
 
-### Pressure and Velocity
+### Pressure, Velocity and Temperature
 
-Since the Reynolds-number is set to $$\text{Re} = 2 \times 10^4$$, a pressure-velocity boundary setup will be employed, where velocity is defined at the inlet while pressure is set at the outlet.
+For this example case, the volumetric flow rate at the air inlet as well as exhaust gas inlet are given. Therefore, instead of manually calculating the inlet velocity based on patch area(e.g., inlet velocity equal to volumetric flow rate divided by patch area), we can use the velocity inlet boundary condition `flowRateInletVelocity` and directly specify the volumetric flow rate. The setup for both inlets looks as follows:
 
-The velocity at the inlet is set to a uniform fixed value of $$U_\text{in} = 0.3\,\text{m/s}$$ and at the outlet to zero gradient using a `fixedValue` and `zeroGradient` boundary condition, respectively. Walls are considered no-slip and thus set to the `noSlip` boundary condition.
+```
+inlet_air
+{
+    type                flowRateInletVelocity;
+    volumetricFlowRate  0.005;
+    value               uniform (0 0 0);
+}
 
-The kinematic pressure at the outlet is set to a uniform value of $$p_\text{out} = 0\,\text{m}^2\text{/s}^2$$ using a `fixedValue` boundary condition, while walls and the inlet are treated as zero gradient, thus set to `zeroGradient`.
+inlet_exhaust
+{
+    type                flowRateInletVelocity;
+    volumetricFlowRate  0.0025;
+    value               uniform (0 0 0);
+}
+```
+
+Pressure at the inlet is treated as zero gradient and inlet temperature is $$300\,\text{K}$$ for the air inlet and $$900\,\text{K}$$ for the exhaust gas inlet, respectively. At the outlet, velocity and temperature are treated as zero gradient and the pressure is set to $$10^5\,\text{Pa}$$. The walls are considered no-slip and adiabatic. Thus, the temperature boundary condition is also set to zero gradient.
+
 
 ### Turbulent Kinetic Energy
 

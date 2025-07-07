@@ -23,6 +23,12 @@ This tutorial will describe how to pre-process, run, and post-process a case inv
 
 ![Diffuser case geometry](figures/exhaust-gas-recirculation-geometry.png)
 
+The boundary conditions for the give problem are as follows:
+- Air inlet: Volumetric flow rate of $$Q = 0.005\,\text{m}^3\text{/s}$$ at a temperature of $$300\,\text{K}$$
+- Exhaust gas inlet: Volumetric flow rate of $$Q = 0.0025\,\text{m}^3\text{/s}$$ at a temperature of $$900\,\text{K}$$
+- Outlet: Pressure of $$10^5\,\text{Pa}$$
+- Pipe walls: Adiabatic and no-slip
+
 ## Preparation
 
 Before starting, perform the following steps for preparation:
