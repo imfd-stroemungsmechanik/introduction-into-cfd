@@ -53,7 +53,7 @@ The *relevant* files for this tutorial case are:
 
 The hexahedral-dominant, three-dimensional mesh is created automatically with the meshing utility `cartesianMesh` from a user provided surface geometry named `exhaust_gas_recirculation.obj, which is located in the case folder.
 
-The exhaust gas recirculation pipe has a total length of $$360\,\text{mm}$$ in $$x$$-direction with an air inlet diameter of $$40\,\text{mm}$$ and an exhaust gas inlet with a diameter of $$20\,\text{mm}$$. an initial channel height of $$H = 1\,\text{m}$$ at the inlet and extends to $$4.7\,\text{m}$$ towards the outlet. The maximum cell size is set to $$3\,\text{mm}$$ resulting in about 13 cells across the large pipe diameter. Additionally, the walls for the first mesh have eight inflation layers with a thickness ratio of 1.3.
+The exhaust gas recirculation pipe has a total length of $$360\,\text{mm}$$ in $$x$$-direction with an air inlet diameter of $$40\,\text{mm}$$ and an exhaust gas inlet with a diameter of $$20\,\text{mm}$$. an initial channel height of $$H = 1\,\text{m}$$ at the inlet and extends to $$4.7\,\text{m}$$ towards the outlet. The maximum cell size is set to $$3\,\text{mm}$$ resulting in about 13 cells across the large pipe diameter. Additionally, the walls have Five inflation layers with a thickness ratio of 1.3.
 
 The resulting `meshDict` looks as follows:
 
@@ -70,13 +70,13 @@ boundaryLayers
     {
         pipe_exhaust
         {
-            nLayers           8;
+            nLayers           5;
 
             thicknessRatio    1.3;
         }
         pipe_air
         {
-            nLayers           8;
+            nLayers           5;
 
             thicknessRatio    1.3;
         }
@@ -97,7 +97,7 @@ The resulting mesh can be visualized with ParaView should look like follows arou
 
 At this point the mesh generation is complete. The mesh consists of:
  - Background mesh with a cell size of $$3 \text{mm}$$
- - Eight inflation layers at the walls with a thickness ratio of 1.3.
+ - Five inflation layers at the walls with a thickness ratio of 1.3.
  - Correct patch types for air and exhaust inlet, outlet, and pipe walls.
 
 
@@ -122,34 +122,30 @@ Create polyMesh for time = 0
 Time = 0s
 
 Mesh stats 
-    points:           59346
-    internal points:  0
-    faces:            115814
-    internal faces:   56470
-    cells:            28714
-    faces per cell:   6
+    points:           66681
+    faces:            190868
+    internal faces:   181436
+    cells:            62182
+    faces per cell:   5.98733
     boundary patches: 5
-    point zones:      0
-    face zones:       0
-    cell zones:       0
 
 ...
 
 Checking geometry...
-    Overall domain bounding box (-30 0 -0.651697) (61 4.7 0.651697)
-    Mesh has 2 geometric (non-empty/wedge) directions (1 1 0)
-    Mesh has 2 solution (non-empty) directions (1 1 0)
-    All edges aligned with or perpendicular to non-empty directions.
-    Boundary openness (-2.77203e-18 -1.50709e-16 9.20305e-15) OK.
-    Max cell openness = 2.61181e-16 OK.
-    Max aspect ratio = 1.58715 OK.
-    Minimum face area = 0.00397046. Maximum face area = 0.155254.  Face area magnitudes OK.
-    Min volume = 0.00517507. Max volume = 0.0143652.  Total volume = 362.148.  Cell volumes OK.
-    Mesh non-orthogonality Max: 14.4587 average: 0.802326
+    Overall domain bounding box (-20.0004 -170 -19.9912) (360 7.23793e-11 19.9912)
+    Mesh has 3 geometric (non-empty/wedge) directions (1 1 1)
+    Mesh has 3 solution (non-empty) directions (1 1 1)
+    Boundary openness (4.74107e-17 -7.05875e-17 -2.54233e-15) OK.
+    Max cell openness = 5.20632e-16 OK.
+    Max aspect ratio = 16.3738 OK.
+    Minimum face area = 0.206012. Maximum face area = 13.7709.  Face area magnitudes OK.
+    Min volume = 0.177828. Max volume = 37.082.  Total volume = 627526.  Cell volumes OK.
+    Mesh non-orthogonality Max: 61.6751 average: 6.22186
     Non-orthogonality check OK.
     Face pyramids OK.
-    Max skewness = 0.426205 OK.
+    Max skewness = 2.4353 OK.
     Coupled point location match (average 0) OK.
+
 
 Mesh OK.
     
@@ -158,16 +154,32 @@ End
 
 This gives us all relevant mesh statistics and quality criteria of the mesh:
 
-- The mesh consists of 28714 cells,
-- has 5 different boundary patches.
+- The mesh consists of 62182 cells,
+- has 5 different boundary patches,
+- the overall boundingbox of $$380\,\text{m}$$ in $$x$$-direction, $$170\,\text{m}$$ in $$y$$-direction and $$40\,\text{m}$$ in $$z$$-direction.
 
-As this is a hexa-dominant, unstructured mesh with a single layer of inflation cells on the wall surfaces, the mesh quality in general is very good:
+As this is a hexa-dominant, unstructured mesh with five layers of inflation cells on the wall surfaces, the mesh quality in general is good:
 
-- max cell aspect ratio of 1.59,
-- a maximum mesh non-orthogonality of 14.5, and
-- a max cell skewness of 0.43.
+- max cell aspect ratio of 16.4,
+- a maximum mesh non-orthogonality of 61.7, and
+- a max cell skewness of 2.44.
 
 The final output `Mesh OK.` indicates that no critical problems or errors were found during `checkMesh`. Therefore, we can continue with this mesh and proceed with the simulation.
+
+
+## Mesh Scaling
+
+The overall bounding box of the computational mesh does not match the given dimensions of the geometry, since the latter was created in millimeters. Therefore, the mesh has to be scaled down in all three directions with a scaling factor of $$0.001$$. In order to do so, the mesh manipulation utility `transformPoints` can be used as follows:
+
+```bash
+transformPoints -scale "(0.001 0.001 0.001)"
+```
+
+{: .warning }
+> If this command is executed twice, the mesh will be scaled by $$0.001 \times 0.001 = 10^{-6}$$!
+
+
+
 
 
 ## Physical Properties
