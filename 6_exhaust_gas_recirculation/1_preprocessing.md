@@ -188,9 +188,10 @@ Thermophysical models are concerned with:
 - Thermodynamics, e.g. relating internal energy $$e$$ to temperature $$T$$
 - Transport, e.g. the dependence of properties such as viscosity $$\mu$$ on temperature
 - State, e.g. dependence of density on temperature $$T$$ and pressure $$p$$.
+
 Unlike the setup for incompressible flows, these thermophysical properties are stored in the `thermophysicalProperties` file in the `constant` directory.
 
-A thermophysical model required an entry named ´thermoType´ which specifies the package of thermophysical modelling that is used in the simulation. OpenFOAM includes a large set of pre-compiled combinations of modelling, built within the code using C++ templates.
+A thermophysical model required an entry named `thermoType` which specifies the package of thermophysical modelling that is used in the simulation. OpenFOAM includes a large set of pre-compiled combinations of modelling, built within the code using C++ templates.
 
 The individual submodels chosen for this case are as follows:
 
@@ -231,15 +232,15 @@ mixture
 }
 ```
 
-#### Composition of each constituent
+#### **Composition of each constituent**
 
 There is currently only one option for the specie model which specifies the composition of each constituent. That model is itself named `specie`, which is specified by the entry `molWeight`, which specifies the grams per mole of the given species. Here, air is considered with a mol weight of $$28.9\,\text{g/mol}$$.
 
-#### Thermodynamics model
+#### **Thermodynamics model**
 
 The thermodynamic models are concerned with evaluating the specific heat $$c_p$$ from which other properties are derived. The thermodynamics model selected here is of type `hConst`, which assumes a constant $$c_p$$ and heat of fusion $$H_f$$, which is simply specified by two keywords, `cp` set to $$1007\,\text{J/(kg K)}$$ and `Hf` set to $$0$$.
 
-#### Equation of state
+#### **Equation of state**
 
 The equation of state for the given fluid is set to perfect gas. Therefore, density is calculated based on the following relation without the need of any additional material parameter:
 
@@ -247,7 +248,7 @@ $$ \rho = \frac{p}{R\,T} $$
 
 with the specific gas constant for air $$R$$.
 
-#### Transport model
+#### **Transport model**
 
 The transport modelling concerns evaluating dynamic viscosity $$\mu$$, thermal conductivity $$\kappa$$, and thermal diffusivity $$\alpha$$. In this case, a `const` transport model is specified, which assumes a constant dynamic viscosity $$\mu$$ and Prandtl number $$\text{Pr}$$. These two variables are specified by the keywords `mu` set to $$1.8 \times 10^{-5}$$ and `Pr` to $$0.7$$. Since thermal conductivity and thermal diffusivity can be derived from these quantities, they do not have to be specified.
 
@@ -266,12 +267,13 @@ RAS
 }
 ```
 
-For this set of simulation the Reynolds-Averaged Navier-Stokes (RANS) equations should be solved. Therefore, the entry `simulationType` is set to `RAS`, which stands for **R**eynolds-**A**veraged **S**imulation. Within the `RAS` sub-dictionary, the keyword `RASModel` set to `kOmegaSST` selects the  $$\text{SST} \, \, k-\omega$$ turbulence model.
+For this set of simulation the Reynolds-Averaged Navier-Stokes (RANS) equations should be solved. Therefore, the entry `simulationType` is set to `RAS`, which stands for **R**eynolds-**A**veraged **S**imulation. Within the `RAS` sub-dictionary, the keyword `RASModel` set to `kOmegaSST` selects the SST $$k-\omega$$ turbulence model.
+
 
 
 ## Boundary Conditions
 
-Since the simulation starts at time $$t=0$$, the boundary and initial field data is stored in the `0` sub-directory. This must be done for all variables solved for, such as pressure `p` and velocity `U`. Furthermore, the $$k-\epsilon$$ solves two additional transport equations for turbulent kinetic energy $$k$$ and turbulent dissipation rate $$\epsilon$$. Therefore, initial and boundary conditions have to be provided for these variables as well. Finally, the treatment of the turbulent viscosity $$\nu_\text{t}$$ at the walls has to be specified as well.
+Since the simulation starts at time $$t=0$$, the boundary and initial field data is stored in the `0` sub-directory. This must be done for all variables solved for, such as pressure `p`, velocity `U` and temperature `T` as this is a compressible case. Furthermore, the SST $$k-\omega$$ solves two additional transport equations for turbulent kinetic energy $$k$$ and specific dissipation rate $$\omega$$. Therefore, initial and boundary conditions have to be provided for these variables as well. Finally, the treatment of the turbulent viscosity $$\nu_\text{t}$$ and turbulent thermal diffusivity $$\alpha_\text{t}$$ at the walls have to be specified as well.
 
 ### Pressure and Velocity
 
