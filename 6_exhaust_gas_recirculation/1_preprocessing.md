@@ -295,7 +295,7 @@ inlet_exhaust
 }
 ```
 
-Pressure at the inlet is treated as zero gradient and inlet temperature is $$300\,\text{K}$$ for the air inlet and $$900\,\text{K}$$ for the exhaust gas inlet, respectively. At the outlet, velocity and temperature are treated as zero gradient and the pressure is set to $$10^5\,\text{Pa}$$. The walls are considered no-slip and adiabatic. Thus, the temperature boundary condition is also set to zero gradient.
+Pressure at the inlet is treated as zero gradient and inlet temperature is $$300\,\text{K}$$ for the air inlet and $$900\,\text{K}$$ for the exhaust gas inlet, respectively. At the outlet, velocity and temperature are treated as zero gradient and the static pressure is set to $$10^5\,\text{Pa}$$. The walls are considered no-slip and adiabatic. Thus, the velocity is set to $$(0 \, 0 \, 0)$$ and the temperature to zero gradient.
 
 
 ### Turbulent Kinetic Energy
