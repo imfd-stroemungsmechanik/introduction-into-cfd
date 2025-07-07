@@ -21,7 +21,7 @@ The objectives for this tutorial are as follows:
 
 This tutorial will describe how to pre-process, run, and post-process a case involving a transient, compressible flow of a exhaust gas recirculation. The geometry is shown in the following figure with an inlet for cold air on the left, inlet for the hot exhaust gas in the center, no-slip adiabatic walls for the air and exhaust side, and an outlet at the right. The flow will be solved using the OpenFOAM solver `rhoPimpleFoam` the suitable for laminar and turbulent, compressible, transient flows.
 
-![Diffuser case geometry](figures/exhaust_gas_recirculation-geometry.png)
+![Diffuser case geometry](figures/exhaust-gas-recirculation-geometry.png)
 
 ## Preparation
 
