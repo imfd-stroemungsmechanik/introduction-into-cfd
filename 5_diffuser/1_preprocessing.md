@@ -432,7 +432,7 @@ solvers
 }
 ```
 
-The momentum equation and the transport equations for the turbulent properties is solved using a Gauss Seidel solver **Preconditioned bi-Conjugate Gradient** solver with an simplified **Diagonal-based Incomplete LU** preconditioner (PBiCG solver with DILU preconditioner). The absolute tolerance for solving is $$10^{-12}$$ with a relative tolerance of $$0.1$$:
+The momentum equation and the transport equations for the turbulent properties are solved using a **Preconditioned bi-Conjugate Gradient** solver with an simplified **Diagonal-based Incomplete LU** preconditioner (PBiCG solver with DILU preconditioner). The absolute tolerance for solving is $$10^{-12}$$ with a relative tolerance of $$0.1$$:
 
 ```
 solvers

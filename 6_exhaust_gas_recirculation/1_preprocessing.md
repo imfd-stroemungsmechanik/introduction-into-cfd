@@ -277,7 +277,7 @@ Since the simulation starts at time $$t=0$$, the boundary and initial field data
 
 ### Pressure, Velocity and Temperature
 
-For this example case, the volumetric flow rate at the air inlet as well as exhaust gas inlet are given. Therefore, instead of manually calculating the inlet velocity based on patch area(e.g., inlet velocity equal to volumetric flow rate divided by patch area), we can use the velocity inlet boundary condition `flowRateInletVelocity` and directly specify the volumetric flow rate. The setup for both inlets looks as follows:
+For this example case, the volumetric flow rate at the air inlet as well as exhaust gas inlet are given. Instead of manually calculating the inlet velocity based on patch area (e.g., inlet velocity equal to volumetric flow rate divided by patch area), we can use the velocity inlet boundary condition `flowRateInletVelocity` and directly specify the volumetric flow rate. The setup for both inlets looks as follows:
 
 ```
 inlet_air
@@ -295,158 +295,39 @@ inlet_exhaust
 }
 ```
 
-Pressure at the inlet is treated as zero gradient and inlet temperature is $$300\,\text{K}$$ for the air inlet and $$900\,\text{K}$$ for the exhaust gas inlet, respectively. At the outlet, velocity and temperature are treated as zero gradient and the static pressure is set to $$10^5\,\text{Pa}$$. The walls are considered no-slip and adiabatic. Thus, the velocity is set to $$(0 \, 0 \, 0)$$ and the temperature to zero gradient.
+Pressure at the inlet is treated as zero gradient and inlet temperature is $$300\,\text{K}$$ for the air inlet and $$900\,\text{K}$$ for the exhaust gas inlet, respectively. At the outlet, velocity and temperature are treated as zero gradient and the static pressure is set to $$10^5\,\text{Pa}$$. The walls are considered no-slip and adiabatic. Thus, the velocity is set to $$(0 \, 0 \, 0)$$, temperature and pressure to zero gradient.
 
 
-### Turbulent Kinetic Energy
+### Turbulent Quantities
 
-The turbulent kinetic energy has units of $$\text{m}^2\text{/s}^2$$ and its initial value is set to $$0.1\,\text{m}^2\text{/s}^2$$. Since defining specific values for $$k$$ at the inlet are difficult to predict, the turbulent kinetic energy will be estimated based on the turbulent intensity $$I_\text{t}$$ and the inlet velocity $$U_\text{in}$$ at the patch itself. Therefore, the following formula will be used:
+The turbulent kinetic energy $$k$$ at the inlet is estimated based on turbulent intensity $$I_t$$ using the `turbulentIntensityKineticEnergyInlet` boundary condition with an intensity of 2 % at the air inlet and 8 % at the exhaust gas inlet. Similarly, specific dissipation rate $$\omega$$ is estimated via turbulent length scale $$L_t$$ and the `turbulentMixingLengthFrequencyInlet` boundary condition. In both cases, the length scale is equal to the pipe diameter. Wall functions are used for the walls with the `kqRWallFunction` for turbulent kinetic energy and the `omegaWallFunction` for the specific dissipation rate. At the outlet, both variables are treated with zero gradient. Turbulent kinetic energy and specific dissipation rate are initialized with $$0.1\,\text{m}^2\text{/s}^2$$ and $$10\,000\,\text{1/s}$$, respectively.
 
-$$ k_\text{in} = 1.5 I_\text{in} |U_\text{in}|^2 $$
-
-This estimate is calculated by the `turbulentIntensityKineticEnergyInlet` boundary condition with one additional entry `intensity`, which sets the turbulent intensity $$I_\text{t}$$ to 0.01, which stands for a low turbulent intensity of 1 %. At the walls, an all-$$y^+$$ wall function approach is used, which computes the effect of the turbulent boundary layer onto the turbulent kinetic energy. The boundary type is therefore set to `kqRWallFunction`. Finally, at the outlet a zero gradient boundary condition is used.
-
-The complete `boundaryField` entry for the turbulent kinetic energy looks as follows:
-
-```
-boundaryField
-{
-    inlet
-    {
-        type            turbulentIntensityKineticEnergyInlet;
-        intensity       0.01;
-        value           uniform 0.1;
-    }
-
-    outlet
-    {
-        type            zeroGradient;
-    }
-
-    lowerWall
-    {
-        type            kqRWallFunction;
-        value           uniform 0.1;
-    }
-
-    upperWall
-    {
-        type            kqRWallFunction;
-        value           uniform 0.1;
-    }
-}
-
-```
-
-{: .note }
-> When using advanced OpenFOAM boundary conditions like `totalPressure`, `turbulentIntensityKineticEnergyInlet` or wall functions for turbulent quantities, the entry `values` with an initial value has to be applied, although this value will be overwritten in the very first time step. Therefore, this `value` entry has no relevance for the course of the simulation.
-
-
-### Turbulent Dissipation Rate
-
-The turbulent dissipation rate has units of $$\text{m}^2\text{/s}^3$$ and its initial value is set to $$100\,\text{m}^2\text{/s}^3$$. Similar to the turbulent kinetic energy, specifying resonable values for $$\epsilon$$ at the inlet is difficult. Therefore, the following empirical formula will be used instead based on turbulent kinetic energy $$k$$ at the inlet patch, modelling coefficient $$C_\mu$$, and a turbulent length scale $$L_\text{t}$$:
-
-$$ \epsilon_\text{in} = \frac{C_\mu^{0.75} \, k^{1.5}}{L_\text{t}} $$
-
-This estimate is implemented in the `turbulentMixingLengthDissipationRateInlet` boundary condition with one additional entry `mixingLength`, which sets the turbulent length scale to $$L_\text{t} = 1.5 \times 10^{-3}\,\text{m}$$. At the walls, an all-$$y^+$$ wall function approach is used, which computes the effect of the turbulent boundary layer onto the turbulent dissipation rate. The boundary type is therefore set to `epsilonWallFunction`. Finally, at the outlet a zero gradient boundary condition is used.
-
-The complete `boundaryField` entry for the turbulent dissipation rate looks as follows:
-
-```
-boundaryField
-{
-    inlet
-    {
-        type            turbulentMixingLengthDissipationRateInlet;
-        mixingLength    0.0015;
-        value           uniform 100;
-    }
-
-    outlet
-    {
-        type            zeroGradient;
-    }
-
-    lowerWall
-    {
-        type            epsilonWallFunction;
-        value           uniform 100;
-    }
-
-    upperWall
-    {
-        type            epsilonWallFunction;
-        value           uniform 100;
-    }
-}
-```
-
-### Turbulent Viscosity
-
-Finally, the turbulent viscosity $$\nu_\text{t}$$ with unit $$\text{m}^2\text{/s}$$ has to be specified in particular at the walls. Since the turbulent viscosity will be calculated based on the turbulent quantities $$k$$ and $$\epsilon$$, the initial field values and the boundary conditions at anything other than walls is relevant. Therefore, the internal field is simply set to $$0\,\text{m}^2\text{/s}$$ and the boundary conditions for inlet and outlet are set to `calculated`.
-
-{: .note }
-> The `calculated` boundary type in OpenFOAM is always used, when the corresponding variable will be calculated by the CFD model itself and does not have to be specified. In case of turbulent viscosity, $$\nu_\text{t}$$ will be calculated by the turbulence model and thus does not have to be specified.
-
-The specification of the boundary condition at walls for $$\nu_\text{t}$$ is critical, though, as this defines the wall treatment approach. In this case, an all-$$y^+$$ wall function of type `nutUSpaldingWallFunction` is, which is designed to work across the entire $$y^+$$ range, making it more versatile, e.g. valid both in the viscous sublayer with $$y^+ \approx 1$$ and within the log-law region with $$y^+ > 30$$. This flexibility allows for mesh refinement without the need to change these boundary condition later.
-
-The complete `boundaryField` entry for the turbulent viscosity looks as follows:
-
-```
-boundaryField
-{
-    inlet
-    {
-        type            calculated;
-        value           uniform 0;
-    }
-
-    outlet
-    {
-        type            calculated;
-        value           uniform 0;
-    }
-
-    lowerWall
-    {
-        type            nutUSpaldingWallFunction;
-        value           uniform 0;
-    }
-
-    upperWall
-    {
-        type            nutUSpaldingWallFunction;
-        value           uniform 0;
-    }
-}
-```
+Turbulent viscosity $$\nu_t$$ and turbulent thermal diffusivity $$\alpha_t$$ have to be specified only at the walls. Here, we are using a wall funtion approach as well with the `nutUSpaldingWallFunction` boundary condition for `mut` and the `compressible::alphatWallFunction` boundary condition for `alphat`. All other patches are set to `calculated` as they will be computed by the turbulence model itself.
 
 
 
 ## Simulation Control
 
-Settings related to the control of time (for transient simulations) or iterations (for steady-state simulations) and reading and writing of the solution data are read in from the `controlDict` file in the `system` folder.
+Settings related to the control of time and reading and writing of the solution data are read in from the `controlDict` file in the `system` folder.
 
 The key settings for this steady-state turbulent simulation include:
 ```
-application     simpleFoam;
-
-startFrom       startTime;
+application     rhoPimpleFoam;
 
 startTime       0;
 
 stopAt          endTime;
 
-endTime         2500;
+endTime         0.1;
 
-deltaT          1;
+deltaT          8e-6;
 
-writeControl    timeStep;
+writeControl    runTime;
 
-writeInterval   250;
+writeInterval   0.002;
 ```
 
-In this tutorial case, the solver `simpleFoam` is used, a pressure-based solver for incompressible, steady-state, laminar or turbulent single-phase flows. The simulation starts at time `0`. Therefore we set the `startFrom` keyword to `startTime` and then specify the `startTime` keyword to be `0`. The simulations runs for 2500 iterations, which is why the `endTime` entry is set to `2500`. Since time step size has no physical meaning in steady-state simulations, the time step size `deltaT` is set to 1, which functions as iteration counter rather than physical time. Finally, results are witten out every 250 iterations configured via the `writeInterval` keyword.
+In this tutorial case, the solver `rhoPimpleFoam` is used, a pressure-based solver for compressible, transient, laminar or turbulent single-phase flows. The simulation starts at time `0`. Therefore we set the `startFrom` keyword to `startTime` and then specify the `startTime` keyword to be `0`. The simulations runs until an end time of $$0.1\,\text{s}$$. Time step size `deltaT` is set to $$8 \times 10^{-6}\,\text{s}$$ for stability reasons. Finally, results are witten out every $$0.002\,\text{s}$$ configured via the `writeInterval` keyword.
 
 
 
@@ -456,49 +337,46 @@ The user specifies the choice of finite volume discretisation schemes in the `fv
 
 ### Temporal derivatives
 
-The discretization of the temporal derivatives $$(\partial / \partial t)$$ is defined within the `ddtSchemes` keyword. Since this is a steady-state simulation, the entry here is set to `steadyState`, e.g. the temporal derivative is set to zero.
+The discretization of the temporal derivatives $$(\partial / \partial t)$$ is defined within the `ddtSchemes` keyword. The entry here is set to `Euler`, e.g. a first order implicit time discretization.
 
 ```
 ddtSchemes
 {
-    default             steadyState;
+    default             Euler;
 }
 ```
 
 ### Gradient terms
 
-The discretization of the gradient terms is defined within the `gradSchemes` keyword. All gradient schemes are discretized equally with a second order **central differencing scheme** with a cell-based gradient limiter to avoid exessively large gradients. Hence, the `default` discretization is set to `cellLimited Gauss linear 1.0`.
+The discretization of the gradient terms is defined within the `gradSchemes` keyword. All gradient schemes are discretized equally with a second order **central differencing scheme**. Hence, the `default` discretization is set to `Gauss linear`.
 
 ```
 gradSchemes
 {
-    default             cellLimited Gauss linear 1.0;
+    default             Gauss linear;
 }
 ```
 
 ### Convective terms
 
-The discretization of the convective transport terms is defined within the `divSchemes` keyword. Here, `div(phi,U)` referes to the discretization of the convective transport of momentum with `phi` being the (volumetric) flux and `U` the variable transported by the flux. In this case, the **second order upwind scheme** is employed called `Gauss linearUpwindV` combined with the default gradient scheme defined under `gradSchemes`. Since a turbulence model is employed, the convective transport of the turbulent quantities `k` and `epsilon` in their respective transport equations is also discretized with the **second order upwind scheme** combined with the default gradient scheme.
+The discretization of the convective transport terms is defined within the `divSchemes` keyword. The convective transport of momentum `div(phi,U)` adn enthalpy `div(phi,h)` is discretized using the **second order upwind scheme** called `Gauss linearUpwind` combined with the default gradient scheme defined under `gradSchemes`. The convection of kinetic energy in the energy equation `div(phi,K)` is discretized with a **second order central differencing scheme** called `Gauss linear` and the turbulent quantities are discretized with **first order upwind**.
 
 Additionaly, `div((nuEff*dev2(T(grad(U)))))` denotes the divergence of the shear stress tensor in the momentum equation. Since this term is diffusive in nature, it is recommended to discretize it with a central differencing scheme, here `Gauss linear`.
 
 ```
 divSchemes
 {
-    div(phi,U)          bounded Gauss linearUpwindV default;
+    div(phi,U)      Gauss linearUpwindV default;
 
-    div(phi,k)          bounded Gauss linearUpwind default;
-    div(phi,epsilon)    bounded Gauss linearUpwind default;
+    div(phi,h)      Gauss linearUpwind default;
+    div(phi,K)      Gauss linear;
 
-    div((nuEff*dev2(T(grad(U))))) Gauss linear;
+    div(phi,k)      Gauss upwind;
+    div(phi,omega)  Gauss upwind;
+
+    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 ```
-
-{: .note }
-> The keyword `bounded` in front of the discretization scheme for the convective terms is only required in steady-state simulations. It helps to maintain boundedness of the solution variable and promotes a better convergence.
-
-
-
 
 
 ## Linear Solver Settings
@@ -507,7 +385,7 @@ The specification of the linear equation solvers, tolerances and other algorithm
 
 ### Solver settings
 
-The pressure field in the pressure-velocity coupling is solved using a **Geometric agglomerated Algebraic MultiGrid** (short: GAMG) solver with a Gauss-Seidel solver for smoothing during the multi-grid steps. The absolute solver tolerance for each iteration is set to $$10^{-6}$$ with a relative tolerance of $$0.1$$: 
+The pressure field in the pressure-velocity coupling is solved using a **Geometric agglomerated Algebraic MultiGrid** (short: GAMG) solver with a Gauss-Seidel solver for smoothing during the multi-grid steps. The absolute solver tolerance for each iteration is set to $$10^{-6}$$ with a relative tolerance of $$0.01$$ for the intermediate pressure-velocity coupling iterations and a relative tolerance of $$0$$ for the final iteration. 
 
 
 ```
@@ -518,25 +396,37 @@ solvers
         solver          GAMG;
         smoother        GaussSeidel;
         tolerance       1e-06;
-        relTol          0.1;
+        relTol          0.01;
+    }
+
+    pFinal
+    {
+        $p;
+        relTol          0;
     }
 ... 
 }
 ```
 
-The momentum equation and the transport equations for the turbulent properties is solved using a Gauss Seidel solver **Preconditioned bi-Conjugate Gradient** solver with an simplified **Diagonal-based Incomplete LU** preconditioner (PBiCG solver with DILU preconditioner). The absolute tolerance for solving is $$10^{-12}$$ with a relative tolerance of $$0.1$$:
+The momentum and energy equation as well as the transport equations for the turbulent properties are solved using a Gauss Seidel solver . The absolute tolerance for solving is $$10^{-6}$$ with a relative tolerance of $$0.1$$:
 
 ```
 solvers
 {
 ...
 
-    "(U|k|epsilon)"
+    "(rho|U|h|k|omega)"
     {
-        solver          PBiCG;
-        preconditioner  DILU;
-        tolerance       1e-12;
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-06;
         relTol          0.1;
+    }
+
+    "(rho|U|h|k|omega)Final"
+    {
+        $U;
+        relTol          0;
     }
 }
 ```
@@ -544,38 +434,13 @@ solvers
 
 ### Pressure-velocity coupling
 
-Pressure-based, steady-state simulations in OpenFOAM rely on the SIMPLE pressure-velocity coupling algorithm. Additional options for this algorithm are available within the `SIMPLE` entry in `fvSolutions`. In this tutorial, the consistent formulation of the algorithm is used called SIMPLEC with the keyword `consistent`. Additionally, the pressure correction equation is solved one additional time every iteration for improved convergence and stability with the `nNonOrthogonalCorrectors` entry set to `1`.
-
-The simulation will automatically be stopped as soon as the residual criteria are met specified in the `residualControl` sub-dictionary. In this case, these thresholds are set to $$10^{-4}$$ for all variables.
+Pressure-based, steady-state simulations in OpenFOAM rely on the PIMPLE pressure-velocity coupling algorithm. Additional options for this algorithm are available within the `PIMPLE` entry in `fvSolutions`. In this tutorial, the pressure correction equation is solved one additional time every iteration for improved convergence and stability with the `nCorrectors` entry set to `2`.
 
 ```
-SIMPLE
+PIMPLE
 {
-    consistent                  yes;
-    nNonOrthogonalCorrectors    1;
-
-    residualControl
-    {
-        p                       1e-4;
-        U                       1e-4;
-        k                       1e-4;
-        epsilon                 1e-4;
-    }
-}
-```
-
-### Relaxation factors
-
-Steady state simultions are highly unstable, if no relaxation factors are used. Since the SIMPLEC algorithm is employed, no relaxation factor for pressure has to be set. However, velocity, turbulent kinetic energy and turbulent dissipation rate are relaxed with 0.8 and 0.5, respectively, using equation underrelaxation.
-
-```
-relaxationFactors
-{
-    equations
-    {
-        U               0.8;
-        k               0.5;
-        epsilon         0.5;
-    }
+    nOuterCorrectors    1;
+    nCorrectors         2;
+    nNonOrthogonalCorrectors 0;
 }
 ```
