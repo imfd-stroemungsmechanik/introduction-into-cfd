@@ -6,6 +6,10 @@ nav_order: 7
 
 # Exhaust Gas Recirculation
 
+## Motivation
+
+Exhaust Gas Recirculation (EGR) is a nitrogen oxide (NOx) reduction technique used in internal combustion engines. The system works by recirculating a portion of the engine's exhaust gas back into the combustion chamber, where it mixes with the incoming fresh air-fuel mixture. This seemingly counterintuitive approach of mixing "waste" exhaust gases with fresh intake air serves a crucial purpose in modern automotive engineering.
+
 ## Objectives
 
 The objectives for this tutorial are as follows:
@@ -21,7 +25,7 @@ The objectives for this tutorial are as follows:
 
 This tutorial will describe how to pre-process, run, and post-process a case involving a transient, compressible flow of a exhaust gas recirculation. The geometry is shown in the following figure with an inlet for cold air on the left, inlet for the hot exhaust gas in the center, no-slip adiabatic walls for the air and exhaust side, and an outlet at the right. The flow will be solved using the OpenFOAM solver `rhoPimpleFoam` the suitable for laminar and turbulent, compressible, transient flows.
 
-![Diffuser case geometry](figures/exhaust-gas-recirculation-geometry.png)
+![Exhaust gas recirculation system case geometry](figures/exhaust-gas-recirculation-geometry.png)
 
 The boundary conditions for the give problem are as follows:
 - Air inlet: Volumetric flow rate of $$Q = 0.005\,\text{m}^3\text{/s}$$ at a temperature of $$300\,\text{K}$$

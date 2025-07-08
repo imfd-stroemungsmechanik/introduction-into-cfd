@@ -71,13 +71,11 @@ boundaryLayers
         pipe_exhaust
         {
             nLayers           5;
-
             thicknessRatio    1.3;
         }
         pipe_air
         {
             nLayers           5;
-
             thicknessRatio    1.3;
         }
     }
