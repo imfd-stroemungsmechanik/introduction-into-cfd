@@ -385,8 +385,7 @@ The specification of the linear equation solvers, tolerances and other algorithm
 
 ### Solver settings
 
-The pressure field in the pressure-velocity coupling is solved using a **Geometric agglomerated Algebraic MultiGrid** (short: GAMG) solver with a Gauss-Seidel solver for smoothing during the multi-grid steps. The absolute solver tolerance for each iteration is set to $$10^{-6}$$ with a relative tolerance of $$0.01$$ for the intermediate pressure-velocity coupling iterations and a relative tolerance of $$0$$ for the final iteration. 
-
+The pressure field in the pressure-velocity coupling is solved using a **Geometric agglomerated Algebraic MultiGrid** (short: GAMG) solver with a Gauss-Seidel solver for smoothing during the multi-grid steps. The solver is actually set up twice as the pressure-velocity equation is solved more than once. For the intermediate iterations, a relative tolerance of $$0.01$$ is used while for the final iteration a relative tolerance of $$0$$ is used.
 
 ```
 solvers
@@ -434,7 +433,7 @@ solvers
 
 ### Pressure-velocity coupling
 
-Pressure-based, steady-state simulations in OpenFOAM rely on the PIMPLE pressure-velocity coupling algorithm. Additional options for this algorithm are available within the `PIMPLE` entry in `fvSolutions`. In this tutorial, the pressure correction equation is solved one additional time every iteration for improved convergence and stability with the `nCorrectors` entry set to `2`.
+Pressure-based, steady-state simulations in OpenFOAM rely on the PIMPLE pressure-velocity coupling algorithm. Additional options for this algorithm are available within the `PIMPLE` entry in `fvSolutions`. In this tutorial, the pressure correction equation is solved one additional time every iteration for improved convergence and stability with the `nCorrectors` entry set to `2`. Since this is a transient simulation, relaxation factors or residual criteria are not necessarily required.
 
 ```
 PIMPLE
