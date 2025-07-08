@@ -8,7 +8,7 @@ nav_order: 2
 # Solving
 
 
-## Starting the Solver
+## Running in Parallel
 
 By default, OpenFOAM does only run on a single CPU core on a computer (e.g. it runs in serial). Even for smaller cases this might lead to long computational times. For example, the mesh for this simulation consists of about 60.000 cells. A simulation on a single CPU core would take about 24 min to finish. In contrast, most modern workstation computer and laptops come equipped with 8 - 16 CPU cores (not including hyperthreading). So it would just make sense to run OpenFOAM in parallel using several CPU cores at once to speed up the simulation.
 
@@ -17,7 +17,7 @@ Using OpenFOAM in parallel consists of three steps:
  2. Running the case in parallel,
  3. Reconstructing the results from the individual processor folders.
 
-### 1. Decomposing a case
+### 1. Decomposing the case
 
 At first, the computational mesh (e.g. the `constant/polyMesh` directory) and the intial and boundary conditions (typically the `0` folder) have to be decomposed into $$n$$ separate parts or sub-domains, where $$n$$ is the number of CPU cores to be used. This way, each CPU core gets a separate portion of the overall simulation domain. During a parallel run, a CPU core does only solve the governing equation in the assigned computational sub-domain. For example, decomposing the computational mesh for the exhaust gas recirculation system case into 4 sub-domains, results in the following distribution:
 
@@ -105,13 +105,14 @@ This tool automatically reconstructs all time folders in the individual processo
 
 
 
+
 ## Monitoring the Simulation
 
-In order to monitor the simulation during its run and for postprocessing, two function objects are added at the bottom of the `controlDict`. These are used for e.g. writing out the residuals over the course of the simulation, perform certain post-processing tasks such as calculating the flow rate over a patch, compute maximum and average values of the flow field, compute forces and force coefficients on objects, compute derived fields such as heat transfer or shear stress rates, and generate images through cutPlanes or iso-surfaces.
+In order to monitor the simulation during its run and for postprocessing, several function objects are added at the bottom of the `controlDict`.
 
 ### Residuals
 
-By default, the residuals are only printed to the terminal window. In order to visualize the residuals to help judge convergence, a function object has been added to the `controlDict`. This function object of type `solverInfo` saves the initial residuals of the fields `(p U k epsilon)`, so pressure, velocity, turbulent kinetic energy, and turbulent dissipation rate, during runtime. Therefore, a new folder called `postProcessing` is automatically created inside the case folder. So in this example, the residuals are stored under the following path: `postProcessing/solverInfo/0/solverInfo.dat`.
+In order to visualize the residuals to help judge convergence, the function object `solverInfo` has been added to the `controlDict`. It saves the initial residuals of the fields `(p U h k omega)`, so pressure, velocity, enthalpy, turbulent kinetic energy, and specific dissipation rate, during runtime in the `postProcessing` folder under the following path: `postProcessing/solverInfo/0/solverInfo.dat`.
 
 ```
 functions
@@ -120,30 +121,30 @@ functions
     {
         type            solverInfo;
         libs            (utilityFunctionObjects);
-        fields          (p U k epsilon);
+        fields          (p U h k omega);
     }
 
 ...
 }
 ```
 
-Once the simulation has finished and all the time directories are written out, the data written by the function objects can be analyzed. This data can typically be plotted in a diagram using Microsoft Excel, Python, Gnuplot or any other tool. In order to quickly evaluate the monitored results from the function objects, a script is added to the airfoil case directory called `create_plots.py`. Executing it will automatically create the diagrams for residuals and average inlet pressure after the run. By typing the following command in the terminal, the diagrams are created using Python and stored as png file:
+Either during runtime or once the simulation has finished, the data written by the function objects can be analyzed. This data can typically be plotted in a diagram using Microsoft Excel, Python, Gnuplot or any other tool. In order to quickly evaluate the monitored results from the function objects, a script is added to the case directory called `create_plots.py`. Executing it will automatically create the diagrams for residuals. By typing the following command in the terminal, the diagrams are created using Python and stored as png file:
 
 ```bash
 python3 create_plots.py
 ```
 
-This creates the following diagram of the residuals on the $$y$$-axis plotted against the iteration on the $$x$$-axis in the case folder:
+This creates the following diagram of the residuals on the $$y$$-axis plotted against time on the $$x$$-axis in the case folder:
 
-![Diffuser case residuals](figures/diffuser-results-residuals.png)
+![Exhaust gas recirculation system case residuals](figures/exhaust-gas-recirculation-residuals.png)
 
-The plot shows that the residuals fall throughout the simulation to below $$10^{-4}$$ for all monitored variables. Since this is the specified residual criteria, the simulation stops automatically. We can assume this is a converged steady-state simulation.
+The plot shows that while there is a clear trend in falling residuals, this trend is superimposed by large oscillations. This indicates that this is a stronly transient flow with no stationary state.
 
 
 
-### Dimensionless Wall Distance
+### Probes
 
-Additionally, a second function object named `yPlus` in the `controlDict` evaluates the dimensionless wall distance $$y^+$$ in order to assess the mesh resolution within the turbulent boundary layer. It writes out the minimum, maximum, and average $$y^+$$ value for wall patches of type `wall` in the `postProcessing` directory and also create a new field in the results folders called `yPlus` with the dimensionless wall distance for every boundary face for visualization. The computation is performed whenever a new results folder is written out (e.g., every 250 iterations as defined in `controlDict`) as the entry `writeControl` is set to `writeTime`.
+Additionally, a second function object named `probes` in the `controlDict` evaluates pressure, velocity and temperature in pre-defined monitor points. In this case, three points are defined just below where the exhaust pipe intersects with the air pipe and further downstream. The values are written out every time step and help in analysing the transient flow behaviour and maximum temperatures throughout the system.
 
 The function object itself is configured as follows:
 
@@ -152,14 +153,25 @@ functions
 {
 ...
     
-    yPlus
+    probes
     {
-        type                yPlus;
-        libs                (fieldFunctionObjects);
+        type            probes;
+        libs            (sampling);
+        writeControl    timeStep;
+        writeInterval   1;
 
-        writeControl        writeTime;
+        fields
+        (
+            U
+        );
+
+        probeLocations
+        (
+            (0.12 -0.15 0.0)
+            (0.15 -0.15 0.0)
+            (0.18 -0.15 0.0)
+        );
     }
 }
 ```
 
-When analysing the the results it is revealed that the average dimensionless wall distance for the final time step is in the range of 20 with a maximum value of 51. This indicates that the mesh is slightly to fine for using standard wall functions, which require a dimensionless wall distance of at least 30. Therefore, the first cell is located in the buffer region of the turbulent boundary layer leading to an incresed numerical error. Nevertheless, for now this mesh is sufficient for this seminar.
