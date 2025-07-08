@@ -17,7 +17,7 @@ Using OpenFOAM in parallel consists of three steps:
  2. Running the case in parallel,
  3. Reconstructing the results from the individual processor folders.
 
-#### **1. Decomposing a case
+### 1. Decomposing a case
 
 At first, the computational mesh (e.g. the `constant/polyMesh` directory) and the intial and boundary conditions (typically the `0` folder) have to be decomposed into $$n$$ separate parts or sub-domains, where $$n$$ is the number of CPU cores to be used. This way, each CPU core gets a separate portion of the overall simulation domain. During a parallel run, a CPU core does only solve the governing equation in the assigned computational sub-domain. For example, decomposing the computational mesh for the exhaust gas recirculation system case into 4 sub-domains, results in the following distribution:
 
@@ -36,7 +36,7 @@ decomposePar
 
 
 
-#### **2. Run in parallel**
+### 2. Run in parallel
 
 Once the case has been decomposed, it can be solved in parallel using mpi (Message Passing Interface), which organizes the processor-processor communication. Instead of just typing `rhoPimpleFoam` into the terminal, for a parallel execution the command is as follows:
 
@@ -90,7 +90,7 @@ This output at time 0.04652 tells us in summary:
 - The execution time for the simulation up until this iteration is roughly 255 seconds as indicated by the `ExecutionTime`.
 
 
-#### **3. Reconstructing the case**
+### 3. Reconstructing the case
 
 Once the simulation has finished, the results can be visualized in ParaView, since ParaView can both visualize decomposed and reconstructed OpenFOAM data. However, it is highly recommended to reconstruct the individual subdomains back into a overall complete domain before continuing the post-processing. This way, the number of stored files and required storage space can be reduced and the case folder is less confusing. In order to reconstruct the subdomains, the following command is used:
 
