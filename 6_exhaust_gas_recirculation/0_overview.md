@@ -33,6 +33,8 @@ The boundary conditions for the give problem are as follows:
 - Outlet: Pressure of $$10^5\,\text{Pa}$$
 - Pipe walls: Adiabatic and no-slip
 
+Due to the high temperature differences between air and exhaust gas, the flow is assumbed to be compressible.
+
 ## Preparation
 
 Before starting, perform the following steps for preparation:

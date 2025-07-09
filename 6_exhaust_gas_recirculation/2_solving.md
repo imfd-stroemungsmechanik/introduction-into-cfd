@@ -57,7 +57,7 @@ mpirun -np 4 rhoPimpleFoam -parallel
 
 Here, `mpirun` takes care of the parallel execution, `-np 4` is an additional option specifying the number of processors used (here: 4), `rhoPimpleFoam` is the executable run in parallel and `-parallel` an additional option, so OpenFOAM knows to run the solver in parallel. Results folders created during parallel execution are stored in their respective processor folder. Furthermore, post-processing function objects are stored as normal in the `postProcessing` directory.
 
-The progress of the job is written to the terminal window like normal. It tells the user the current time step (e.g. iteration in steady-state simulations), the equations beeing solved, initial and final residuals for all fields and should look like follows:
+The progress of the job is written to the terminal window like normal. It tells the user the current time step (e.g. iteration in steady-state simulations), the equations being solved, initial and final residuals for all fields and should look like follows:
 
 
 
@@ -98,7 +98,7 @@ ExecutionTime = 254.95 s  ClockTime = 266 s
 This output at time 0.04652 tells us in summary:
 - The solvers being used for the different governing equations, initial and final residuals, and the number of iterations per time step.
 - The error of the conservation of mass is denoted as `continuity error`. Since its value is very small, conservation of mass is maintained.
-- The execution time for the simulation up until this iteration is roughly 255 seconds as indicated by the `ExecutionTime`.
+- The execution time for the simulation up to this iteration is roughly 255 seconds as indicated by the `ExecutionTime`.
 
 
 ### 3. Reconstructing the case
