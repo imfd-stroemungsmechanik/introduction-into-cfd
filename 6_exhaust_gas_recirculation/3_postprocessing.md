@@ -48,7 +48,7 @@ Smaller flow structures with higher temperature can be seen downstream the t-jun
 
 
 
-## Analysing the Mixing
+## Analysing the Mixing Process
 
 In order to analyse the mixing of exhaust gas and fresh air along the pipe, we can plot the average temperature over a line in the center of the main pipe. Select the **Plot over Line** filter from the **Domain** $$\rightarrow$$ **Data Analysis**. The **Properties** window panel should appear as shown in the following figure:
 
