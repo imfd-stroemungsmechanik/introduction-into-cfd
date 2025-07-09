@@ -19,17 +19,28 @@ Using OpenFOAM in parallel consists of three steps:
 
 ### 1. Decomposing the case
 
-At first, the computational mesh (e.g. the `constant/polyMesh` directory) and the intial and boundary conditions (typically the `0` folder) have to be decomposed into $$n$$ separate parts or sub-domains, where $$n$$ is the number of CPU cores to be used. This way, each CPU core gets a separate portion of the overall simulation domain. During a parallel run, a CPU core does only solve the governing equation in the assigned computational sub-domain. For example, decomposing the computational mesh for the exhaust gas recirculation system case into 4 sub-domains, results in the following distribution:
+At first, the computational mesh (e.g. the `constant/polyMesh` directory) and the intial and boundary conditions (typically the `0` folder) have to be decomposed into $$n$$ separate parts or sub-domains, where $$n$$ is the number of CPU cores to be used. This way, each CPU core gets a separate portion of the overall simulation domain. During a parallel run, a CPU core does only solve the governing equation in the assigned computational sub-domain.
 
+The number of sub-domains is configured in the `decomposeParDict` in the `system` folder, which has the following content:
 
-![Exhaust gas recirculation system case decomposition](figures/exhaust-gas-recirculation-decompose.png)
+```
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+numberOfSubdomains  4;
 
-The number of sub-domains is configured in the `decomposeParDict` in the `system` folder. For this simulation, the number of sub-domains is set to 4 and the decomposition is computed using the `scotch` algorithm, which automatically tries to minimze the processor-processor communication for parallel computation. The decomposition itself can be performed using the following command:
+method              scotch;
+```
+
+For this simulation, the number of sub-domains is set to 4 and the decomposition is computed using the `scotch` algorithm, which automatically tries to minimze the processor-processor communication for parallel computation. The decomposition itself can be performed using the following command:
 
 ```bash
 decomposePar
 ```
+
+Decomposing the exhaust gas recirculation system case for running in parallel results in the following processor subdomains:
+
+![Exhaust gas recirculation system case decomposition](figures/exhaust-gas-recirculation-decompose.png)
+
 
 {: .note }
 > If the case has already been decomposed with `decomposePar`, running the tool again will result in an error as there are already processor folders present. In order to automatically remove old processor folders and decompse the case once again, an additional option can be sued when decomposing the case: `decomposePar -force`.
@@ -136,7 +147,7 @@ python3 create_plots.py
 
 This creates the following diagram of the residuals on the $$y$$-axis plotted against time on the $$x$$-axis in the case folder:
 
-![Exhaust gas recirculation system case residuals](figures/exhaust-gas-recirculation-residuals.png)
+![Exhaust gas recirculation system case residuals](figures/diagram-residuals.png)
 
 The plot shows that while there is a clear trend in falling residuals, this trend is superimposed by large oscillations. This indicates that this is a stronly transient flow with no stationary state.
 
@@ -144,9 +155,11 @@ The plot shows that while there is a clear trend in falling residuals, this tren
 
 ### Probes
 
-Additionally, a second function object named `probes` in the `controlDict` evaluates pressure, velocity and temperature in pre-defined monitor points. In this case, three points are defined just below where the exhaust pipe intersects with the air pipe and further downstream. The values are written out every time step and help in analysing the transient flow behaviour and maximum temperatures throughout the system.
+Additionally, a second function object named `probes` in the `controlDict` evaluates pressure, velocity and temperature in pre-defined monitor points. In this case, three points are defined just below where the exhaust pipe intersects with the air pipe and further downstream as shown in the following figure:
 
-The function object itself is configured as follows:
+![Exhaust gas recirculation system case probe locations](figures/exhaust-gas-recirculation-probes.png)
+
+The values are written out every time step and help in analysing the transient flow behaviour and detect possible characteristic frequencies. The function object itself is configured as follows:
 
 ```
 functions
@@ -162,7 +175,7 @@ functions
 
         fields
         (
-            U
+            T
         );
 
         probeLocations
@@ -174,4 +187,10 @@ functions
     }
 }
 ```
+
+By using the provided `create_plots.py` Python script, a diagram of the temperature over time for the individual probe points is created:
+
+![Exhaust gas recirculation system case probe temperature](figures/diagram-probe-temperature.png)
+
+It takes about 0.01 seconds until the hot exhaust gas reaches the location of the probe points. Then, their temperature rises quickly. Directly below the t-junction at probe 1, the temperature is lowest with a maximum of $$500\,\text{K}$$. Probe 2 has the highest temperature of around $$850\,\text{K}$$ at the end of the simulation. However, probe 3 sits in between with a lower temperature in the range of $$600\,\text{K}$$ due to the mixing of cold air and hot exhaust gas. Note that the maximum and minimum temperature is actually above and below the inlet temperatures of $$900\,\text{K}$$ and $$300\,\text{K}$$, respectively. This is unphysical and probably due to the unlimited gradient in the second order upwind discretication scheme.
 
