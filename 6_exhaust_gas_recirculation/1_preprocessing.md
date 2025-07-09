@@ -316,7 +316,7 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         0.1;
+endTime         0.08;
 
 deltaT          8e-6;
 
@@ -325,7 +325,7 @@ writeControl    runTime;
 writeInterval   0.002;
 ```
 
-In this tutorial case, the solver `rhoPimpleFoam` is used, a pressure-based solver for compressible, transient, laminar or turbulent single-phase flows. The simulation starts at time `0`. Therefore we set the `startFrom` keyword to `startTime` and then specify the `startTime` keyword to be `0`. The simulations runs until an end time of $$0.1\,\text{s}$$. Time step size `deltaT` is set to $$8 \times 10^{-6}\,\text{s}$$ for stability reasons. Finally, results are witten out every $$0.002\,\text{s}$$ configured via the `writeInterval` keyword.
+In this tutorial case, the solver `rhoPimpleFoam` is used, a pressure-based solver for compressible, transient, laminar or turbulent single-phase flows. The simulation starts at time `0`. Therefore we set the `startFrom` keyword to `startTime` and then specify the `startTime` keyword to be `0`. The simulations runs until an end time of $$0.08\,\text{s}$$. Time step size `deltaT` is set to $$8 \times 10^{-6}\,\text{s}$$ for stability reasons. Finally, results are witten out every $$0.002\,\text{s}$$ configured via the `writeInterval` keyword.
 
 
 
