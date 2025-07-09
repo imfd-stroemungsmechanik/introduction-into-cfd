@@ -192,5 +192,84 @@ By using the provided `create_plots.py` Python script, a diagram of the temperat
 
 ![Exhaust gas recirculation system case probe temperature](figures/diagram-probe-temperature.png)
 
-It takes about 0.01 seconds until the hot exhaust gas reaches the location of the probe points. Then, their temperature rises quickly. Directly below the t-junction at probe 1, the temperature is lowest with a maximum of $$500\,\text{K}$$. Probe 2 has the highest temperature of around $$850\,\text{K}$$ at the end of the simulation. However, probe 3 sits in between with a lower temperature in the range of $$600\,\text{K}$$ due to the mixing of cold air and hot exhaust gas. Note that the maximum and minimum temperature is actually above and below the inlet temperatures of $$900\,\text{K}$$ and $$300\,\text{K}$$, respectively. This is unphysical and probably due to the unlimited gradient in the second order upwind discretication scheme.
+It takes about 0.01 seconds until the hot exhaust gas reaches the location of the probe points. Then, their temperature rises quickly. Directly below the t-junction at probe 1, the temperature is lowest with a maximum of $$500\,\text{K}$$. Probe 2 has the highest temperature of around $$850\,\text{K}$$ at the end of the simulation. However, probe 3 sits in between with a lower temperature in the range of $$600\,\text{K}$$ due to the mixing of cold air and hot exhaust gas. Note that the maximum and minimum temperature is actually above and below the inlet temperatures of $$900\,\text{K}$$ and $$300\,\text{K}$$, respectively. This is **unphysical** and probably due to the unlimited gradient in the second order upwind discretication scheme.
 
+
+### Average and Maximum Outlet Temperature
+
+For exhaust gas recirculation systems the maximum and average outlet temperature is essential to avoid the damage of downstream engine components due to exessive temperature. Therefore, two additional function object are added to compute maximum and average outlet temperature of the mixing gas. The first one, called `average_outlet_temperature` is of type `surfaceFieldValue` and compute the area-weighted average of the temperature field at a region of type `patch` with the name of that patch `outlet`. Similar, the second one called `maximum_outlet_temperature` is also of type `surfaceFieldValue` and computes the maximum face temperature at the outlet patch.
+
+```
+functions
+{
+...
+
+    average_outlet_temperature
+    {
+        type            surfaceFieldValue;
+        libs            (fieldFunctionObjects);
+
+        fields          (T);
+        operation       areaAverage;
+
+        regionType      patch;
+        name            outlet;
+        writeFields     false;
+    }
+    
+    maximum_outlet_temperature
+    {
+        type            surfaceFieldValue;
+        libs            (fieldFunctionObjects);
+
+        fields          (T);
+        operation       max;
+
+        regionType      patch;
+        name            outlet;
+        writeFields     false;
+    }
+}
+```
+
+Similar to the previous plots, these results indicate a strongly transient flow problem with a maximum temperature of up to $$500\,\text{K}$$ and an average temperature of around $$400\,\text{K}$$.
+
+![Exhaust gas recirculation system case outlet temperature](figures/diagram-outlet-temperature.png)
+
+
+
+### Average Flow Field
+
+Since the flow problem seems to be highly transient, averaged flow fields over time can be handy for postprocessing. Therefore, a final function object called `fieldAverage` is added, which averages the temperature and velocity field over every time step. The resulting fields, `TMean` for temperature and `UMean` for velocity, are written out whenever a results folder would be written out with the entry `writeControl` set to `writeTime`. The function object is configured as follows:
+
+```
+functions
+{
+    ...
+    
+    fieldAverage
+    {
+        type            fieldAverage;
+        libs            (fieldFunctionObjects);
+        writeControl    writeTime;
+
+        fields
+        (
+            U
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+            T
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+        );
+    }
+}
+```
+
+This concludes the setup of the exhaust gas recirculation system and the configuration of function objects for runtime postpressing.
