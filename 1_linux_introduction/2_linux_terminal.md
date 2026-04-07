@@ -1,11 +1,12 @@
 ---
 layout: default
-title: 1. Linux Command Line
-nav_order: 2
+title: Linux Terminal
+parent: 1. Linux Introduction
+nav_order: 1
 ---
 
 
-# The Linux Command Line for Beginners
+# The Linux Terminal for Beginners
 
 ## Motivation
 
