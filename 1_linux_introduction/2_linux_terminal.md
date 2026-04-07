@@ -51,16 +51,18 @@ Navigating the terminal requires typing, but there are two critical features des
 
 The following commands form the foundation of navigating and manipulating files within a Linux environment.
 
-### Navigation & Viewing
+#### Navigation & Viewing
+
 | Command | Description | Common Usage & Flags |
 | :--- | :--- | :--- |
 | `pwd` | **P**rint **W**orking **D**irectory. Displays the absolute path of the current directory. | `pwd` |
 | `ls` | **L**i**s**t. Displays the contents of a directory. | `ls -l` (detailed list), `ls -a` (shows hidden files). |
 | `cd` | **C**hange **D**irectory. Moves the working location. | `cd ..` (moves up one directory), `cd ~` (returns to Home). |
 | `cat` | con**cat**enate. Outputs text file contents to the screen. | `cat system/controlDict` |
-| `clear`| Clears the terminal screen of all previous output. | `clear` |
+| `clear` | Clears the terminal screen of all previous output. | `clear` |
 
-### File & Directory Management
+#### File & Directory Management
+
 | Command | Description | Common Usage & Flags |
 | :--- | :--- | :--- |
 | `mkdir` | **M**a**k**e **Dir**ectory. Creates a new folder. | `mkdir new_folder` |
