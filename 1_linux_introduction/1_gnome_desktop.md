@@ -5,6 +5,7 @@ parent: 1. Linux Introduction
 nav_order: 1
 ---
 
+
 # The Gnome Desktop
 
 This seminar utilizes the **Debian 13** operating system with the **GNOME** desktop environment. 

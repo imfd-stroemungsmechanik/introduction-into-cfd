@@ -2,109 +2,68 @@
 layout: default
 title: Linux Terminal
 parent: 1. Linux Introduction
-nav_order: 1
+nav_order: 2
 ---
 
 
-# The Linux Terminal for Beginners
+# The Linux Terminal
 
-## Motivation
+While graphical interfaces are suitable for file management and web browsing, computational fluid dynamics workflows using OpenFOAM rely entirely on the command-line interface, known as the **Terminal**.
 
-The command line is an alternative to the GUI based interface you are so used to. Although GUI interfaces are quite easy to use, they are not as flexible and powerful as the command line. For simple operations, the GUI is probably favourable. However, the command line has several distinct advantages:
- 1. More complex operations can be performed, such as searching through thousands of files for a specific string and copy these files, or easily transferring files between your computer and a remote server. 
- 2. The command line is typically faster than a GUI since there is less overhead from the graphical user interface.
- 3. Servers such as HPC clusters typically do not offer a graphical user interface, so the command line is the only way to operate there.
- 4. Commands can be scripted easily in order to automate tasks and complex operations.
+Open the Terminal by pressing the `Super` key, typing `terminal`, and pressing `Enter`.  The terminal will open up and you will see a prompt that looks similar to this:
 
-The Linux shell can be accessed by programs like the terminal. They come with a long list of commands by default which can be combined to build larger programs from smaller ones is what gives the command line its power and flexibility.
+![Activities Overview](figures/terminal_window.png)
 
-In this lesson you learn about some of the most useful commands.
+## Understanding the Command Prompt
 
-## Opening a terminal
+When the Terminal opens, a command prompt appears, waiting for input. It typically follows this format:
+`username@computername:~$`
 
-On a Debian 11, which is the version of the linux operating system used in the computer labs, you can find a launcher for the terminal by clicking on the Applications item at the top left of the screen, then System Tools, and there you will find an entry called MATE Terminal.
+* `username`: The current user's account name.
+* `computername`: The hostname of the machine.
+* `~` (tilde): Indicates the current working directory. In Linux, the tilde is a shortcut representing the user's Home directory (`/home/username`).
+* `$`: Indicates that the terminal is ready to accept a standard command.
 
-{: .note }
-> There are many different terminal versions installed, such as LXTerminal, Terminator, or Xfce Terminal. Except for some functionality and different design, they work all the same.
 
-This video explains the design of the shell and the following aspects:
+## Command Structure
 
-- The *working directory* is the directory, which the terminal is currently looking at.
-- The `~` symbol is a special directory shortcut refering to your `home` directory.
+A typical Linux command consists of up to three parts, separated by spaces:
 
-<video width="640" height="480" controls preload="metadata" controls poster="figures/terminal-introduction-1.png">
-  <source src="videos/terminal-introduction-1.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+```bash
+command [options] [arguments]
+```
 
-## Folder directories
+1. `command` is the program to be executed.
+2. `[options]` are *optional* paramters, which modify the behavior of the command, usually preceded by a hyphen (e.g., `-l` for a long, detailed format).
+3. `arguments` are the target file or directory the command should act upon.
 
-Managing your directories and file structure in your computer or servers is an important skill you need to use when running CFD simulations on linux machines and HPC cluster. In this concept, we are going to show you how to use the terminal with multiple commands to navigate and organize your files.
 
-This video focuses on the following topics:
-- Listing the content of a directory using `ls`. Additional information can be shown when using the additional argument `-l`.
-- Changing the working directory using the command `cd`.
+## Quality-of-Life Features
 
-<video width="640" height="480" controls preload="metadata" controls poster="figures/terminal-introduction-2.png">
-  <source src="videos/terminal-introduction-2.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+Navigating the terminal requires typing, but there are two critical features designed to speed up the workflow and reduce typographical errors:
 
-## Current working directory
+* **Tab Completion:** When typing a file or directory name, pressing the `Tab` key will automatically complete the name. If multiple files share the same starting letters, pressing `Tab` twice will display all possible options. **This feature should be used constantly.**
+* **Command History:** Pressing the `Up Arrow` and `Down Arrow` keys cycles through previously executed commands. This eliminates the need to retype long commands.
 
-Sometimes you will get lost in many directories, with this command you can see where you are.
 
-This video explains the following topics:
-- Print out the current working directory using `pwd`.
-- Special directory names are introduced: `..` stands for the parent directory; `.` for the current directory, and `~` for the home directory.
 
-<video width="640" height="480" controls preload="metadata" controls poster="figures/terminal-introduction-3.png">
-  <source src="videos/terminal-introduction-3.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+## Expanded Command Dictionary
 
-## Organizing your files
+The following commands form the foundation of navigating and manipulating files within a Linux environment.
 
-With the terminal, you can use commands to organize your files into directories, move files, copy or remove the files.
+### Navigation & Viewing
+| Command | Description | Common Usage & Flags |
+| :--- | :--- | :--- |
+| `pwd` | **P**rint **W**orking **D**irectory. Displays the absolute path of the current directory. | `pwd` |
+| `ls` | **L**i**s**t. Displays the contents of a directory. | `ls -l` (detailed list), `ls -a` (shows hidden files). |
+| `cd` | **C**hange **D**irectory. Moves the working location. | `cd ..` (moves up one directory), `cd ~` (returns to Home). |
+| `cat` | con**cat**enate. Outputs text file contents to the screen. | `cat system/controlDict` |
+| `clear`| Clears the terminal screen of all previous output. | `clear` |
 
-This video emphasizes on the following topics:
-
-- Creating new directories with `mkdir`.
-- Move files and folders around or rename them using `mv`.
-- Introduction of the wildcard `*`, which stands for one or more occurrences for any character.
-
-<video width="640" height="480" controls preload="metadata" controls poster="figures/terminal-introduction-4.png">
-  <source src="videos/terminal-introduction-4.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-
-## Viewing files
-
-With the terminal, you can use commands to view files, let's learn how to do it in this concept.
-
-This video focuses on the following topics:
-
-- Viewing files using `cat`, `less` and the top and bottom lines with `head` and `tail`, respectively.
-
-<video width="640" height="480" controls preload="metadata" controls poster="figures/terminal-introduction-5.png">
-  <source src="videos/terminal-introduction-5.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-
-## Removing files or directories
-
-With the terminal, you can use commands to remove files or directories.
-
-This video shows the following aspects:
-
-- Copying single files using `cp` and directories recursively with the additional argument `-r`.
-- Deleting files with `rm` and directories recursively using the additional argument `-r`.
-- Deleting the content of all files and directories within a given directory using the wildcard `*`
-
-<video width="640" height="480" controls preload="metadata" controls poster="figures/terminal-introduction-6.png">
-  <source src="videos/terminal-introduction-6.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-
-{: .warning }
-> The `rm` command deletes files and directories without a waring and without using the Recycle Bin or Trash Can. Therefore, these files cannot be recovered. Be particularly careful when combining this command with wildcards, as complete folders and be deleted easily by mistake.
+### File & Directory Management
+| Command | Description | Common Usage & Flags |
+| :--- | :--- | :--- |
+| `mkdir` | **M**a**k**e **Dir**ectory. Creates a new folder. | `mkdir new_folder` |
+| `cp` | **C**o**p**y. Duplicates a file or directory. | `cp file.txt copy.txt`. Use `cp -r` to copy a whole directory. |
+| `mv` | **M**o**v**e. Moves a file. It is also used to **rename** files. | `mv old_name.txt new_name.txt` |
+| `rm` | **R**e**m**ove. Deletes a file. **Warning: There is no recycle bin in the terminal. Deletion is permanent.** | `rm file.txt`. Use `rm -r` to delete a directory. |
