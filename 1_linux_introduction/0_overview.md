@@ -25,5 +25,5 @@ Why use Linux for OpenFOAM and not Windows for this seminar? There are three maj
 ## Preparation
 
 Before beginning the seminar, please complete the following steps to access the working environment:
- 1. Power on the computer and select the **Linux** operating system from the boot manager menu.
+ 1. Power on the computer and select the **Debian GNU/Linux** operating system from the boot manager menu and press **Enter**.
  2. Log in using standard university account credentials.
