@@ -51,7 +51,7 @@ Navigating the terminal requires typing, but there are two critical features des
 
 The following commands form the foundation of navigating and manipulating files within a Linux environment.
 
-#### Navigation & Viewing
+### Navigation & Viewing
 
 | Command | Description | Common Usage & Flags |
 | :--- | :--- | :--- |
@@ -61,7 +61,7 @@ The following commands form the foundation of navigating and manipulating files 
 | `cat` | con**cat**enate. Outputs text file contents to the screen. | `cat system/controlDict` |
 | `clear` | Clears the terminal screen of all previous output. | `clear` |
 
-#### File & Directory Management
+### File & Directory Management
 
 | Command | Description | Common Usage & Flags |
 | :--- | :--- | :--- |
