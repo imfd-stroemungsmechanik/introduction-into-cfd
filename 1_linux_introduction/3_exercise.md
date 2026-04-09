@@ -15,7 +15,7 @@ While the GNOME graphical interface is suitable for general tasks, OpenFOAM reli
 
 The workspace must first be prepared using the graphical interface. OpenFOAM simulations are organized into "cases," which are essentially directories (folders) containing specific configuration text files.
 
-1. Download the archive file `1_linux_introduction.zip` from the Downloads folder on the [OPAL course page](https://bildungsportal.sachsen.de/opal/auth/RepositoryEntry/19816513539).
+1. Download the archive file [1_linux_introduction.zip](https://github.com/user-attachments/files/26598622/1_linux_introduction.zip) containing a dummy OpenFOAM case repository.
 2. Open the File Manager by pressing the `Super` key, type `files`, and press `Enter`.
 3. Extract the archive:
    * Navigate to the **Downloads** directory.
