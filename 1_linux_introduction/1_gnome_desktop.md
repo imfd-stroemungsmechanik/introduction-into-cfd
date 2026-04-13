@@ -8,9 +8,9 @@ nav_order: 1
 
 # The Gnome Desktop
 
-This seminar utilizes the **Debian 13** operating system with the **GNOME** desktop environment. 
+In this tutorial you will familiarize yourself with the **Debian 13** operating system with the **GNOME** desktop environment. 
 
-Linux looks and feels different than Windows. In Windows, the operating system and the graphical interface are one tightly integrated package. In Linux, they are separate. Debian handles the underlying system (managing files, hardware, and running OpenFOAM), while GNOME is the graphical user interface of the system, the windows, buttons, and menus used to interact with.
+Linux looks and feels different to Windows. In Windows, the operating system and the graphical interface are one tightly integrated package. In Linux, they are separate. Debian handles the underlying system (managing files, hardware, and running OpenFOAM), while GNOME is the graphical user interface of the system, the windows, buttons, and menus used to interact with.
 
 Here is a quick guide to navigating GNOME and where to find everything.
 
@@ -33,13 +33,15 @@ GNOME is designed around minimizing distractions. When you log in, you will see 
 
 ![Activities Overview](figures/activities_overview.png)
 
-* Press the **`Super` key** (the key with the Windows logo) or click the top-left corner of the screen to open the Activities overview.
-* In the Activities overview, the screen zooms out. You will see all your open windows, your workspaces, the search bar at the top, and the **Dash** (dock) at the bottom.
-* There are two ways to launch applications:
+Press the **`Super` key** (the key with the Windows logo) or click the top-left corner of the screen to open the Activities overview.
+
+In the Activities overview, the screen zooms out and you will see all your open windows, your workspaces, the search bar at the top, and the **Dash** (dock) at the bottom.
+
+There are two ways to launch applications:
   1. Click on the dots icon in the dock at the bottom within the Activities overview and select an application.
-  2. Simply start typing the name of an application within the Activities overview. For example, to open the file manager, press `Super`, type `files`, and hit `Enter`. This is the fastest way to work.
-* You can add and remove apps from the dock via drag-and-drop.
-* Windows can be **snapped** to take up exactly half the screen. Drag a window to the left or right edge of the screen.
+  2. Type the name of an application within the Activities overview. For example, to open the file manager, press `Super`, type `files`, and hit `Enter`. This is the fastest way to work.
+
+You can add and remove apps from the dock via drag-and-drop. Windows can be **snapped** to take up exactly half the screen. Try this yourself by dragging a window to the left or right edge of the screen.
 
 ### The File Manager
 The GNOME file manager is simply called **Files**. There are some differences in the file system between Windows and Linux:

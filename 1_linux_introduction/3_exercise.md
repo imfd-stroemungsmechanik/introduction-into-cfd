@@ -61,11 +61,11 @@ cd 1_linux_introduction
 ls
 ```
 
-Running `ls` here will display three items: `0`, `constant`, and `system`. This is the strict standard directory structure required for every OpenFOAM case.
+Running `ls` here will display four items: The three folders `0`, `constant`, and `system`, and a script called `Allrun`. This is the strict standard directory structure required for every OpenFOAM case.
 
 #### Create a case backup
 
-In CFD workflows, duplicating a working case before modifying the setup is standard practice. To copy an entire directory, the `-r` (recursive) flag must be included.
+In CFD workflows, duplicating a working case before modifying the setup is standard practice. To copy an entire directory, the `-r` (recursive) flag must be included. Go to the parent directory and copy the OpenFOAM case.
 
 ```bash
 cd ..
@@ -98,16 +98,29 @@ ls
 
 #### Inspect a configuration file
 
-OpenFOAM does not feature a graphical setup menu. Simulation parameters are defined in text files, often called "dictionaries" or "dicts".
+OpenFOAM does not feature a graphical setup menu. Simulation parameters are defined in text files, often called "dictionaries" or "dicts". Enter the OpenFOAM case folder and display the content of the file `controlDict` in the `system` folder.
 
 ```bash
 cd 1_linux_introduction
 cat system/controlDict
 ```
 
+#### Manipulate a configuration file
+
+While `cat` can be used to display the content of files, text editors like `nano` can be used to manipulate the content of text files. Use `nano` to open the `controlDict` and change the value of the `endTime` entry from 0.3 to 0.5. 
+
+```bash
+nano system/controlDict
+```
+
+Save the file and exit `nano` as follows:
+ 1. Press **Control + X** for starting the exis process
+ 2. When asked **"Save modified butter?"** press **y** (yes)
+ 3. Onced asked for the filename press **Enter** to confirm the current name
+
 #### Clean up the workspace
 
-To finalize the exercise, the terminal screen can be cleared of all previous command output.
+To complete the exercise, clean the terminal screen of all previous command outputs.
 
 ```bash
 clear

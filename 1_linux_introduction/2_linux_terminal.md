@@ -10,7 +10,7 @@ nav_order: 2
 
 While graphical interfaces are suitable for file management and web browsing, computational fluid dynamics workflows using OpenFOAM rely entirely on the command-line interface, known as the **Terminal**.
 
-Open the Terminal by pressing the `Super` key, typing `terminal`, and pressing `Enter`.  The terminal will open up and you will see a prompt that looks similar to this:
+Open the Terminal by pressing the `Super` key, typing `terminal`, and pressing `Enter`.  The terminal will open and you will see a prompt similar to this:
 
 ![Activities Overview](figures/terminal_window.png)
 
