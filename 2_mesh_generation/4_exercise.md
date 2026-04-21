@@ -2,7 +2,7 @@
 layout: default
 title: Exercise
 parent: 2. Mesh Generation
-nav_order: 3
+nav_order: 4
 ---
 
 # Exercise
