@@ -52,7 +52,7 @@ Instead of importing an already existing grid, the mesh for this case will be cr
  =========                 |
  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
   \\    /   O peration     | Website:  https://openfoam.org
-   \\  /    A nd           | Version:  11
+   \\  /    A nd           | Version:  13
     \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 FoamFile
