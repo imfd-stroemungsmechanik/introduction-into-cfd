@@ -93,23 +93,23 @@ At first, the coordinates of the 16 vertices are specified in a list, where the 
 ```
 vertices
 (
-    (-50 0   -1)
     (-50 25  -1)
-    (0   -25 -1)
+    (-50 50  -1)
     (0   0   -1)
     (0   25  -1)
-    (250 -25 -1)
-    (250 0   -1)
-    (250 25  -1)
+    (0   50  -1)
+    (250 0 -1)
+    (250 25   -1)
+    (250 50  -1)
 
-    (-50 0   1)
     (-50 25  1)
-    (0   -25 1)
+    (-50 50  1)
     (0   0   1)
     (0   25  1)
-    (250 -25 1)
+    (0   50  1)
     (250 0   1)
-    (250 25  1)   
+    (250 25   1)
+    (250 50  1)  
 );
 ```
 
@@ -255,15 +255,14 @@ Mesh stats
 ...
 
 Checking geometry...
-    Overall domain bounding box (-0.05 -0.025 -0.001) (0.25 0.025 0.001)
+    Overall domain bounding box (-50 0 -1) (250 50 1)
     Mesh has 2 geometric (non-empty/wedge) directions (1 1 0)
     Mesh has 2 solution (non-empty) directions (1 1 0)
     All edges aligned with or perpendicular to non-empty directions.
-    Boundary openness (-6.00733e-20 -6.84835e-18 -2.15273e-16) OK.
-    Max cell openness = 1.35525e-16 OK.
+    Max cell openness = 0 OK.
     Max aspect ratio = 1 OK.
-    Minimum face area = 2.5e-06. Maximum face area = 6.25e-06.  Face area magnitudes OK.
-    Min volume = 6.25e-09. Max volume = 6.25e-09.  Total volume = 1.375e-05.  Cell volumes OK.
+    Minimum face area = 5. Maximum face area = 6.25.  Face area magnitudes OK.
+    Min volume = 12.5. Max volume = 12.5.  Total volume = 27500.  Cell volumes OK.
     Mesh non-orthogonality Max: 0 average: 0
     Non-orthogonality check OK.
     Face pyramids OK.
@@ -281,7 +280,7 @@ This gives us all relevant mesh statistics and quality criteria of the mesh:
 
 As this is a block-structured mesh with uniform cell size, the mesh quality is excellent with criteria such as:
 - max cell aspect ratio of 1,
-- a uniform cell volume $$6.25 \times 10^{-9}\,\text{m}^3$$,
+- a uniform cell volume $$12.5\,\text{m}^3$$,
 - a maximum mesh non-orthogonality of 0, and
 - a max cell skewness of 0.
 
