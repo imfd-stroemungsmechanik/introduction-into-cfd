@@ -73,7 +73,7 @@ OpenFOAM is designed as a code for 3D space and defines all meshes as such. Howe
 
 ## Mesh quality
 
-After importing or generating a computational grid, it is always recommended to check the mesh statistics and quality criteria. This can easily be done using the utility `checkMesh` from within the `elbow` folder. Just type in the terminal:
+After importing or generating a computational grid, it is always recommended to check the mesh statistics and quality criteria. This can easily be done using the utility `checkMesh` from within the `1_elbow` folder. Just type in the terminal:
 
 ```bash
 checkMesh
@@ -153,25 +153,25 @@ This gives us all relevant mesh statistics and quality criteria of the mesh:
  - `Checking topology` checks for the correct topology of the mesh both for cells and patches.
  - `Checking geometry` reveals information regarding mesh quality with statistics such as maximum non-orthogonality, aspect ratio, and skewness, respectively.
 
-All critical mesh quality statistics are within the tolerable limits and the final output `Mesh OK.` indicates that no critical problems or errors were found during `checkMesh`. Therefore, we can continue with this mesh and proceed with the simulation.
+All critical mesh quality statistics are within the tolerable limits (e.g., non-orthogonality < 70°, skewness < 4) and the final output `Mesh OK.` indicates that no critical problems or errors were found during `checkMesh`. Therefore, we can continue with this mesh and proceed with the simulation.
 
 
 
 
 ## Mesh manipulation
 
-`checkMesh` reveals one potential problem as the bounding box of the computational domain is $64\,\text{m}$ in $x$-direction, $68.54\,\text{m}$ in $y$-direction, and $1.97\,\text{m}$ in $z$-direction. This indicates that the mesh is incorrectly scaled.
+`checkMesh` reveals one potential problem as the bounding box of the computational domain is $$64\,\text{m}$$ in $$x$$-direction, $$68.54\,\text{m}$$ in $y$-direction, and $$1.97\,\text{m}$$ in $z$-direction. This indicates that the mesh is incorrectly scaled.
 
-In order to manipulate the mesh, e.g. scale, translate or rotate, the OpenFOAM utility `transformPoints` can be used. In this tutorial, the overall size of the bounding box must be scaled from $64\,\text{m}$ in $x$-direction down to $64\,\text{mm}$. This results in a scaling factor of 0.001 in all three dimensions. As a result, the `transformPoints` command has to be executed using the `scale` option as follows:
+In order to manipulate the mesh, e.g. scale, translate or rotate, the OpenFOAM utility `transformPoints` can be used. In this tutorial, the overall size of the bounding box must be scaled from $$64\,\text{m}$$ in $$x$$-direction down to $$64\,\text{mm}$$. This results in a scaling factor of 0.001 in all three dimensions. As a result, the `transformPoints` command has to be executed using the `scale` option as follows:
 
-```
+```bash
 transformPoints "scale=(0.001 0.001 0.001)"
 ```
 
 Once executed, the mesh will be scaled down by a factor of 1000.
 
 {: .warning }
-> If this command is executed twice, the mesh will be scaled by $0.001 \times 0.001=10^{-6}$.
+> If this command is executed twice, the mesh will be scaled by $$0.001 \times 0.001=10^{-6}$$.
 
 {: .tip }
 > It is impossible to memorize the syntax and functionality of all OpenFOAM solvers, utilities and post-processing tools. Therefore, you can always execute a command with the optional parameter `-help`. This will give you a detailed list of all options and how to use them, i.e. in this example how to use the `scale` option of the mesh manipulation utility `transformPoints`.
