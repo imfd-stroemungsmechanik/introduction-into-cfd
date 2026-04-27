@@ -126,4 +126,79 @@ blocks
 A mesh refinement study, where the resolution is systematically doubled, can now be performed by changing just four values instead of editing every block individually.
 
 {: .note }
-> The `boundary` and `defaultPatch` entries remain unchanged — they reference vertex indices, not coordinates or variables. Copy them from the previous tutorial as they are.
+> The `boundary` and `defaultPatch` entries remain unchanged — they reference vertex indices, not coordinates or variables.
+
+
+## Computing values with `#calc`
+
+### Motivation
+
+Some values in the `blockMeshDict` are not independent but are derived from other parameters. For example, `yBottom` is simply the negative of `yTop` when the step height equals the channel half-height. Declaring both independently introduces the risk of inconsistency. The `#calc` directive solves this by evaluating C++ expressions inline.
+
+
+### Syntax
+
+The `#calc` directive takes a C++ expression enclosed in double quotes and evaluates it at parse time. Variables can be referenced inside the expression using the `$` prefix:
+
+```
+variableName  #calc "C++ expression using $otherVariable";
+```
+
+
+### Deriving dependent dimensions
+
+With `#calc`, the geometric parameters can be reduced to a set of truly independent values. The following definition derives `yBottom` and `xInlet` from the step height and inlet length and is placed at the top of `blockMeshDict`:
+
+```
+// Independent geometric parameters
+stepHeight  25;
+inletLength 50;
+outletLength 250;
+channelHalfHeight 25;
+
+// Derived coordinates
+xInlet      #calc "-$inletLength";
+xStep       0;
+xOutlet     $outletLength;
+
+yBottom     #calc "-$stepHeight";
+yMid        0;
+yTop        $channelHalfHeight;
+
+zBack       -1;
+zFront      1;
+```
+
+Now, `yBottom` is automatically computed as the negative of `stepHeight`. If the step height changes, the bottom coordinate updates automatically, and the mesh remains consistent.
+
+
+### Computing the cell count from a target cell size
+
+In practice, the mesh resolution is often specified through a target cell size rather than a fixed number of cells. The `#calc` directive can compute the required cell count at run-time. The following lines replace the previous hard-coded mesh resolution:
+
+```
+// Mesh resolution
+cellSize    2.5;
+nxInlet     #calc "round($inletLength / $cellSize)";
+nxOutlet    #calc "round($outletLength / $cellSize)";
+nyHalf      #calc "round($channelHalfHeight / $cellSize)";
+nz          1;
+```
+
+With this approach, changing `cellSize` from `2.5` to `1.25` automatically doubles the resolution in all directions. The `round()` function ensures that the result is an integer, as required by `blockMesh`.
+
+{: .warning }
+> The `#calc` directive evaluates standard C++ expressions. This means that C++ mathematical functions such as `sin()`, `cos()`, `sqrt()`, `pow()`, and `round()` are available. However, integer division follows C++ rules: `5 / 2` evaluates to `2`, not `2.5`. Use `5.0 / 2.0` for floating-point division when necessary.
+
+
+### Generating the mesh
+
+Create the new mesh by running `blockMesh` again and verify the result with `checkMesh`:
+
+```bash
+blockMesh
+checkMesh
+```
+
+{: .warning }
+> Running `blockMesh` automatically overwrites any previously existing mesh.
