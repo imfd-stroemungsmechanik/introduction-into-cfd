@@ -24,12 +24,10 @@ In OpenFOAM, the computational mesh, field data, model properties and numerical 
 ```
 1_elbow
 ├── system
-|   ├── controlDict
-|   ├── fvSchemes
-|   └── fvSolution
+|   └── controlDict
 └── elbow.msh
 
-1 directory, 4 files
+1 directory, 2 files
 ```
 
 The *relevant* file for this tutorial case is:
@@ -160,7 +158,7 @@ All critical mesh quality statistics are within the tolerable limits (e.g., non-
 
 ## Mesh manipulation
 
-`checkMesh` reveals one potential problem as the bounding box of the computational domain is $$64\,\text{m}$$ in $$x$$-direction, $$68.54\,\text{m}$$ in $y$-direction, and $$1.97\,\text{m}$$ in $z$-direction. This indicates that the mesh is incorrectly scaled.
+`checkMesh` reveals one potential problem as the bounding box of the computational domain is $$64\,\text{m}$$ in $$x$$-direction, $$68.54\,\text{m}$$ in $$y$$-direction, and $$1.97\,\text{m}$$ in $$z$$-direction. This indicates that the mesh is incorrectly scaled.
 
 In order to manipulate the mesh, e.g. scale, translate or rotate, the OpenFOAM utility `transformPoints` can be used. In this tutorial, the overall size of the bounding box must be scaled from $$64\,\text{m}$$ in $$x$$-direction down to $$64\,\text{mm}$$. This results in a scaling factor of 0.001 in all three dimensions. As a result, the `transformPoints` command has to be executed using the `scale` option as follows:
 
