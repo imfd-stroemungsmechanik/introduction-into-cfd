@@ -31,7 +31,7 @@ cd 3_advanced
 
 ### Motivation
 
-Consider the vertex list from the previous tutorial. The step height of $$25\,\text{mm}$$ appears as the literal number `25` in four different vertex coordinates, and as `-25` in four others. Similarly, the inlet length of $$50\,\text{mm}$$ appears as `-50` in four vertices. If the step height needs to be changed, every occurrence must be found and updated manually — a process that is tedious and error-prone.
+Consider the vertex list from the previous tutorial. The step height of $$25\,\text{mm}$$ appears as the literal number `25` in several different vertex coordinates. Similarly, the inlet length of $$50\,\text{mm}$$ appears as `-50` in four vertices. If the step height needs to be changed, every occurrence must be found and updated manually - a process that is tedious and error-prone.
 
 OpenFOAM dictionaries support **variable declarations**: a name is assigned a value, and the variable can then be referenced anywhere in the file using the `$` prefix.
 
@@ -46,9 +46,9 @@ xInlet      -50;
 xStep       0;
 xOutlet     250;
 
-yBottom     -25;
-yMid        0;
-yTop        25;
+yBottom     0;
+yMid        25;
+yTop        50;
 
 zBack       -1;
 zFront      1;
@@ -84,7 +84,7 @@ vertices
 );
 ```
 
-Compared to the original file, this version is both more readable and more maintainable. The inline comments `// 0`, `// 1`, etc. are optional but help track the vertex indices. Changing the step height from $$25\,\text{mm}$$ to $$30\,\text{mm}$$ now requires editing only two lines (`yBottom` and `yTop`) instead of sixteen coordinates.
+Compared to the original file, this version is both more readable and more maintainable. The inline comments `// 0`, `// 1`, etc. are optional but help track the vertex indices. Changing the step height from $$25\,\text{mm}$$ to $$30\,\text{mm}$$ now requires editing only a single line instead of sixteen coordinates.
 
 {: .tip }
 > Adding inline comments with the vertex index next to each vertex definition makes the `blockMeshDict` much easier to debug. This is considered good practice, especially for cases with many vertices.
@@ -130,11 +130,12 @@ A mesh refinement study, where the resolution is systematically doubled, can now
 > The `boundary` and `defaultPatch` entries remain unchanged — they reference vertex indices, not coordinates or variables.
 
 
+
 ## Computing values with `#calc`
 
 ### Motivation
 
-Some values in the `blockMeshDict` are not independent but are derived from other parameters. For example, `yBottom` is simply the negative of `yTop` when the step height equals the channel half-height. Declaring both independently introduces the risk of inconsistency. The `#calc` directive solves this by evaluating C++ expressions inline.
+Some values in the `blockMeshDict` are not independent but are derived from other parameters. For example, `yMid` and `yTop` are both directly proportional to `stepHeight`. Declaring all three independently introduces the risk of inconsistency. The `#calc` directive solves this by evaluating C++ expressions inline.
 
 
 ### Syntax
@@ -145,10 +146,9 @@ The `#calc` directive takes a C++ expression enclosed in double quotes and evalu
 variableName  #calc "C++ expression using $otherVariable";
 ```
 
-
 ### Deriving dependent dimensions
 
-With `#calc`, the geometric parameters can be reduced to a set of truly independent values. The following definition derives `yBottom` and `xInlet` from the step height and inlet length and is placed at the top of `blockMeshDict`:
+With `#calc`, the geometric parameters can be reduced to a set of truly independent values. The following definition derives `yMid`, `yTop`, and `xInlet` from the step height and inlet length and is placed at the top of `blockMeshDict`:
 
 ```
 // Independent geometric parameters
@@ -169,7 +169,8 @@ zBack       -1;
 zFront      1;
 ```
 
-Now, `yBottom` is automatically computed as the negative of `stepHeight`. If the step height changes, the bottom coordinate updates automatically, and the mesh remains consistent.
+Now, `yMid` and `yTop` are automatically derived from `stepHeight`. If the step height changes, both coordinates update automatically, and the mesh remains consistent.
+
 
 
 ### Computing the cell count from a target cell size
@@ -239,7 +240,7 @@ For the backward-facing step, the flow separates at the step edge and a recircul
 To refine towards the step edge in the $$x$$-direction, consider the local coordinate system of each block. In the outlet blocks, the local $$x$$-direction runs from the step ($$x = 0$$) to the outlet ($$x = 250\,\text{mm}$$). Since we want small cells at the start (near the step), the ratio must be greater than 1. In the inlet block, the local $$x$$-direction runs from the inlet ($$x = -50\,\text{mm}$$) to the step ($$x = 0$$). Here, we want small cells at the end (near the step), so the ratio must be less than 1.
 
 {: .tip }
-> When two adjacent blocks share a face, the cell sizes at their shared interface must match. This means the expansion ratio at the end of one block must be consistent with the expansion ratio at the start of the neighbouring block. Using inverse ratios (`1.0 / $ratio`) ensures this consistency.
+> When two adjacent blocks share a face, the cell sizes at their shared interface must match. This means the expansion ratio at the end of one block must be consistent with the expansion ratio at the start of the neighbouring block. For larger cases, computing one ratio as the inverse of the other using #calc helps avoid inconsistencies.
 
 The updated `blocks` entry with grading applied looks as follows:
 
@@ -270,7 +271,7 @@ blockMesh
 checkMesh
 ```
 
-The `checkMesh` output will now show a maximum aspect ratio greater than 1, since the cells near the walls are thin and elongated:
+The `checkMesh` output will now show a maximum aspect ratio greater than 1, since the cells near the step edge are compressed in the $$x$$-direction while remaining uniform in $$y$$:
 
 ```
 Checking geometry...
@@ -320,7 +321,7 @@ Any edge not listed in the `edges` entry remains a straight line.
 
 ### Defining the arc
 
-For the circular arc, a single interpolation point must be specified. This point lies on the arc, typically at the midpoint between the two vertices. For the edge between vertex 0 and vertex 3, the interpolation point is placed at the horizontal midpoint of the edge and offset in positive $$y$$-direction by distance contraction added to the geometric parameters at the top of `blockMeshDict`:
+For the circular arc, a single interpolation point must be specified. This point lies on the arc, typically at the midpoint between the two vertices. For the edge between vertex 0 and vertex 3, the interpolation point is placed at the horizontal midpoint of the edge and offset in the positive $$y$$-direction by a distance `contraction` - a new variable added to the geometric parameters at the top of `blockMeshDict`:
 
 ```
 // Independent geometric parameters
@@ -408,7 +409,6 @@ nxInlet     #calc "round($inletLength / $cellSize)";
 nxOutlet    #calc "round($outletLength / $cellSize)";
 nyHalf      #calc "round($stepHeight / $cellSize)";
 nz          1;
-
 
 vertices
 (
@@ -566,7 +566,7 @@ Click **Apply** and select **Surface with Edges** to inspect the mesh. The inlet
 This concludes the third part of the Meshing Tutorial. We have:
 - Replaced hardcoded values in the `blockMeshDict` with named variables for improved readability and maintainability,
 - Used the `#calc` directive to compute derived quantities such as negative coordinates and cell counts from a target cell size,
-- Applied mesh grading with `simpleGrading` to refine the mesh near walls and the step edge,
+- Applied mesh grading with `simpleGrading` to refine the mesh near the step edge,
 - Introduced curved edges using the `arc` edge type to create a rounded inlet geometry.
 
 These features are essential for professional CFD workflows, where meshes must be parameterized for design studies, sensitivity analyses, and mesh convergence studies.
