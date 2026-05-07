@@ -173,7 +173,7 @@ boundary
         type patch;
         faces
         (
-            (0 1 8 9)
+            (0 1 9 8)
         );
     }
 
@@ -298,6 +298,106 @@ paraFoam &
 In the **Pipeline Browser** on the left, the user can see that ParaView has opened `backwards-step.OpenFOAM`, the module for the backward-step case. Clicking on the green **Apply** button in the **Properties** panel displays the computational domain. Selecting **Surface with Edges** in the top center menu bar shows the computational mesh as follows:
 
 ![ParaView showing the backward-step surface mesh](figures/backward-step-mesh.png)
+
+
+
+
+
+
+
+## Mesh grading
+
+### Motivation
+
+In the previous tutorial, the `simpleGrading` for each block was set to `(1 1 1)`, which produces a uniform cell distribution with equal cell sizes throughout the block. While this is the simplest approach, it is rarely optimal for CFD simulations.
+
+In most flows, the gradients of velocity, pressure, and temperature are largest near solid walls and in regions with strong flow features such as recirculation zones. Resolving these gradients accurately requires a higher mesh density in these areas. However, increasing the resolution uniformly throughout the entire domain would result in an unnecessarily large mesh and excessive computational cost.
+
+Mesh grading solves this by gradually varying the cell size within a block, concentrating cells where they are needed most while keeping the mesh coarser in regions where the flow is relatively uniform.
+
+
+### The expansion ratio
+
+The `simpleGrading` entry defines the **expansion ratio** for each of the three local block directions. The expansion ratio is defined as the ratio of the last cell size to the first cell size along that direction:
+
+$$\text{Expansion ratio} = \frac{\delta_e}{\delta_s}$$
+
+This means:
+- A ratio of **1** produces uniform cells (no grading).
+- A ratio **greater than 1** produces cells that grow along the direction, i.e. small cells at the start and large cells at the end.
+- A ratio **less than 1** produces cells that shrink along the direction, i.e. large cells at the start and small cells at the end.
+
+The following figure illustrates the effect of different expansion ratios on a single block:
+
+![Grading expansion ratios](https://doc.cfd.direct/openfoam/user-guide-v13/img/index338x.png)
+
+
+### Applying grading to the backward-facing step
+
+For the backward-facing step, the flow separates at the step edge and a recirculation zone develops behind the step. Therefore, the mesh should be refined near the step edge in the $$x$$-direction, where the flow separates and reattaches.
+
+To refine towards the step edge in the $$x$$-direction, consider the local coordinate system of each block. In the outlet blocks, the local $$x$$-direction runs from the step ($$x = 0$$) to the outlet ($$x = 250\,\text{mm}$$). Since we want small cells at the start (near the step), the ratio must be greater than 1. In the inlet block, the local $$x$$-direction runs from the inlet ($$x = -50\,\text{mm}$$) to the step ($$x = 0$$). Here, we want small cells at the end (near the step), so the ratio must be less than 1.
+
+{: .tip }
+> When two adjacent blocks share a face, the cell sizes at their shared interface must match. This means the expansion ratio at the end of one block must be consistent with the expansion ratio at the start of the neighbouring block.
+
+The updated `blocks` entry with grading applied looks as follows:
+
+```
+blocks
+(
+    // Inlet block
+    hex (0 3 4 1 8 11 12 9)
+    (20 10 1)
+    simpleGrading (0.1 1 1)
+
+    // Lower outlet block
+    hex (2 5 6 3 10 13 14 11)
+    (100 10 1)
+    simpleGrading (10 1 1)
+
+    // Upper outlet block
+    hex (3 6 7 4 11 14 15 12)
+    (100 10 1)
+    simpleGrading (10 1 1)
+);
+```
+
+Regenerate and inspect the mesh:
+
+```bash
+blockMesh
+checkMesh
+```
+
+The `checkMesh` output will now show a maximum aspect ratio greater than 1, since the cells near the step edge are compressed in the $$x$$-direction while remaining uniform in $$y$$:
+
+```
+Checking geometry...
+    ...
+    Max aspect ratio = 3.99276 OK.
+    ...
+    Mesh non-orthogonality Max: 0 average: 0
+    Non-orthogonality check OK.
+    ...
+```
+
+Even though the aspect ratio has increased, the non-orthogonality remains at 0 because grading only changes the cell *size*, not the cell *shape* — all cells remain perfect hexahedra aligned with the coordinate axes.
+
+Open the mesh in ParaView to visually confirm the grading:
+
+```bash
+paraFoam &
+```
+
+![ParaView showing the graded mesh](figures/backward-step-grading.png)
+
+The mesh should clearly show smaller cells near the step edge, with cells gradually growing towards the outlet.
+
+
+
+
+
 
 
 ## Conclusion
