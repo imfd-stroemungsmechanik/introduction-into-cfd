@@ -320,7 +320,7 @@ Mesh grading solves this by gradually varying the cell size within a block, conc
 
 The `simpleGrading` entry defines the **expansion ratio** for each of the three local block directions. The expansion ratio is defined as the ratio of the last cell size to the first cell size along that direction:
 
-$$\text{Expansion ratio} = \frac{\delta_e}{\delta_s}$$
+$$\text{Expansion ratio} = \frac{\Delta x_\text{last}}{\Delta x_\text{first}}$$
 
 This means:
 - A ratio of **1** produces uniform cells (no grading).
@@ -329,7 +329,7 @@ This means:
 
 The following figure illustrates the effect of different expansion ratios on a single block:
 
-![Grading expansion ratios](https://doc.cfd.direct/openfoam/user-guide-v13/img/index338x.png)
+![Grading expansion ratios](figures/blockMesh_expansion_ratio.png)
 
 
 ### Applying grading to the backward-facing step

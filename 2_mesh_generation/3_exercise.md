@@ -31,9 +31,12 @@ In the inlet block, both the lower face (*y* = 25 mm) and the upper face (*y* = 
 ```
 simpleGrading
 (
-    0.1                                    // x: keep the existing grading
-    ((0.5 0.5 5) (0.5 0.5 0.2))            // y: refine towards both walls
-    1                                      // z
+    0.1                 // Keep x-direction expansion ratio
+    (
+        (0.5 0.5 5)     // 50% in y-direction contain 50% of the cells with a expansion ratio of 5
+        (0.5 0.5 0.2)   // 50% in y-direction contain 50% of the cells with a expansion ratio of 0.2
+    )
+    1                   // No z-direction expansion ratio
 )
 ```
 
