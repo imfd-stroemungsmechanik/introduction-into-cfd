@@ -10,103 +10,52 @@ nav_order: 1
 
 ## OpenFOAM Case Structure
 
-A case being simulated involves data for mesh, fields, properties, control parameters, etc. In OpenFOAM this data is stored in a set of files within a case directory rather than in a single case file, as in many other CFD packages. The case directory is given a suitably descriptive name, here `backward-step`. This folder contains the following subfolders and files:
+A case being simulated involves data for mesh, fields, properties, control parameters, etc. In OpenFOAM this data is stored in a set of files within a case directory rather than in a single case file, as in many other CFD packages. The case directory is given a suitably descriptive name, here `1_backward-step`. This folder contains the following subfolders and files:
 
 ```
-backward-step
+1_backward-step
 ├── 0
 │   ├── p
 │   └── U
 ├── constant
-│   ├── turbulenceProperties
-│   └── transportProperties
+│   ├── momentumProperties
+│   └── physicalProperties
 ├── system
+│   ├── blockMeshDict
 │   ├── controlDict
+│   ├── functions
 │   ├── fvSchemes
-│   ├── fvSolution
-│   └── meshDict
-└── backward-step.stl
-
-3 directories, 9 files
+│   └── fvSolution
+└── create_plots.py
+3 directories, 10 files
 ```
 
 The *relevant* files for this tutorial case are:
 - `constant` - This directory contains files that are related to the physics of the problem, including the mesh and any physical properties that are required for the solver. In this case:
-    - `transportProperties` has the physical properties of the fluid, e.g. viscosity.
+    - `physicalProperties` has the physical properties of the fluid, e.g. viscosity.
 - `system` - This folder contains files related to how the simulation is to be solved:
+    - `blockMesh` contains the generation of the block-structured mesh using `blockMesh`.
     - `controlDict` for setting control parameters including start/end time, time step size and parameters for data output.
+    - `functions` contains post-processing functions executed on runtime.
     - `fvSchemes` for the discretization schemes used in the Finite Volume Method.
-    - `meshDict` contains the configuration for the automated meshing process.
-- `backward-step.stl`: The geometry file forming the boundaries of the computational domain.
+- `create_plots.py` is a Python script for evaluating the residuals and maximum flow velocity after the simulation.
 
 
 ## Mesh Generation
 
-The hexahedral-dominant, two-dimensional mesh is created automatically with the meshing utility `cartesian2DMesh` from a user provided surface geometry named `backward-step.stl` in the case folder.
+The block-structured, two-dimensional mesh is created automatically with the meshing utility `blockMesh`. The mesh configuration is essential taken from the previous tutorial with:
+ - A uniform cell size of $$\Delta x = 2.5 \times 10^{-3}\,\text{m}$$.
+ - `inlet` patch on the left, `outlet` patch on the right.
+ - `walls` for the top and bottom wall.
+- `frontAndBackPlanes` for the front and back patches.
 
-Due to the simple geometry, the mesh has a uniform cell size of $$\Delta x = 2.5 \times 10^{-3}\,\text{m}$$ without any local refinement. Thus, the `meshDict` is as follows:
-
-```
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-surfaceFile     "backward-step.stl";
-
-maxCellSize     2.5e-3;
-```
-
-In order to make sure all corresponding patches are grouped together correctly using a suitable patch type, the following lines are added in the `meshDict`:
-
-```
-renameBoundary
-{
-    newPatchNames
-    {
-        "inlet"
-        {
-            type    patch;
-            newName inlet;
-        }
-
-        "outlet"
-        {
-            type    patch;
-            newName outlet;
-        }
-        
-        "wall.*"
-        {
-            type    wall;
-            newName walls;
-        }
-        
-        ".*Empty.*"
-        {
-            type    empty;
-            newName frontAndBackPlanes;
-        }
-    }
-}
-```
-
-Here, the `inlet` and `outlet` patches are of type `patch`, all `wall`-named surfaces of the surface geometry are grouped together in a patch named `walls` of type `wall`, and the front and back plane of the geometry are grouped together in a patch called `frontAndBackPlanes` of type `empty`.
-
-In order to create the mesh, the `cartesian2DMesh` utility has to be executed:
+In order to create the mesh, the `blockMesh` utility has to be executed:
 
 ```bash
-cartesian2DMesh
+blockMesh
 ```
 
-At this point the mesh generation is complete. The mesh consists of:
- - Background mesh with a cell size of $$2.5 \times 10^{-3}\,\text{m}$$.
- - Correct patch types for inlet, outlet, walls and front and back planes.
-
-{: .note }
-> OpenFOAM always operates in a 3 dimensional Cartesian coordinate system and all geometries are generated in 3 dimensions. OpenFOAM solves the case in 3 dimensions by default but can be instructed to solve in 2 dimensions by specifying a special `empty` boundary condition on boundaries normal to the 3rd dimension for which no solution is required. Since the created mesh is two-dimensional, it will have a single cell layer in $$z$$-direction with the patch `frontAndBackPlanes` of type `empty`.
-
-
-## Mesh Quality
-
-Once the mesh has been created, it is always recommended to check the mesh statistics and quality. This can easily be done using the utility `checkMesh` from within the `backward-step` folder:
+At this point the mesh generation is complete and it is recommended to check the mesh statistics and quality. This can easily be done using the utility `checkMesh` from within the `1_backward-step` folder:
 
 ```
 checkMesh
@@ -123,11 +72,11 @@ Create polyMesh for time = 0
 Time = 0s
 
 Mesh stats
-    points:           5200
+    points:           4682
     internal points:  0
-    faces:            9961
-    internal faces:   4763
-    cells:            2454
+    faces:            8940
+    internal faces:   4260
+    cells:            2200
     faces per cell:   6
     boundary patches: 4
     point zones:      0
@@ -137,19 +86,18 @@ Mesh stats
 ...
 
 Checking geometry...
-    Overall domain bounding box (-0.05 -0.025 -0.001) (0.25 0.025 0.001)
+    Overall domain bounding box (-50 0 -1) (250 50 1)
     Mesh has 2 geometric (non-empty/wedge) directions (1 1 0)
     Mesh has 2 solution (non-empty) directions (1 1 0)
     All edges aligned with or perpendicular to non-empty directions.
-    Boundary openness (5.86182e-19 9.08582e-18 -1.63855e-15) OK.
-    Max cell openness = 1.92817e-16 OK.
-    Max aspect ratio = 1.62483 OK.
-    Minimum face area = 2.0672e-06. Maximum face area = 8.04129e-06.  Face area magnitudes OK.
-    Min volume = 4.13441e-09. Max volume = 1.60826e-08.  Total volume = 2.75e-05.  Cell volumes OK.
-    Mesh non-orthogonality Max: 14.2832 average: 1.1051
+    Max cell openness = 0 OK.
+    Max aspect ratio = 1 OK.
+    Minimum face area = 5. Maximum face area = 6.25.  Face area magnitudes OK.
+    Min volume = 12.5. Max volume = 12.5.  Total volume = 27500.  Cell volumes OK.
+    Mesh non-orthogonality Max: 0 average: 0
     Non-orthogonality check OK.
     Face pyramids OK.
-    Max skewness = 0.68929 OK.
+    Max skewness = 0 OK.
     Coupled point location match (average 0) OK.
 
 Mesh OK.
@@ -159,14 +107,14 @@ End
 
 This gives us all relevant mesh statistics and quality criteria of the mesh:
 
-- The mesh consists of 2454 cells,
+- The mesh consists of 2200 cells,
 - has 4 different boundary patches.
 
 As this is a block-structured mesh with uniform cell size, the mesh quality is excellent with criteria such as:
 
-- max cell aspect ratio of 1.625,
-- a maximum mesh non-orthogonality of 14.28, and
-- a max cell skewness of 0.69.
+- max cell aspect ratio of 1,
+- a maximum mesh non-orthogonality of 0, and
+- a max cell skewness of 0.
 
 The final output `Mesh OK.` indicates that no critical problems or errors were found during `checkMesh`. Therefore, we can continue with this mesh and proceed with the simulation.
 
@@ -175,20 +123,18 @@ The final output `Mesh OK.` indicates that no critical problems or errors were f
 
 ## Physical Properties
 
-The physical properties for the fluid, such as kinematic viscosity, are stored in the `transportProperties` file in the `constant` directory.
+The physical properties for the fluid, such as kinematic viscosity, are stored in the `physicalProperties` file in the `constant` directory.
 
 In this tutorial, the Reynolds-number at the inlet should be 1250. Based on the inlet velocity of $$U_\text{in} = 1\,\text{m/s}$$ and the channel height at the inlet of $$H_\text{in} = 0.025\,\text{m}$$, the kinematic viscosity can be computed using the Reynolds-number:
 
 $$ \text{Re} = \frac{U_\text{in} \, H_\text{in}}{\nu} \quad \rightarrow \quad \nu = \frac{U_\text{in} \, H_\text{in}}{\text{Re}} = 2 \times 10^{-5}\,\text{m}^2\text{/s} $$
 
-This value along side the rheological model of the fluid (here: Newtonian fluid) has to be specified in the `transportProperties` dictionary as follows:
+This value along side the rheological model of the fluid (here: constant viscosity) has to be specified in the `physicalProperties` dictionary as follows:
 
 ```
-viscosityModel  Newtonian;
+viscosityModel  constant;
 
 nu              2e-5;
-
-// ************************************************************************* //
 ```
 
 
@@ -202,9 +148,9 @@ Settings related to the control of time (for transient simulations) or iteration
 
 The file starts with the corresponding solver to be used:
 ```
-application     pimpleFoam;
+solver          incompressibleFluid;
 ```
-In this tutorial case, we are using the solver `pimpleFoam`, a pressure-based solver for incompressible, transient, laminar or turbulent single-phase flows.
+In this tutorial case, we are using the solver `incompressibleFluid`, a pressure-based solver for incompressible, transient or steady-state, laminar or turbulent single-phase flows.
 
 
 ### Start and End Times
@@ -226,7 +172,7 @@ endTime         1;
 
 ### Time Step Size
 
-The time step size is defined via the keyword `deltaT`. To achieve temporal accuracy and numerical stability when running `pimpleFoam`, we aim for a Courant number of $$\text{Co} \approx 0.25$$. Based on the cell size $$\Delta x$$, flow velocity $$U$$, and time step size $$\Delta t$$, the Courant number is defined for a given cell as:
+The time step size is defined via the keyword `deltaT`. To achieve temporal accuracy and numerical stability when running `incompressibleFluid`, we aim for a Courant number of $$\text{Co} \approx 0.25$$. Based on the cell size $$\Delta x$$, flow velocity $$U$$, and time step size $$\Delta t$$, the Courant number is defined for a given cell as:
 
 $$ \text{Co} = \frac{U \Delta t}{\Delta x} $$
 
@@ -288,25 +234,21 @@ gradSchemes
 
 The discretization of the convective terms, e.g., convective fluxes, is defined within the `divSchemes` keyword. Here, `div(phi,U)` referes to the discretization of the convective flux $$\partial(u_i u_j)/\partial x_j$$ with `phi` being the (volumetric) flux and `U` the variable transported by the flux. In this case, the **first order upwind scheme** is employed called `Gauss upwind`.
 
-Additionaly, `div((nuEff*dev2(T(grad(U)))))` denotes the divergence of the shear stress tensor in the momentum equation. Since this term is diffusive in nature, it is recommended to discretize it with a central differencing scheme, here `Gauss linear`.
-
 ```
 divSchemes
 {
     div(phi,U)          Gauss upwind;
-
-    div((nuEff*dev2(T(grad(U))))) Gauss linear;
 }
 ```
 
 ### Laplacian Terms
 
-The Laplacian terms, e.g., second order spatial derivatives $$\partial^2/\partial x_j^2$$, are discretized using a **central differencing scheme** corrected for non-orthogonal meshes called `Gauss linear corrected`.
+The Laplacian terms, e.g., second order spatial derivatives $$\partial^2/\partial x_j^2$$, are discretized using a **central differencing scheme** without correction for non-orthogonal meshes called `Gauss linear orthogonal`.
 
 ```
 laplacianSchemes
 {
-    default         Gauss linear corrected;
+    default         Gauss linear orthogonal;
 }
 ```
 

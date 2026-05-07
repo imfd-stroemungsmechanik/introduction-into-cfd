@@ -26,19 +26,12 @@ Change the `endTime` in the `controlDict` in the `system` directory from 1 to 2 
 #### Questions
 
 1. Are there any changes in the flow field beyond 1 second flow time?
-2. How do the residuals change for a longer simulation time?
+2. How do the residuals and the maximum velocity change for a longer simulation time?
 
 
 ### 2. Increase Mesh Resolution
 
-Create a copy of the `backward-step` case directory for a second simulation with a refined mesh:
-
-```bash
-cp -r backward-step backward-step-refined
-cd backward-step-refined
-```
-
-Reduce the maximum cell size (`maxCellSize`) from $$2.5 \times 10^{-3} \, \text{m}$$ to $$1.25 \times 10^{-3}\,\text{m}$$ in the `meshDict` in the `system` directory. Make sure that the time step size `deltaT` in the `controlDict` is also reduced accordingly from $$6.25 \, \times 10^{-4}\,\text{s}$$ to $$3.125 \, \times 10^{-4}\,\text{s}$$ to maintain a Courant number of below 1. Regenerate the mesh with `cartesian2DMesh` and rerun the simulation.
+Create a copy of the `1_backward-step` case directory for a second simulation with a refined mesh. Increase the number of cells in each direction for the hex-blocks in `blockMeshDict` with the exception of the *z*-direction. Make sure that the time step size `deltaT` in the `controlDict` is also reduced accordingly from $$6.25 \, \times 10^{-4}\,\text{s}$$ to $$3.125 \, \times 10^{-4}\,\text{s}$$ to maintain a Courant number of below 1. Regenerate the mesh with `blockMesh` and rerun the simulation.
 
 #### Questions
 
