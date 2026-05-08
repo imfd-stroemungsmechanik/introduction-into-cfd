@@ -10,13 +10,13 @@ nav_order: 2
 
 ## Starting the Solver
 
-In order to start the simulation, we have to execute corresponding the OpenFOAM application. As defined in the `controlDict`, the solver `incompressibleFluid` will be used, suitable for steady-state or transient, incompressible, laminar or turbulent flows. In order to start the solution process, the application `foamRun` has to be executed in the terminal from within the case directory:
+In order to start the simulation, execute the corresponding OpenFOAM application. As defined in the `controlDict`, the solver `incompressibleFluid` will be used, suitable for steady-state or transient, incompressible, laminar or turbulent flows. To start the solution process, execute the application `foamRun` in the terminal from within the case directory:
 
 ```bash
 foamRun
 ```
 
-The progress of the job is written to the terminal window. It tells the user the current time step, the equations being solved, initial and final residuals for all fields and should look like follows:
+The progress of the job is written to the terminal window. It displays the current time step, the equations being solved, initial and final residuals for all fields and should look like follows:
 
 ```
 Courant Number mean: 0.157044 max: 0.312361
@@ -32,7 +32,7 @@ ExecutionTime = 2.81196 s  ClockTime = 3 s
 ```
 
 This output at time step 0.53875s seconds tells us in summary:
-- The maximum Courant number of the simulation is 0.312361 with an average value of 0.157044. While being larger than the initially estimated value of 0.25, it, is still smaller than 1.0 indicating a stable and accurate simulation.
+- The maximum Courant number of the simulation is 0.312361 with an average value of 0.157044. While being larger than the initially estimated value of 0.25, it is still smaller than 1.0 indicating a stable and accurate simulation.
 - The `smoothSolver` (e.g., a Gauss-Seidel solver) is used to solve the velocity components `Ux` and `Uy` in *x*- and *y*-direction. In this time step, it takes one iteration to reach the specified residual criteria.
 - The `GAMG` multigrid solver is used for solving the pressure poisson equation in the pressure-velocity coupling algorithm. For better stability and convergence, the pressure equation is solved twice per time step. It takes 3 and 4 iterations to reach convergence, respectively.
 - The error of the conservation of mass is denoted as `continuity error`. Since its value is very small, conservation of mass is maintained.
@@ -57,11 +57,11 @@ In order to track and monitor the simulation during its run, two function object
 )
 ```
 
-By default, the residuals are only printed to the terminal window. In order to visualize the residuals to help judge convergence, a function object has been added to the `functions` file. This function object saves the initial residuals of the fields `(p U)`, so pressure and velocity, during runtime. Therefore, a new folder called `postProcessing` is automatically created inside the case folder. So in this example, the residuals are stored under the following path: `postProcessing/residuals/0/residuals.dat`.
+By default, the residuals are only printed to the terminal window. In order to visualize the residuals to help judge convergence, a function object has been added to the `functions` file. This function object saves the initial residuals of the fields `(p U)`, so pressure and velocity, during runtime. Therefore, a new folder called `postProcessing` is automatically created inside the case folder. In this example, the residuals are stored under the following path: `postProcessing/residuals/0/residuals.dat`.
 
-Residuals are just one criteria for a converged simulation. Therefore, other physical variables should be consulted as well. In this tutorial, the maximum velocity in the solution domain will also be tracked and written into a separate folder inside `postProcessing`. This is done by including the `cellMaxMag` function object as shown above. It computes the magnitude of the velocity vector and stores the maximum under the following path: `postProcessing/Umax/0/volFieldValue.dat`.
+Residuals are just one criterion for a converged simulation. Therefore, other physical variables should be consulted as well. In this tutorial, the maximum velocity in the solution domain will also be tracked and written into a separate folder inside `postProcessing`. This is done by including the `cellMaxMag` function object as shown above. It computes the magnitude of the velocity vector and stores the maximum under the following path: `postProcessing/Umax/0/volFieldValue.dat`.
 
-Once the simulation has finished and all the time directories are written out, the data written by the function objects can be analyzed. This data can typically be plotted in a diagram using Microsoft Excel, Python, Gnuplot or any other tool. In order to quickly evaluate the monitored results from the function objects, a script is added to the backward-step case directory called `create_plots.py`. Executing it will automatically create the diagrams for residuals and maximum flow velocity after the run. By typing the following command in the terminal, the diagrams are created using Python and stored as png file:
+Once the simulation has finished and all the time directories are written out, the data written by the function objects can be analyzed. This data can typically be plotted in a diagram using Microsoft Excel, Python, Gnuplot or any other tool. In order to quickly evaluate the monitored results from the function objects, a script is added to the backward-step case directory called `create_plots.py`. Execute it to automatically create the diagrams for residuals and maximum flow velocity after the run:
 
 ```bash
 python3 create_plots.py

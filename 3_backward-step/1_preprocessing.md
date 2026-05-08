@@ -34,7 +34,7 @@ The *relevant* files for this tutorial case are:
 - `constant` - This directory contains files that are related to the physics of the problem, including the mesh and any physical properties that are required for the solver. In this case:
     - `physicalProperties` has the physical properties of the fluid, e.g. viscosity.
 - `system` - This folder contains files related to how the simulation is to be solved:
-    - `blockMesh` contains the generation of the block-structured mesh using `blockMesh`.
+    - `blockMeshDict` contains the configuration of the block-structured mesh using `blockMesh`.
     - `controlDict` for setting control parameters including start/end time, time step size and parameters for data output.
     - `functions` contains post-processing functions executed on runtime.
     - `fvSchemes` for the discretization schemes used in the Finite Volume Method.
@@ -49,15 +49,15 @@ The block-structured, two-dimensional mesh is created automatically with the mes
  - A uniform cell size of $$\Delta x = 2.5 \times 10^{-3}\,\text{m}$$.
  - `inlet` patch on the left, `outlet` patch on the right.
  - `walls` for the top and bottom wall.
-- `frontAndBackPlanes` for the front and back patches.
+ - `frontAndBackPlanes` for the front and back patches.
 
-In order to create the mesh, the `blockMesh` utility has to be executed:
+In order to create the mesh, execute the `blockMesh` utility:
 
 ```bash
 blockMesh
 ```
 
-At this point the mesh generation is complete and it is recommended to check the mesh statistics and quality. This can easily be done using the utility `checkMesh` from within the `1_backward-step` folder:
+At this point the mesh generation is complete. Check the mesh statistics and quality using the utility `checkMesh` from within the `1_backward-step` folder:
 
 ```
 checkMesh
@@ -131,7 +131,7 @@ In this tutorial, the Reynolds-number at the inlet should be 1250. Based on the 
 
 $$ \text{Re} = \frac{U_\text{in} \, H_\text{in}}{\nu} \quad \rightarrow \quad \nu = \frac{U_\text{in} \, H_\text{in}}{\text{Re}} = 2 \times 10^{-5}\,\text{m}^2\text{/s} $$
 
-This value along side the rheological model of the fluid (here: constant viscosity) has to be specified in the `physicalProperties` dictionary as follows:
+This value alongside the rheological model of the fluid (here: constant viscosity) has to be specified in the `physicalProperties` dictionary as follows:
 
 ```
 viscosityModel  constant;
@@ -178,7 +178,7 @@ The time step size is defined via the keyword `deltaT`. To achieve temporal accu
 
 $$ \text{Co} = \frac{U \Delta t}{\Delta x} $$
 
-The flow velocity naturally varies across the domain and the Courant-number limitation must be kept in every cell. Therefore, we have to estimate the time step size based on known values. The cell size of this nearly equidistant mesh follows from the block size and the number of cells specified in `blockMeshDict` in the `system` folder. This results in a value of $$\Delta x = 2.5 \times 10^{-3}\,\text{m}$$. The characteristic velocity in the flow domain $$U$$ can be approximated to be equal to the inlet velocity $$U_\text{in}$$. Although the actual flow velocity will probably be higher locally further downstream the inlet, this gives a sufficiently good estimate for the time step size $$\Delta t$$.
+The flow velocity naturally varies across the domain and the Courant-number limitation must be kept in every cell. Therefore, we have to estimate the time step size based on known values. The cell size of this equidistant mesh is specified in the `blockMeshDict` in the `system` folder as $$\Delta x = 2.5 \times 10^{-3}\,\text{m}$$. The characteristic velocity in the flow domain $$U$$ can be approximated to be equal to the inlet velocity $$U_\text{in}$$. Although the actual flow velocity will probably be higher locally further downstream the inlet, this gives a sufficiently good estimate for the time step size $$\Delta t$$.
 
 Based on these assumptions and using the equation for the Courant number, the following expression for the allowable time step size can be derived:
 
@@ -196,7 +196,7 @@ deltaT          6.25e-04;
 
 ### Writing out Results
 
-As the simulation progresses, results are written out at certain intervals of time that can later be analysed and visualized. The `writeControl` keyword presents several options for setting the iteration interval at which the results are written. Here, the `runTime` option is selected which specifies that results are written out at certain simulation time intervals. Here, the `writeInterval` keyword sets this interval to `0.05`, which means that every 0.05 seconds of simulation time a results folder will be written. When OpenFOAM writes out results, it creates a new directory *named as the current time* containing a individual file for each field written out.
+As the simulation progresses, results are written out at certain intervals of time that can later be analysed and visualized. The `writeControl` keyword presents several options for setting the iteration interval at which the results are written. Here, the `runTime` option is selected which specifies that results are written out at certain simulation time intervals. The `writeInterval` keyword sets this interval to `0.05`, which means that every 0.05 seconds of simulation time a results folder will be written. When OpenFOAM writes out results, it creates a new directory *named as the current time* containing an individual file for each field written out.
 
 The corresponding lines in the `controlDict` look as follows:
 ```
@@ -234,7 +234,7 @@ gradSchemes
 
 ### Convective Terms
 
-The discretization of the convective terms, e.g., convective fluxes, is defined within the `divSchemes` keyword. Here, `div(phi,U)` referes to the discretization of the convective flux $$\partial(u_i u_j)/\partial x_j$$ with `phi` being the (volumetric) flux and `U` the variable transported by the flux. In this case, the **first order upwind scheme** is employed called `Gauss upwind`.
+The discretization of the convective terms, e.g., convective fluxes, is defined within the `divSchemes` keyword. Here, `div(phi,U)` refers to the discretization of the convective flux $$\partial(u_i u_j)/\partial x_j$$ with `phi` being the (volumetric) flux and `U` the variable transported by the flux. In this case, the **first order upwind scheme** is employed called `Gauss upwind`.
 
 ```
 divSchemes
@@ -264,4 +264,3 @@ interpolationSchemes
     default         linear;
 }
 ```
-
