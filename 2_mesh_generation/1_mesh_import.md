@@ -53,6 +53,9 @@ End
 
 The mesh has been successfully imported into the OpenFOAM format and stored within the `constant/polyMesh` folder.
 
+{: .note }
+> The OpenFOAM commands must be executed from within the case folders, meaning the terminal should be opened inside those folders.
+
 
 ## The `polyMesh` directory
 

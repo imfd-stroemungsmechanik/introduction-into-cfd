@@ -55,6 +55,8 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+convertToMeters     0.001;
+
 vertices
 (
     ...
@@ -80,10 +82,15 @@ boundary
 
 The file structure follows the overall meshing process of `blockMesh`:
 
-1. All coordinates of the vertices of the individual blocks are defined in a list `vertices`.
-2. Based on these vertices, the individual blocks are created and meshed under `blocks`.
-3. Default patches without specification can be set in the optional `defaultPatch` entry.
-4. The boundary patches of the case are defined in `boundary`.
+1. Scaling factor `convertToMeters` for the vertex coordinates.
+2. All coordinates of the vertices of the individual blocks are defined in a list `vertices`.
+3. Based on these vertices, the individual blocks are created and meshed under `blocks`.
+4. Default patches without specification can be set in the optional `defaultPatch` entry.
+5. The boundary patches of the case are defined in `boundary`.
+
+
+{: .note }
+> For a more detailed introduction to `blockMesh`, refer to the official OpenFOAM User Guide: [blockMesh documentation](https://doc.cfd.direct/openfoam/user-guide-v13/blockmesh).
 
 
 ### Definition of the vertices
@@ -91,6 +98,8 @@ The file structure follows the overall meshing process of `blockMesh`:
 At first, the coordinates of the 16 vertices are specified in a list, where the vertices are numbered internally starting from zero. Then, each vertex can be accessed by its position in the list. This `vertices` subdict looks as follows in `blockMeshDict`:
 
 ```
+convertToMeters     0.001;
+
 vertices
 (
     (-50 25  -1)
@@ -113,7 +122,7 @@ vertices
 );
 ```
 
-The resulting vertices look like follows with the vertices and their numbering in blue and the geometry in grey:
+The `convertToMeters` entry defines a scaling factor by which all vertex coordinates in the mesh description are multiplied. For example, in this case all vertex coordinates are multiplied by 0.001 meaning that the values given for each vertex are in mm. The resulting vertices look like follows with the vertices and their numbering in blue and the geometry in grey:
 
 ![Backward-facing step vertices](figures/backward-step-vertices.png)
 
@@ -149,7 +158,7 @@ Based on the length of the first block of $$50\,\text{mm}$$ and a cell count of 
 ![Backward-facing step blocking](figures/backward-step-blocking.png)
 
 {: .note }
-> It is important that the resolution of the blocks is consistent. For example, the number of cells in $x$-direction for the second and third block must be the same! Otherwise, these blocks would not match.
+> It is important that the resolution of the blocks is consistent. For example, the number of cells in $$x$$-direction for the second and third block must be the same! Otherwise, these blocks would not match.
 
 
 ### Definition of the boundaries
@@ -159,7 +168,7 @@ The boundary of the mesh is given in a list named boundary. The boundary is brok
 - `type`: the patch type, either a generic `patch` on which some boundary conditions are applied or a particular geometric condition, for example of type `wall`
 - `faces`: a list of block faces that make up the patch
 
-Each block face is defined by a list of 4 vertex numbers. The list can begin with any vertex in no particular order. For example, the `inlet` patch is made up of the vertices `(0 1 9 8)`, which is visualized in the following figure:
+Each block face is defined by a list of 4 vertex numbers.  The list can begin with any vertex but needs to follow a sequence through connecting edges, with no restriction on the direction. For example, the `inlet` patch is made up of the vertices `(0 1 9 8)`, which is visualized in the following figure:
 
 ![Backward-facing step patch](figures/backward-step-patch.png)
 
@@ -255,18 +264,18 @@ Mesh stats
 ...
 
 Checking geometry...
-    Overall domain bounding box (-50 0 -1) (250 50 1)
+    Overall domain bounding box (-0.05 0 -0.001) (0.25 0.05 0.001)
     Mesh has 2 geometric (non-empty/wedge) directions (1 1 0)
     Mesh has 2 solution (non-empty) directions (1 1 0)
     All edges aligned with or perpendicular to non-empty directions.
-    Max cell openness = 0 OK.
+    Max cell openness = 1.35525e-16 OK.
     Max aspect ratio = 1 OK.
-    Minimum face area = 5. Maximum face area = 6.25.  Face area magnitudes OK.
-    Min volume = 12.5. Max volume = 12.5.  Total volume = 27500.  Cell volumes OK.
+    Minimum face area = 5e-06. Maximum face area = 6.25e-06.  Face area magnitudes OK.
+    Min volume = 1.25e-08. Max volume = 1.25e-08.  Total volume = 2.75e-05.  Cell volumes OK.
     Mesh non-orthogonality Max: 0 average: 0
     Non-orthogonality check OK.
     Face pyramids OK.
-    Max skewness = 0 OK.
+    Max skewness = 1.11022e-13 OK.
     Coupled point location match (average 0) OK.
 
 Mesh OK.
@@ -280,7 +289,7 @@ This gives us all relevant mesh statistics and quality criteria of the mesh:
 
 As this is a block-structured mesh with uniform cell size, the mesh quality is excellent with criteria such as:
 - max cell aspect ratio of 1,
-- a uniform cell volume $$12.5\,\text{m}^3$$,
+- a uniform cell volume $$12.5 \times 10^{-8}\,\text{m}^3$$,
 - a maximum mesh non-orthogonality of 0, and
 - a max cell skewness of 0.
 
