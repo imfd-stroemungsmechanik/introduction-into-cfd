@@ -61,7 +61,7 @@ By default, the residuals are only printed to the terminal window. In order to v
 
 Residuals are just one criteria for a converged simulation. Therefore, other physical variables should be consulted as well. In this tutorial, the maximum velocity in the solution domain will also be tracked and written into a separate folder inside `postProcessing`. This is done by including the `cellMaxMag` function object as shown above. It computes the magnitude of the velocity vector and stores the maximum under the following path: `postProcessing/Umax/0/volFieldValue.dat`.
 
-Once the simulation has finished and all the time directories are written out, the data written by the function objects can be analyzed. This data can typically be plotted in a diagram using Microsoft Excel, Python, Gnuplot or any other tool. In order to quickly evaluate the monitored results from the function objects, a script is added to the backward-step case directory called `create_plots.py`. Executing it will automatically create the diagrams for residuals and maximum flow velcoity after the run. By typing the following command in the terminal, the diagrams are created using Python and stored as png file:
+Once the simulation has finished and all the time directories are written out, the data written by the function objects can be analyzed. This data can typically be plotted in a diagram using Microsoft Excel, Python, Gnuplot or any other tool. In order to quickly evaluate the monitored results from the function objects, a script is added to the backward-step case directory called `create_plots.py`. Executing it will automatically create the diagrams for residuals and maximum flow velocity after the run. By typing the following command in the terminal, the diagrams are created using Python and stored as png file:
 
 ```bash
 python3 create_plots.py
@@ -75,4 +75,4 @@ The plot shows that the residuals fall throughout the simulation to the range of
 
 ![Backward-facing step case maximum velocity](figures/backward-step-max-velocity.png)
 
-As the maximum velocity is still slightly falling, the case cannot be considered fully converged, yet.
+As the maximum velocity is still slightly falling, the case cannot be considered fully converged, yet. Ideally, residuals should plateau and monitored quantities should reach steady values.

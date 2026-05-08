@@ -40,10 +40,12 @@ The *relevant* files for this tutorial case are:
     - `fvSchemes` for the discretization schemes used in the Finite Volume Method.
 - `create_plots.py` is a Python script for evaluating the residuals and maximum flow velocity after the simulation.
 
+The remaining files and folders (`0`, `fvSolution`, and `momentumProperties`) contain boundary conditions, solver settings, and momentum transport properties. These will be covered in detail in later tutorials.
+
 
 ## Mesh Generation
 
-The block-structured, two-dimensional mesh is created automatically with the meshing utility `blockMesh`. The mesh configuration is essential taken from the previous tutorial with:
+The block-structured, two-dimensional mesh is created automatically with the meshing utility `blockMesh`. The mesh configuration is essentially taken from the previous tutorial with:
  - A uniform cell size of $$\Delta x = 2.5 \times 10^{-3}\,\text{m}$$.
  - `inlet` patch on the left, `outlet` patch on the right.
  - `walls` for the top and bottom wall.
@@ -176,7 +178,7 @@ The time step size is defined via the keyword `deltaT`. To achieve temporal accu
 
 $$ \text{Co} = \frac{U \Delta t}{\Delta x} $$
 
-The flow velocity naturally varies across the domain and the Courant-number limitation must be kept in every cell. Therefore, we have to estimate the time step size based on known values. The cell size of this nearly equidistant mesh is specified in the `meshDict` in the `system` folder as $$\Delta x = 2.5 \times 10^{-3}\,\text{m}$$. The characteristic velocity in the flow domain $$U$$ can be approximated to be equal to the inlet velocity $$U_\text{in}$$. Although the actual flow velocity will probably be higher locally further downstream the inlet, this gives a sufficiently good estimate for the time step size $$\Delta t$$.
+The flow velocity naturally varies across the domain and the Courant-number limitation must be kept in every cell. Therefore, we have to estimate the time step size based on known values. The cell size of this nearly equidistant mesh follows from the block size and the number of cells specified in `blockMeshDict` in the `system` folder. This results in a value of $$\Delta x = 2.5 \times 10^{-3}\,\text{m}$$. The characteristic velocity in the flow domain $$U$$ can be approximated to be equal to the inlet velocity $$U_\text{in}$$. Although the actual flow velocity will probably be higher locally further downstream the inlet, this gives a sufficiently good estimate for the time step size $$\Delta t$$.
 
 Based on these assumptions and using the equation for the Courant number, the following expression for the allowable time step size can be derived:
 

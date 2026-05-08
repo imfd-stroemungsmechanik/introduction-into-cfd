@@ -31,7 +31,7 @@ Change the `endTime` in the `controlDict` in the `system` directory from 1 to 2 
 
 ### 2. Increase Mesh Resolution
 
-Create a copy of the `1_backward-step` case directory for a second simulation with a refined mesh. Increase the number of cells in each direction for the hex-blocks in `blockMeshDict` with the exception of the *z*-direction. Make sure that the time step size `deltaT` in the `controlDict` is also reduced accordingly from $$6.25 \, \times 10^{-4}\,\text{s}$$ to $$3.125 \, \times 10^{-4}\,\text{s}$$ to maintain a Courant number of below 1. Regenerate the mesh with `blockMesh` and rerun the simulation.
+Create a copy of the `1_backward-step` case directory for a second simulation with a refined mesh. Double the number of cells in each direction for the hex-blocks in `blockMeshDict` with the exception of the *z*-direction. Make sure that the time step size `deltaT` in the `controlDict` is also reduced accordingly from $$6.25 \, \times 10^{-4}\,\text{s}$$ to $$3.125 \, \times 10^{-4}\,\text{s}$$ to maintain a Courant number of below 1. Regenerate the mesh with `blockMesh` and rerun the simulation.
 
 #### Questions
 
