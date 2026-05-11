@@ -30,6 +30,6 @@ This tutorial will describe how to pre-process, run and post-process a case invo
 
 Before starting, perform the following steps for preparation:
 
- 1. Download the archive file [3_backward-step.zip]() containing the case folders.
+ 1. Download the archive file [3_backward-step.zip](https://github.com/user-attachments/files/27590154/3_backward-step.zip) containing the case folders.
  2. Extract the archive and move its content to the `OpenFOAM_Projects` folder, which has been created in the first tutorial. 
- 3. Open a terminal, navigate to the newly created folder, and source OpenFOAM.
+ 3. Open a terminal, navigate to the newly created folder, and source OpenFOAM using the `of13`.
