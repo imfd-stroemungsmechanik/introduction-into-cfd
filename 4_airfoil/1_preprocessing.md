@@ -164,6 +164,7 @@ So despite the fact that `checkMesh` fails due to aspect ratio, we can continue 
 
 
 
+
 ## Boundary Conditions
 
 Initial and boundary conditions have to be provided for each variable to be solved. The case starts at time $$t=0$$, so the initial field data is stored in a `0` sub-directory. This folder contains 4 files, `p` and `U` for kinematic pressure and velocity, and `nuTilda` and `nut` for the modified turbulent viscosity and the turbulent viscosity itself, respectively.
@@ -203,11 +204,11 @@ The boundary field data consists of a list of all patch names, each with an asso
 
 ## Pressure and Velocity Boundaries
 
-We want to investigate the flow around the airfoil at a Reynolds-number of $$\text{Re} = 6 \times 10^6$$. Therefore, we have to use a pressure-velocity boundary setup, where velocity is defined at the inflow while pressure is set at the outflow. Since there is only a single boundary patch for inflow and outflow, we have to use `inletOutlet` and `outletInlet` boundary conditions for velocity and pressure, respectively. These two patch types automatically switch between fixed value and zero gradient depending on whether the flow is leaving or entering the solution domain.
+We want to investigate the flow around the airfoil at a Reynolds-number of $$\text{Re} = 6 \times 10^6$$ and a Mach number of $$\text{Ma} = 0.15$$. Therefore, we have to use a pressure-velocity boundary setup, where velocity is defined at the inflow while pressure is set at the outflow. Since there is only a single boundary patch for inflow and outflow, we have to use `inletOutlet` and `outletInlet` boundary conditions for velocity and pressure, respectively. These two patch types automatically switch between fixed value and zero gradient depending on whether the flow is leaving or entering the solution domain.
 
-The velocity at the inlet will be determined using the Reynolds-number. With an airfoil length of $$L = 1\,\text{m}$$ and a kinematic viscosity of $$\nu = 8.58 \times 10^{-6}\,\text{m}^2/\text{s}$$, the characteristic inflow velocity is as follows:
+The velocity at the inlet will be determined using the Mach-number. With a freestream speed of sound of $$c = 343.2\,\text{m/s}$$, the characteristic inflow velocity is as follows:
 
-$$ \text{Re} = \frac{U_\text{in} L}{\nu} \quad \rightarrow \quad U_\text{in} = \frac{\text{Re} \, \nu}{L} = 51.48\,\text{m/s} $$
+$$ \text{Ma} = \frac{U_\text{in}}{c} \quad \rightarrow \quad U_\text{in} = c \cdot \text{Ma} = 51.48\,\text{m/s} $$
 
 
 ### Velocity Field
@@ -280,7 +281,11 @@ boundaryField
 
 ## Physical Properties
 
-The physical properties for the fluid, such as kinematic viscosity, are stored in the `physicalProperties` file in the `constant` directory. In this tutorial, air is considered as fluid, which has a kinematic viscosity of $$\nu = 8.58 \times 10^{-6}\,\text{m}^2/\text{s}$$. Thus, the `physicalProperties` dictionary needs to read:
+The physical properties for the fluid, such as kinematic viscosity, are stored in the `physicalProperties` file in the `constant` directory. Based on a Reynolds-number of the airfoil of $$6 \times 10^{6}$$ and a reference length of 1 meter, the kinematic viscosity can be estimated as follows:
+
+$$ \text{Re} = \frac{U_\text{in} L}{\nu} \quad \rightarrow \quad \nu  = \frac{U_\text{in} \, L}{\text{Re}} = 8.58 \times 10^{-6}\,\text{m}^2/\text{s} $$
+
+Thus, the `physicalProperties` dictionary needs to read:
 
 ```
 viscosityModel  Newtonian;

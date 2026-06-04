@@ -15,15 +15,15 @@ FoamFile
 
 dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform (51.4815 0 0);
+internalField   uniform (45 0 0);
 
 boundaryField
 {
     farfield
     {
         type            inletOutlet;
-        inletValue      uniform (51.4815 0 0);
-        value           uniform (51.4815 0 0);
+        inletValue      uniform (45 0 0);
+        value           uniform (45 0 0);
     }
 
     airfoil
