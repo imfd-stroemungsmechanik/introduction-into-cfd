@@ -163,21 +163,19 @@ So despite the fact that `checkMesh` fails due to aspect ratio, we can continue 
 
 ## Physical Properties
 
-The physical properties for the fluid, such as kinematic viscosity, are stored in the `transportProperties` file in the `constant` directory. In this tutorial, air is considered as fluid, which as a kinematic viscosity of $$\nu = 10^{-5}\,\text{m}^2/\text{s}$$. Thus, the `transportProperties` dictionary reads:
+The physical properties for the fluid, such as kinematic viscosity, are stored in the `physicalProperties` file in the `constant` directory. In this tutorial, air is considered as fluid, which as a kinematic viscosity of $$\nu = 8.58 \times 10^{-6}\,\text{m}^2/\text{s}$$. Thus, the `physicalProperties` dictionary needs to read:
 
 ```
 viscosityModel  Newtonian;
 
-nu              1e-5;
-
-// ************************************************************************* //
+nu              8.58e-6;
 ```
 
 
 
 ## Boundary Conditions
 
-Once the mesh generation is complete, the initial and boundary conditions for the fields are set up for this case. The case is set up to start at time $$t=0$$, so the initial field data is stored in a `0` sub-directory. This folder contains 2 files, `p` and `U`, one for each of the pressure and velocity fields whose initial values and boundary conditions must be set.
+Initial and boundary conditions have to be provided for each variable to be solved. The case starts at time $$t=0$$, so the initial field data is stored in a `0` sub-directory. This folder contains 4 files, `p` and `U` for kinematic pressure and velocity, and `nuTilda` and `nut` for the modified turbulent viscosity and the turbulent viscosity itself, respectivly.
 
 Each file has three primitive entries for a given variable: (1) Specification of the dimensions, (2) the internal field, and (3) the boundary field.
 
@@ -204,7 +202,7 @@ So for the example of kinematic pressure, the unit is $$\text{Length}^2 \times \
 
 ### Internal Field
 
-The internal field stores all the cell center values for the complete mesh. At the beginning of a simulation, this often corresponds to a uniform field as initialization. As teh simulation is running, the internal field will become a non-uniform field with individual field values for each cell.
+The internal field stores all the cell center values for the complete mesh. At the beginning of a simulation, this often corresponds to a uniform field as initialization. As the simulation is running, the internal field will become a non-uniform field with individual field values for each cell.
 
 ### Boundary Field
 
@@ -214,41 +212,35 @@ The boundary field data consists of a list of all patch names, each with an asso
 
 ## Pressure and Velocity Boundaries
 
-We want to investigate the flow around the airfoil at a Reynolds-number of $$10^5$$. Therefore, we have to use a pressure-velocity boundary setup, where velocity is defined at the inlet while pressure is set at the outlet.
+We want to investigate the flow around the airfoil at a Reynolds-number of $$\text{Re} = 6 \times 10^6$$. Therefore, we have to use a pressure-velocity boundary setup, where velocity is defined at the inflow while pressure is set at the outflow. Since there is only a single boundary patch for inflow and outflow, we have to use `inletOutlet` and `outletInlet` boundary conditions for velocity and pressure, respectively. These two patch types automatically switch between fixed value and zero gradient depending on whether the flow is leaving or entering the solution domain.
+
+The velocity at the inlet will be determined using the Reynolds-number. With an airfoil length of $$L = 1\,\text{m}$$ and a kinematic viscosity of $$\nu = 8.58 \times 10^{-6}\,\text{m}^2/\text{s}$$, the characteristic inflow velocity is as follows:
+
+$$ \text{Re} = \frac{U_\text{in} L}{\nu} \quad \rightarrow \quad U_\text{in} = \frac{\text{Re} \, \nu}{L} = 51.48\,\text{m/s} $$
+
 
 ### Velocity Field
 
-The velocity field as a unit of $$\text{meter} \times \text{second}^{-1}$$ with an internal field of $$(0 \, 0 \, 0)$$, indicating a fluid at rest. The velocity at the inlet has to be determined using the Reynolds-number with an airfoil length of $$L = 1\,\text{m}$$ and a kinematic viscosity of $$\nu = 10^{-5}\,\text{m}^2\text{/s}$$:
-
-$$ \text{Re} = \frac{U_\text{in} L}{\nu} \quad \rightarrow \quad U_\text{in} = \frac{\text{Re} \, \nu}{L} = 1\,\text{m/s} $$
-
-Since a uniform velocity profile is assumed at the inlet, a `fixedValue` boundary condition is employed with a uniform velocity of $$1\,\text{m/s}$$ in $$x$$-direction. The outlet is considered a zero-gradient boundary condition for velocity, which is named `zeroGradient` in OpenFOAM. The flow is considered viscous, which results in a `noSlip` condition for velocity at the airfoil, e.g. the velocity directly at the airfoil surface is zero. In order to minimize the effect of the `topAndbottom` patch, it is considered a `slip` wall, where the velocity gradient normal to the wall is zero and thus no boundary layer forms. Finally, front and back of the computational domain are `empty` indicating a two-dimensional setup.
+The velocity field as a unit of $$\text{meter} \times \text{second}^{-1}$$ and is initialized based on the inlet velocity to $$(51.48 \, 0 \, 0)$$. For the farfield, an `inletOutlet` boundary type is used with an inlet velocity of $$(51.48 \, 0 \, 0)$$. This boundary condition automatically switches between a fixed value boundary condition, wherever the flow is entering the solution domain, and a zero gradient in patch-normal direction, wherever the flow is leaving the domain. The flow is considered viscous, which results in a `noSlip` condition for velocity at the airfoil, e.g. the velocity directly at the airfoil surface is zero. Front and back of the computational domain are `empty` indicating a two-dimensional setup.
 
 The concrete file for velocity in the `0` directory looks as follows:
 
 ```
 dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform (0 0 0);
+internalField   uniform (51.48 0 0);
 
 boundaryField
 {
-    inlet
+    farfield
     {
-        type            fixedValue;
-        value           uniform (1 0 0);
-    }
-    outlet
-    {
-        type            zeroGradient;
+        type            inletOutlet;
+        inletValue      uniform (51.48 0 0);
+        value           uniform (51.48 0 0);
     }
     airfoil
     {
         type            noSlip;
-    }
-    topAndBottom
-    {
-        type            slip;
     }
     frontAndBack
     {
@@ -261,7 +253,7 @@ boundaryField
 
 ### Pressure Field
 
-The kinematic pressure field has a unit of $$\text{meter}^2 \times \text{second}^{-2}$$ with a uniform internal field of 0. Since this is a pressure-velocity configuration, the pressure at the inlet is defined as zero-gradient boundary condition called `zeroGradient` and the static kinematic pressure at the outlet is specified uniformly as zero using a `fixedValue` boundary condition. On wall patches, pressure is always set to `zeroGradient` and front and back of the computational domain are `empty` consistent with the velocity boundary.
+The kinematic pressure field has a unit of $$\text{meter}^2 \times \text{second}^{-2}$$ with a uniform internal field of 0. For the farfield, an `outletInlet` boundary type is used with an outlet pressure of zero. This boundary condition automatically switches between a zero gradient boundary condition, wherever the flow is entering the solution domain, and a fixed value boundary condition, wherever the flow is leaving the domain. At wall patches, pressure is set to a zero gradient condition, and front and back of the computational domain are `empty` consistent with the velocity boundary.
 
 {: .note }
 > OpenFOAM often uses a relative kinematic pressure of zero as initial value and at the outlet boundary as the absolute value of pressure is not of relevance for incompressible simulations.
@@ -275,23 +267,14 @@ internalField   uniform 0;
 
 boundaryField
 {
-    inlet
+    farfield
     {
-        type            zeroGradient;
-    }
-
-    outlet
-    {
-        type            fixedValue;
+        type            outletInlet;
+        outletValue     uniform 0;
         value           uniform 0;
     }
 
     airfoil
-    {
-        type            zeroGradient;
-    }
-
-    topAndBottom
     {
         type            zeroGradient;
     }
@@ -304,6 +287,7 @@ boundaryField
 ```
 
 
+
 ## Simulation Control
 
 Settings related to the control of time (for transient simulations) or iterations (for steady-state simulations) and reading and writing of the solution data are read in from the `controlDict` file in the `system` folder.
@@ -313,14 +297,14 @@ Settings related to the control of time (for transient simulations) or iteration
 
 The file starts with the corresponding solver to be used:
 ```
-application     simpleFoam;
+solver          incompressibleFluid;
 ```
-In this tutorial case, we are using the solver `simpleFoam`, a pressure-based solver for incompressible, steady-state, laminar or turbulent single-phase flows.
+In this tutorial case, we are using the solver `incompressibleFluid`, a pressure-based solver for incompressible, steady-state or transient, laminar or turbulent single-phase flows.
 
 
 ### Start and End Times
 
-In this tutorial the run starts at time 0, which means that OpenFOAM needs to read field data from a directory named 0. Therefore we set the `startFrom` keyword to `startTime` and then specify the `startTime` keyword to be `0`. The simulation should run until a steady state solution is reached. Since it is unknown how many iterations are needed for this, it is assumed that 1000 iterations are sufficient. Therefore, the `stopAt` entry is set to `endTime` and the `endTime` entry to `1000`.
+OpenFOAM offers great flexibility with time/iteration control. In this tutorial the run starts at time 0, which means that OpenFOAM needs to read field data from a directory named 0. Therefore we set the `startFrom` keyword to `startTime` and then specify the `startTime` keyword to be 0. The simulation should run until a steady state solution is reached, up to a maximum of 1000 iterations. Therefore, the `stopAt` entry is set to `endTime` and the `endTime` entry to `1000`.
 
 The corresponding lines in the `controlDict` look as follows:
 
@@ -389,14 +373,14 @@ gradSchemes
 
 The discretization of the convective terms, e.g., convective fluxes, is defined within the `divSchemes` keyword. Here, `div(phi,U)` referes to the discretization of the convective flux $$\partial(u_i u_j)/\partial x_j$$ with `phi` being the (volumetric) flux and `U` the variable transported by the flux. In this case, the **second order upwind scheme** is employed called `Gauss linearUpwindV` combined with a non-limited Gauss linear gradient scheme.
 
-Additionaly, `div((nuEff*dev2(T(grad(U)))))` denotes the divergence of the shear stress tensor in the momentum equation. Since this term is diffusive in nature, it is recommended to discretize it with a central differencing scheme, here `Gauss linear`.
+One additional entry is required for the discretization of the convective flux $$\partial(\tilde{\nu} u_j)/\partial x_j$$ for the modified turbulent viscosity $$\tilde{\nu}$$. Similar to the convective flux of momentum, a bounded second order upwind scheme is used.
 
 ```
 divSchemes
 {
     div(phi,U)      bounded Gauss linearUpwindV Gauss linear;
-
-    div((nuEff*dev2(T(grad(U))))) Gauss linear;
+    
+    div(phi,nuTilda) bounded Gauss linearUpwind grad(nuTilda);
 }
 ```
 
@@ -411,8 +395,7 @@ The specification of the linear equation solvers, tolerances and other algorithm
 
 ### Solver settings
 
-The pressure field in the pressure-velocity coupling is solved using a **Geometric agglomerated Algebraic MultiGrid** (short: GAMG) solver with a Gauss-Seidel solver for smoothing during the multi-grid steps. The absolute solver tolerance for each iteration is set to $$10^{-6}$$ with a relative tolerance of $$0.1$$: 
-
+The pressure equation is solved using the **Generalised Algebraic MultiGrid method** (GAMG), which accelerates convergence by coarsening the linear system onto progressively smaller grid levels, solving cheaply on the coarsest level, and mapping the correction back. At each grid level, **Gauss-Seidel** sweeps are applied as the smoother to eliminate local, high-frequency errors. The convergence criteria are the same as before: the solver stops when the residual reaches either the absolute tolerance of $$10^{-6}$$ or 10% of its initial value (`relTol`).
 
 ```
 solvers
@@ -428,7 +411,7 @@ solvers
 }
 ```
 
-The momentum equation is solved using a Gauss Seidel solver **Preconditioned bi-Conjugate Gradient** solver with an simplified **Diagonal-based Incomplete LU** preconditioner (PBiCG solver with DILU preconditioner). The absolute tolerance for solving is $$10^{-6}$$ with a relative tolerance of $$0.1$$:
+The momentum equation is solved iteratively using **Gauss-Seidel** sweeps (`smoothSolver` defines the solver strategy, `smoother` selects the specific algorithm applied at each sweep). The solver stops when either the residual drops below the absolute tolerance of $$10^{-6}$$, or when it falls to 10% of its initial value within the current time step (`relTol`), whichever is reached first:
 
 ```
 solvers
@@ -437,9 +420,9 @@ solvers
 
     U
     {
-        solver          PBiCG;
-        preconditioner  DILU;
-        tolerance       1e-06;
+        solver          smoothSolver;
+        smoother        GaussSeidel;
+        tolerance       1e-08;
         relTol          0.1;
     }
 }
@@ -448,7 +431,7 @@ solvers
 
 ### Pressure-velocity coupling
 
-Pressure-based, steady-state simulations in OpenFOAM rely on the SIMPLE pressure-velocity coupling algorithm. Additional options for this algorithm are available within the `SIMPLE` entry in `fvSolutions`. In this tutorial, we will specify the final residual, at which the simulation should be stopped. This can be done in the `residualControl` entry for each variable solved separately. In this case, the simulation will automatically be stopped once the residual for pressure drops below $$10^{-4}$$ and for velocity below $$10^{-5}$$.
+The `SIMPLE` block configures the outer pressure-velocity coupling loop for this steady-state case. Setting `consistent` to `yes` activates the SIMPLEC variant, which uses a more complete pressure correction and allows for less aggressive under-relaxation. This is why `p` can be set to 1.0 (no relaxation) under `relaxationFactors`. The `residualControl` entries define when the SIMPLE loop considers the solution converged: iterations continue until the residuals of all listed fields drop below $$5 \times 10^{-5}$$.
 
 ```
 SIMPLE
@@ -463,18 +446,19 @@ SIMPLE
 
 ### Relaxation factors
 
-Steady state simultions are highly unstable, if no relaxation factors are used. Here, the pressure is relaxed with a factor of $$0.3$$ utilizing field relaxation and velocity with a factor of $$0.7$$ using equation relaxation.
+The `relaxationFactors` block stabilises the iterative process by blending each new solution with the previous one. The distinction between fields and equations is where the blending is applied: fields modifies the solution field directly after solving (here, pressure is unrelaxed at 1.0, enabled by SIMPLEC), while equations modifies the linear system itself before solving, which is numerically more stable for transport equations like momentum and the Spalart-Allmaras turbulence variable (both damped to 0.9, meaning each update retains 10% of the old solution).
 
 ```
 relaxationFactors
 {
     fields
     {
-        p               0.3;
+        p               1.0;
     }
     equations
     {
-        U               0.7;
+        U               0.9;
+        nuTilda         0.9;
     }
 }
 ```
