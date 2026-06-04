@@ -32,6 +32,41 @@ We can clearly see the flow around the airfoil the following key flow features: 
 ![Airfoil paraview velocity contour](figures/airfoil-results-velocity-contour.png)
 
 
+## Pressure Coefficient
+
+In order to plot the surface pressure coefficient, we first select only the `airfoil` surface in the **Properties** panel and confirm with **Apply**. Next, we use the **Calculator** filter to compute the pressure coefficient as follows. With the `4_airfoil.OpenFOAM` module highlighted in the **Pipeline Browser**, select the **Calculator** filter from the **Common Data and Analytics** in the top menu of Paraview. The equation for pressure coefficient $$C_p$$ should be implemented as follows:
+
+$$C_p = \frac{p}{\frac{1}{2}U_\text{inf}^2}$$
+
+with kinematic pressure $$p$$ and reference velocity $$U_\text{inf} = 51.48\,\text{m/s}$$, which is equal to the inflow velocity. Variables in the calculator can either be found via the **Scalar** and **Vector** dropdown menu or directly adressed via their name. The resulting array name should be `pressure_coefficient`. The final calculator should look as follows:
+
+![Airfoil calculator configuration](figures/paraview-calculator.png)
+
+The pressure coefficient can now be plotted along the airfoil using the **Plot Data** filter under **Filters** $$\rightarrow$$ **Data Analysis** with the following settings:
+ 1. Uncheck the **Use Index for XAxis** and select **Points_X** instead in the then available dropdown menu. This way the variables are plotted against the $$x$$-coordinate.
+ 2. Only select the variable `pressure_coefficient` for plotting.
+ 3. Label the $$x$$- and $$y$$-axis with $$x$$-Coordinate and Pressure Coefficient accordingly.
+
+The resulting **Properties** panel should look as follows:
+
+![Airfoil plot data configuration](figures/paraview-plotData.png)
+
+Reference data for pressure coefficient is provided in the `experimental_data` folder for different angle of attacks. The files are formatted in CSV file format and can be imported to ParaView for visualization. Click on **File** $$\rightarrow$$ **Open...** to open the files and click **Apply**. With the following steps, we can add the reference data to the diagram:
+ 1. Click in the diagram.
+ 2. Select the **Show** button for the just opened reference data in the **Pipeline Browser**.
+ 3. Uncheck the **Use Index for XAxis** and select **x/c** instead in the then available dropdown menu.
+ 4. Only select the variable `c_p` for plotting.
+ 5. Optionally change the **Legend Name** of the data added and adjust the line and marker style to distinguish from the numerical data plotted.
+
+The resulting diagram could look like follows:
+
+![Airfoil plot pressure coefficient](figures/airfoil-results-pressure-coefficient.png)
+
+
+
+
+
+
 ## Force Coefficients
 
 We have used the force coefficients to judge convergence. However, we can also use the values for validation. However, the force coefficients plot is not suited for that since we cannot get exact values from it:

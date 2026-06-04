@@ -45,7 +45,7 @@ The *relevant* files for this tutorial case are:
 
 ## Mesh Import
 
-The block-structured mesh for this case has been created using an external software and is stored in the ANSYS Fluent mesh format *.msh. It can be imported into OpenFOAM using the build-in tool `fluentMeshToFoam`:
+The block-structured mesh for this case has been created using an external software and is stored in the ANSYS Fluent mesh format *.msh. It can be imported into OpenFOAM using the built-in tool `fluentMeshToFoam`:
 
 ```bash
 fluentMeshToFoam airfoil_naca0012.msh
@@ -83,7 +83,7 @@ Since this is a two-dimensional mesh, the patches at the front and back must be 
 ```
 
 {: .note }
-> OpenFOAM always operates in a 3 dimensional Cartesian coordinate system and all geometries are generated in 3 dimensions. OpenFOAM solves the case in 3 dimensions by default but can be instructed to solve in 2 dimensions by specifying a special `empty` boundary condition on boundaries normal to the 3rd dimension for which no solution is required. Since the created mesh is two-dimensional, it will have a single cell layer in $$z$$-direction with the patch `frontAndBackPlanes` of type `empty`.
+> OpenFOAM always operates in a 3 dimensional Cartesian coordinate system and all geometries are generated in 3 dimensions. OpenFOAM solves the case in 3 dimensions by default but can be instructed to solve in 2 dimensions by specifying a special `empty` boundary condition on boundaries normal to the 3rd dimension for which no solution is required. Since the created mesh is two-dimensional, it will have a single cell layer in $$z$$-direction with the patch `frontAndBack` of type `empty`.
 
 
 
@@ -147,8 +147,8 @@ Failed 1 mesh checks.
 This gives us all relevant mesh statistics and quality criteria of the mesh:
 
 - The mesh consists of 57344 hexahedral cells,
-- has three different boundary patches `farfiled`, `airfoil`, and `frontAndBack`, and
-- has two solution directions, e.g., a two-dimensional mesh.
+- has three different boundary patches `farfield`, `airfoil`, and `frontAndBack`, and
+- has two solution directions, i.e., a two-dimensional mesh.
 
 As this is a hexahedral, block-structured mesh, maximum non-orthogonality and skewness are good with 52.38 and 0.34, respectively. However, aspect ratio reaches extreme values with nearly $$30 \times 10^6$$. This comes from:
  1. Very high near-wall mesh resolution for resolving the turbulent boundary layer
@@ -163,7 +163,7 @@ So despite the fact that `checkMesh` fails due to aspect ratio, we can continue 
 
 ## Physical Properties
 
-The physical properties for the fluid, such as kinematic viscosity, are stored in the `physicalProperties` file in the `constant` directory. In this tutorial, air is considered as fluid, which as a kinematic viscosity of $$\nu = 8.58 \times 10^{-6}\,\text{m}^2/\text{s}$$. Thus, the `physicalProperties` dictionary needs to read:
+The physical properties for the fluid, such as kinematic viscosity, are stored in the `physicalProperties` file in the `constant` directory. In this tutorial, air is considered as fluid, which has a kinematic viscosity of $$\nu = 8.58 \times 10^{-6}\,\text{m}^2/\text{s}$$. Thus, the `physicalProperties` dictionary needs to read:
 
 ```
 viscosityModel  Newtonian;
@@ -175,13 +175,13 @@ nu              8.58e-6;
 
 ## Boundary Conditions
 
-Initial and boundary conditions have to be provided for each variable to be solved. The case starts at time $$t=0$$, so the initial field data is stored in a `0` sub-directory. This folder contains 4 files, `p` and `U` for kinematic pressure and velocity, and `nuTilda` and `nut` for the modified turbulent viscosity and the turbulent viscosity itself, respectivly.
+Initial and boundary conditions have to be provided for each variable to be solved. The case starts at time $$t=0$$, so the initial field data is stored in a `0` sub-directory. This folder contains 4 files, `p` and `U` for kinematic pressure and velocity, and `nuTilda` and `nut` for the modified turbulent viscosity and the turbulent viscosity itself, respectively.
 
 Each file has three primitive entries for a given variable: (1) Specification of the dimensions, (2) the internal field, and (3) the boundary field.
 
 ### Dimensions
 
-Specifies the dimensions of the field. In general, algebraic operations must be performed on properties using consistent units of measurement; in particular, addition, subtraction and equality are only physically meaningful for properties of the same dimensional units. The dimension set in OpenFOAM consists of 7 scalars delimited by square backets, e.g. for kinematic pressure:
+Specifies the dimensions of the field. In general, algebraic operations must be performed on properties using consistent units of measurement; in particular, addition, subtraction and equality are only physically meaningful for properties of the same dimensional units. The dimension set in OpenFOAM consists of 7 scalars delimited by square brackets, e.g. for kinematic pressure:
 
 ```
 [0 2 -2 0 0 0 0]
@@ -221,7 +221,7 @@ $$ \text{Re} = \frac{U_\text{in} L}{\nu} \quad \rightarrow \quad U_\text{in} = \
 
 ### Velocity Field
 
-The velocity field as a unit of $$\text{meter} \times \text{second}^{-1}$$ and is initialized based on the inlet velocity to $$(51.48 \, 0 \, 0)$$. For the farfield, an `inletOutlet` boundary type is used with an inlet velocity of $$(51.48 \, 0 \, 0)$$. This boundary condition automatically switches between a fixed value boundary condition, wherever the flow is entering the solution domain, and a zero gradient in patch-normal direction, wherever the flow is leaving the domain. The flow is considered viscous, which results in a `noSlip` condition for velocity at the airfoil, e.g. the velocity directly at the airfoil surface is zero. Front and back of the computational domain are `empty` indicating a two-dimensional setup.
+The velocity field has a unit of $$\text{meter} \times \text{second}^{-1}$$ and is initialized based on the inlet velocity to $$(51.48 \, 0 \, 0)$$. For the farfield, an `inletOutlet` boundary type is used with an inlet velocity of $$(51.48 \, 0 \, 0)$$. This boundary condition automatically switches between a fixed value boundary condition, wherever the flow is entering the solution domain, and a zero gradient in patch-normal direction, wherever the flow is leaving the domain. The flow is considered viscous, which results in a `noSlip` condition for velocity at the airfoil, i.e., the velocity directly at the airfoil surface is zero. Front and back of the computational domain are `empty` indicating a two-dimensional setup.
 
 The concrete file for velocity in the `0` directory looks as follows:
 
@@ -322,14 +322,14 @@ endTime         1000;
 
 ### Time Step Size
 
-The time step size is defined via the keyword `deltaT`. Since we are performing a steady-state simulation, the time step size has no physical meaning and is simply set to `1`. This way it acts as a iteration counter. The corresponding settings in `controlDict` look as follows:
+The time step size is defined via the keyword `deltaT`. Since we are performing a steady-state simulation, the time step size has no physical meaning and is simply set to `1`. This way it acts as an iteration counter. The corresponding settings in `controlDict` look as follows:
 
 ```
 deltaT          1;
 ```
 
 {: .note }
-> Regardless of whether steady-state or transient simulations are performed, OpenFOAM always referes to `startTime`, `endTime` and `deltaT`. In transient simulations, these entries possess the physical meaning of time. However, in steady state simulations time is not considered. Therefore, these entries will simply correspond to the start and end of the simulation in terms of iterations.
+> Regardless of whether steady-state or transient simulations are performed, OpenFOAM always refers to `startTime`, `endTime` and `deltaT`. In transient simulations, these entries possess the physical meaning of time. However, in steady state simulations time is not considered. Therefore, these entries will simply correspond to the start and end of the simulation in terms of iterations.
 
 
 ### Writing out Results
@@ -349,7 +349,7 @@ The user specifies the choice of finite volume discretisation schemes in the `fv
 
 ### Temporal derivatives
 
-The discretization of the temporal derivatives $$(\partial / \partial t)$$ is defined within the `ddtSchemes` keyword. Since this is a steady-state simulation, the entry here is set to `steadyState`, e.g. the temporal derivative is set to zero.
+The discretization of the temporal derivatives $$(\partial / \partial t)$$ is defined within the `ddtSchemes` keyword. Since this is a steady-state simulation, the entry here is set to `steadyState`, i.e., the temporal derivative is set to zero.
 
 ```
 ddtSchemes
@@ -371,7 +371,7 @@ gradSchemes
 
 ### Convective terms
 
-The discretization of the convective terms, e.g., convective fluxes, is defined within the `divSchemes` keyword. Here, `div(phi,U)` referes to the discretization of the convective flux $$\partial(u_i u_j)/\partial x_j$$ with `phi` being the (volumetric) flux and `U` the variable transported by the flux. In this case, the **second order upwind scheme** is employed called `Gauss linearUpwindV` combined with a non-limited Gauss linear gradient scheme.
+The discretization of the convective terms is defined within the `divSchemes` keyword. Here, `div(phi,U)` refers to the discretization of the convective flux $$\partial(u_i u_j)/\partial x_j$$ with `phi` being the (volumetric) flux and `U` the variable transported by the flux. In this case, the **second order upwind scheme** is employed called `Gauss linearUpwindV` combined with a non-limited Gauss linear gradient scheme.
 
 One additional entry is required for the discretization of the convective flux $$\partial(\tilde{\nu} u_j)/\partial x_j$$ for the modified turbulent viscosity $$\tilde{\nu}$$. Similar to the convective flux of momentum, a bounded second order upwind scheme is used.
 
@@ -395,7 +395,7 @@ The specification of the linear equation solvers, tolerances and other algorithm
 
 ### Solver settings
 
-The pressure equation is solved using the **Generalised Algebraic MultiGrid method** (GAMG), which accelerates convergence by coarsening the linear system onto progressively smaller grid levels, solving cheaply on the coarsest level, and mapping the correction back. At each grid level, **Gauss-Seidel** sweeps are applied as the smoother to eliminate local, high-frequency errors. The convergence criteria are the same as before: the solver stops when the residual reaches either the absolute tolerance of $$10^{-6}$$ or 10% of its initial value (`relTol`).
+The pressure equation is solved using the **Generalised Algebraic MultiGrid method** (GAMG), which accelerates convergence by coarsening the linear system onto progressively smaller grid levels, solving cheaply on the coarsest level, and mapping the correction back. At each grid level, **Gauss-Seidel** sweeps are applied as the smoother to eliminate local, high-frequency errors. The convergence criteria are as follows: the solver stops when the residual reaches either the absolute tolerance of $$10^{-6}$$ or 10% of its initial value (`relTol`).
 
 ```
 solvers
@@ -411,7 +411,7 @@ solvers
 }
 ```
 
-The momentum equation is solved iteratively using **Gauss-Seidel** sweeps (`smoothSolver` defines the solver strategy, `smoother` selects the specific algorithm applied at each sweep). The solver stops when either the residual drops below the absolute tolerance of $$10^{-6}$$, or when it falls to 10% of its initial value within the current time step (`relTol`), whichever is reached first:
+The momentum equation is solved iteratively using **Gauss-Seidel** sweeps (`smoothSolver` defines the solver strategy, `smoother` selects the specific algorithm applied at each sweep). The solver stops when either the residual drops below the absolute tolerance of $$10^{-8}$$, or when it falls to 10% of its initial value within the current time step (`relTol`), whichever is reached first:
 
 ```
 solvers
@@ -438,7 +438,7 @@ solvers
 
 ### Pressure-velocity coupling
 
-The `SIMPLE` block configures the outer pressure-velocity coupling loop for this steady-state case. Setting `consistent` to `yes` activates the SIMPLEC variant, which uses a more complete pressure correction and allows for less aggressive under-relaxation. This is why `p` can be set to 1.0 (no relaxation) under `relaxationFactors`. The `residualControl` entries define when the SIMPLE loop considers the solution converged: iterations continue until the residuals of all listed fields drop below $$5 \times 10^{-5}$$.
+The `SIMPLE` block configures the outer pressure-velocity coupling loop for this steady-state case. Setting `consistent` to `yes` activates the SIMPLEC variant, which uses a more complete pressure correction and allows for less aggressive under-relaxation. This is why `p` can be set to 1.0 (no relaxation) under `relaxationFactors`. The `residualControl` entries define when the SIMPLE loop considers the solution converged: iterations continue until the residuals fall throughout the simulation to below $$10^{-4}$$ for pressure and $$10^{-4}$$ for velocity:
 
 ```
 SIMPLE
