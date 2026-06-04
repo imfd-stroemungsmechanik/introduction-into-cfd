@@ -10,24 +10,25 @@ nav_order: 5
 
 The objectives for this tutorial are as follows:
 
-- Create a two-dimensional mesh in OpenFOAM with `cartesian2DMesh` and check its quality,
-- Set boundary conditions based on Reynolds-number,
-- Run a steady-state, incompressible simulation with `simpleFoam`,
-- Check convergence and compute drag and lift coefficient,
-- Repeat the simulation with varying angle of attack, and
-- Visualize the velocity field in ParaView.
+- Import the two-dimensional mesh of an airfoil into OpenFOAM and check its quality,
+- Set boundary conditions and material properties based on Reynolds-number and Mach-number,
+- Run a steady-state, incompressible simulation with the solver `incompressibleFluid`,
+- Check convergence and compute drag and lift coefficient, and
+- Visualize the flow field field and pressure coefficient in ParaView.
 
 ## Overview
 
-This tutorial will describe how to pre-process, run, and post-process a case involving a steady-state, isothermal, incompressible flow over a NACA 0012 airfoil. The geometry is shown in the following figure with an inlet on the left, the airfoil in the center, slip walls at the top and bottom, and an outlet at the right. The flow will be solved using the OpenFOAM solver `simpleFoam` the suitable for laminar and turbulent, isothermal, incompressible, steady-state flows.
+This tutorial will describe how to pre-process, run, and post-process a case of a steady-state, isothermal, incompressible flow over a NACA 0012 airfoil. The flow can be characterized by a Reynolds-number of $$\text{Re} = 6 \times 10^6$$ at a Mach number of $$\text{Ma} = 0.15$$. The geometry is shown in the following figure with the airfoil of length $$L = 1\,\text{m}$$ in the center and a farfield boundary condition both upstream and downstream. The flow will be solved using the OpenFOAM solver `incompressibleFluid` the suitable for laminar and turbulent, isothermal, incompressible flows.
 
 ![Backward-facing step case geometry](figures/airfoil-geometry.png)
 
+The NACA0012 airfoil has been [studied extensively by NASA](https://tmbwg.github.io/turbmodels//naca0012_val.html). Numerical and experimental data for various Reynolds-numbers has been published for validation ([Ladson, NASA Technical Memorandum 4074, 1988](https://ntrs.nasa.gov/citations/19880019495)).
 
 
 ## Preparation
 
 Before starting, perform the following steps for preparation:
- 1. Download the archive `4_airfoil.zip` from the Downloads folder on the [OPAL course page](https://bildungsportal.sachsen.de/opal/auth/RepositoryEntry/19816513539).
- 2. Extract the archive.
- 3. Open a terminal, navigate to the newly created folder, and source OpenFOAM.
+
+ 1. Download the archive file [4_airfoil.zip]() containing the case folders.
+ 2. Extract the archive and move its content to the `OpenFOAM_Projects` folder, which has been created in the first tutorial. 
+ 3. Open a terminal, navigate to the newly created folder, and source OpenFOAM using the `of13`.
