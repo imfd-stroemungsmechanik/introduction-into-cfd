@@ -69,17 +69,10 @@ The resulting diagram could look like follows:
 
 ## Force Coefficients
 
-We have used the force coefficients to judge convergence. However, we can also use the values for validation. However, the force coefficients plot is not suited for that since we cannot get exact values from it:
-
-![Airfoil case force coefficients](figures/airfoil-results-forceCoeffs.png)
-
-Instead, we can open the file `postProcessing/forceCoeffs/0/coefficient.dat` and get the raw coefficients and compare it with experimental or analytical values. Compared to the XFoil airfoil database, the results look like follows:
+Reference data for lift and drag coefficient is also provided in the `experimental_data` folder for different angle of attacks. The `create_plots.py` script automatically took the lift and drag coefficient from the last iteration and plotted it against this data. The results look as follows:
 
 
-| Coefficient   | Simulation    | XFoil     |
-| ------------- | --------------| --------- |
-| Drag          | 0.0169        | 0.0169    |
-| Lift          | -0.0007       | 0.0000    |
+![Airfoil case force coefficients](figures/airfoil-results-force-coeffs-validation.png)
 
 The results reveal a very good agreement for the NACA 0012 airfoil simulation at zero angle of attack.
 

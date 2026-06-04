@@ -89,6 +89,6 @@ The plot shows that the residuals fall throughout the simulation to below $$10^{
 
 Similar to the residual plot, a diagram for drag and lift coefficient over the number of iterations is automatically created when executing the `create_plots.py` script. The resulting plot looks as follows:
 
-![Airfoil case force coefficients](figures/airfoil-results-forceCoeffs.png)
+![Airfoil case force coefficients](figures/airfoil-results-force-coeffs.png)
 
 Drag and lift coefficient are essentially constant throughout the simulation. This is to be expected as lift force should be zero for a symmetric airfoil at an angle of attack of 0 degrees and the drag coefficient is expected to be small due to the streamlined shape of the airfoil.
