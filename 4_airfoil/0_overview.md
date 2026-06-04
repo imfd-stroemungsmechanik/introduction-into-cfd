@@ -22,7 +22,7 @@ This tutorial will describe how to pre-process, run, and post-process a case of 
 
 ![Backward-facing step case geometry](figures/airfoil-geometry.png)
 
-The NACA0012 airfoil has been [studied extensively by NASA](https://tmbwg.github.io/turbmodels//naca0012_val.html). Numerical and experimental data for various Reynolds-numbers has been published for validation ([Ladson, NASA Technical Memorandum 4074, 1988](https://ntrs.nasa.gov/citations/19880019495)).
+The NACA0012 airfoil has been [studied extensively by NASA](https://tmbwg.github.io/turbmodels//naca0012_val.html). Experimental data for various Reynolds-numbers has been published for validation ([Ladson, NASA Technical Memorandum 4074, 1988](https://ntrs.nasa.gov/citations/19880019495)).
 
 
 ## Preparation

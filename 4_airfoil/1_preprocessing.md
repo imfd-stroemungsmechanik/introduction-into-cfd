@@ -10,137 +10,77 @@ nav_order: 1
 
 ## OpenFOAM Case Structure
 
-A case being simulated involves data for mesh, fields, properties, control parameters, etc. In OpenFOAM this data is stored in a set of files within a case directory rather than in a single case file, as in many other CFD packages. The case directory is given a suitably descriptive name, here `airfoil`. This folder contains the following subfolders and files:
+A case being simulated involves data for mesh, fields, properties, control parameters, etc. In OpenFOAM this data is stored in a set of files within a case directory rather than in a single case file, as in many other CFD packages. The case directory is given a suitably descriptive name, here `4_airfoil`. This folder contains the following subfolders and files:
 
 ```
-airfoil
+4_airfoil
 ├── 0
+│   ├── nut
+│   ├── nuTilda
 │   ├── p
 │   └── U
 ├── constant
-│   ├── turbulenceProperties
-│   └── transportProperties
-├── geometries
-│   ├── airfoil_0deg.stl
-│   ├── airfoil_2deg.stl
-│   ├── airfoil_4deg.stl
-│   ├── airfoil_6deg.stl
-│   ├── airfoil_8deg.stl
-│   └── airfoil_10deg.stl
-└── system
-    ├── controlDict
-    ├── fvSchemes
-    ├── fvSolution
-    └── meshDict
+│   ├── momentumTransport
+│   └── physicalProperties
+├── system
+│   ├── controlDict
+│   ├── functions
+│   ├── fvSchemes
+│   └── fvSolution
+├── airfoil_naca0012.msh
+└── create_plots.py
 
-4 directories, 12 files
+3 directories, 12 files
 ```
 
 The *relevant* files for this tutorial case are:
 - `0` - This directory stores the initial values and boundary condition for each variables solved.
-- `geometries` - This directory contains all geometry files required for the tutorial.
+- `constant` - This directory contains files that are related to the physics of the problem, including the mesh and any physical properties that are required for the solver. In this case:
+    - `physicalProperties` has the physical properties of the fluid, e.g. viscosity.
 - `system` - This folder contains files related to how the simulation is to be solved:
     - `controlDict` for setting control parameters including start/end time, time step size and parameters for data output.
     - `fvSolution` for the solver settings used in the Finite Volume Method.
-    - `meshDict` contains the configuration for the automated meshing process.
 
 
 
-## Mesh Generation
+## Mesh Import
 
-The hexahedral-dominant, two-dimensional mesh is created automatically with the meshing utility `cartesian2DMesh` from a surface geometry file inside the `geometries` directory. Different geometries are provided for varying angle of attack of the airfoil.
-
-The airfoil has an overall length of $$1\,\text{m}$$. Therefore, the mesh has a maximum cell size of $$0.25\,\text{m}$$ and is refined towards the airfoil with a total of 5 circular, refinement regions around the airfoil with radius of $$1\,\text{m}$$ for the highest mesh refinement up to $$5\,\text{m}$$ for the lowest mesh refinement. This adds 5 additional refinment levels resulting in a smallest cell size of about $$8\,\text{mm}$$. These refinement regions are used to create a more homogeneous transition between the coarse mesh in the farfield and the strongly refined mesh at the airfoil.
-
-```
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-surfaceFile     "geometries/airfoil_0deg.stl";
-
-maxCellSize     0.25;
-
-objectRefinements
-{
-    refinement_5
-    {
-        type        cone;
-        p0          (0 0 -1);
-        p1          (0 0 1);
-        radius0     1;
-        radius1     1;
-        additionalRefinementLevels    5;
-    }
-    refinement_4
-    {
-        type        cone;
-        p0          (0 0 -1);
-        p1          (0 0 1);
-        radius0     2;
-        radius1     2;
-        additionalRefinementLevels    4;
-    }
-    refinement_3
-    {
-        type        cone;
-        p0          (0 0 -1);
-        p1          (0 0 1);
-        radius0     3;
-        radius1     3;
-        additionalRefinementLevels    3;
-    }
-    refinement_2
-    {
-        type        cone;
-        p0          (0 0 -1);
-        p1          (0 0 1);
-        radius0     4;
-        radius1     4;
-        additionalRefinementLevels    2;
-    }
-    refinement_1
-    {
-        type        cone;
-        p0          (0 0 -1);
-        p1          (0 0 1);
-        radius0     5;
-        radius1     5;
-        additionalRefinementLevels    1;
-    }
-}
-```
-
-Additionally, the airfoil has a total of 18 inflation layers with a thickness ratio of 1.2. 
-
-```
-boundaryLayers
-{
-    patchBoundaryLayers
-    {
-        "(airfoil|trailing_edge)"
-        {
-            nLayers             18;
-
-            thicknessRatio      1.2;
-        }
-    }
-}
-```
-
-Finally, all corresponding patches are grouped together correctly using a suitable patch type. In order to create the mesh, the `cartesian2DMesh` utility has to be executed:
+The block-structured mesh for this case has been created using an external software and is stored in the ANSYS Fluent mesh format *.msh. It can be imported into OpenFOAM using the build-in tool `fluentMeshToFoam`:
 
 ```bash
-cartesian2DMesh
+fluentMeshToFoam airfoil_naca0012.msh
 ```
 
 The resulting mesh should look like follows:
 
 ![Airfoil case geometry](figures/airfoil-mesh.png)
 
+Since this is a two-dimensional mesh, the patches at the front and back must be of type `empty` in `constant/polyMesh/boundaries`. Therefore, open the `boundaries` file and correct the type of patch `frontAndBack` to `empty`. The other two patch types are correct and can be left as is:
 
-At this point the mesh generation is complete. The mesh consists of:
- - Background mesh with a cell size of $$0.25 \text{m}$$
- - A circular refinement around the airfoil with a smallest cell size of about $$8\,\text{mm}$$.
- - Correct patch types for inlet, outlet, walls and front and back planes.
+```
+3
+(
+    frontAndBack
+    {
+        type            empty;
+        nFaces          114688;
+        startFace       114208;
+    }
+    airfoil
+    {
+        type            wall;
+        inGroups        List<word> 1(wall);
+        nFaces          256;
+        startFace       228896;
+    }
+    farfield
+    {
+        type            patch;
+        nFaces          704;
+        startFace       229152;
+    }
+)
+```
 
 {: .note }
 > OpenFOAM always operates in a 3 dimensional Cartesian coordinate system and all geometries are generated in 3 dimensions. OpenFOAM solves the case in 3 dimensions by default but can be instructed to solve in 2 dimensions by specifying a special `empty` boundary condition on boundaries normal to the 3rd dimension for which no solution is required. Since the created mesh is two-dimensional, it will have a single cell layer in $$z$$-direction with the patch `frontAndBackPlanes` of type `empty`.
@@ -167,52 +107,56 @@ Create polyMesh for time = 0
 Time = 0s
 
 Mesh stats
-    points:           247780
+    points:           115648
     internal points:  0
-    faces:            491906
-    internal faces:   245950
-    cells:            122672
-    faces per cell:   6.01487
-    boundary patches: 5
+    faces:            229856
+    internal faces:   114208
+    cells:            57344
+    faces per cell:   6
+    boundary patches: 3
     point zones:      0
     face zones:       0
     cell zones:       0
 
 ...
 
+Checking patch topology for multiply connected surfaces...
+    Patch               Faces    Points   Surface topology                  
+    frontAndBack        114688   115648   ok (non-closed singly connected)  
+    airfoil             256      512      ok (non-closed singly connected)  
+    farfield            704      1408     ok (non-closed singly connected)  
+
 Checking geometry...
-    Overall domain bounding box (-10 -10 -0.5) (10 10 0.5)
+
+    Overall domain bounding box (-484.457 -507.806 0) (501 507.806 1)
     Mesh has 2 geometric (non-empty/wedge) directions (1 1 0)
     Mesh has 2 solution (non-empty) directions (1 1 0)
     All edges aligned with or perpendicular to non-empty directions.
-    Boundary openness (5.92486e-18 -2.01429e-18 -3.98592e-14) OK.
-    Max cell openness = 4.42828e-15 OK.
-    Max aspect ratio = 160.597 OK.
-    Minimum face area = 4.49227e-08. Maximum face area = 0.27446.  Face area magnitudes OK.
-    Min volume = 4.49227e-08. Max volume = 0.0739181.  Total volume = 399.917.  Cell volumes OK.
-    Mesh non-orthogonality Max: 31.8675 average: 1.87581
+ ***High aspect ratio cells found, Max aspect ratio: 2.98998e+07, number of cells 7320
+    Minimum face area = 5.18207e-10. Maximum face area = 3181.85.  Face area magnitudes OK.
+    Min volume = 5.18207e-10. Max volume = 3181.85.  Total volume = 875555.  Cell volumes OK.
+    Mesh non-orthogonality Max: 52.3838 average: 5.03403
     Non-orthogonality check OK.
     Face pyramids OK.
-    Max skewness = 1.32345 OK.
+    Max skewness = 0.341413 OK.
     Coupled point location match (average 0) OK.
 
-Mesh OK.
-    
-End
+Failed 1 mesh checks.
 ```
 
 This gives us all relevant mesh statistics and quality criteria of the mesh:
 
-- The mesh consists of 122672 cells,
-- has 6 different boundary patches.
+- The mesh consists of 57344 hexahedral cells,
+- has three different boundary patches `farfiled`, `airfoil`, and `frontAndBack`, and
+- has two solution directions, e.g., a two-dimensional mesh.
 
-As this is a hexa-dominant, unstructured mesh with inflation layers on the airfoil surface, the aspect ratio is relatively high, but other mesh quality metrics are very good:
+As this is a hexahedral, block-structured mesh, maximum non-orthogonality and skewness are good with 52.38 and 0.34, respectively. However, aspect ratio reaches extreme values with nearly $$30 \times 10^6$$. This comes from:
+ 1. Very high near-wall mesh resolution for resolving the turbulent boundary layer
+ 2. Maintained clustering of cells downstream of the trailing edge due to the C-grid topology of the block-structured mesh.
 
-- max cell aspect ratio of 160.6,
-- a maximum mesh non-orthogonality of 31.9, and
-- a max cell skewness of 1.32.
+While this contradicts the recommended values of maximum aspect ratio of 1000, this is not an issue for this simulation. High aspect ratio cells are only problematic when they are stretched across the direction of large solution gradients. In boundary layer and wake flows, the solution gradients are overwhelmingly in the wall-normal direction (velocity changes from zero at the wall to the freestream value over a short distance). The gradients in the streamwise direction are comparatively small (the flow changes slowly along the airfoil surface and downstream in the wake).
 
-The final output `Mesh OK.` indicates that no critical problems or errors were found during `checkMesh`. Therefore, we can continue with this mesh and proceed with the simulation.
+So despite the fact that `checkMesh` fails due to aspect ratio, we can continue with this mesh.
 
 
 
