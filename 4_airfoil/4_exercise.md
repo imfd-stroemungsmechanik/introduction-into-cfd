@@ -14,20 +14,19 @@ The simulation setup of the incompressible flow over around an airfoil gave very
 
 ## 1. Angle of Attack Study
 
-In the tutorial, the airfoil was simulated at an angle of attack of $$\alpha = 0^\circ$$. For aerodynamic design, it is essential to understand how lift and drag change across a range of angles of attack. Instead of modifying the inflow velocity and force coefficient directions, the angle of attack can be changed by simply rotating the mesh using `transformPoints`, which was introduced in the meshing tutorial. Since the inflow direction remains fixed, the rotated airfoil geometry naturally produces the desired angle of attack.
+In the tutorial, the airfoil was simulated at an angle of attack of $$\alpha = 0^\circ$$. For aerodynamic design, it is essential to understand how lift and drag change across a range of angles of attack. The angle of attack is introduced by changing the inflow direction rather than rotating the mesh. Since the NACA 0012 is a symmetric airfoil, only positive angles need to be investigated.
 
 ### Tasks
 
 1. Create a copy of the `4_airfoil` case directory for each of the following angles of attack: $$\alpha = 2^\circ$$, $$4^\circ$$, $$6^\circ$$, $$8^\circ$$, and $$10^\circ$$.
-2. Instead of changing the inflow direction, we can rotate the mesh instead. Since all boundary conditions and function object settings are defined relative to the fixed inflow direction, no other changes are required. For each case, rotate the mesh around the $$z$$-axis using `transformPoints`:
-```bash
-transformPoints "Rz=<angle>"
-```
-3. Open the rotated mesh in ParaView and verify that the airfoil is tilted at the correct angle of attack.
+2. For each case, update the inflow velocity in the U file in the 0 directory. The velocity components are decomposed based on the angle of attack as follows: $$U_x = U_\text{in} \cos{\alpha}$$, $$U_y = U_\text{in} \sin{\alpha}$$. This applies to `internalField`, `inletValue`, and `value` of the `farfield` patch.
+3. Update the `dragDir` and `liftDir` entries in the `functions` file in the `system` directory. Drag is defined parallel to the freestream direction and lift perpendicular to it: $$\text{dragDir} = (\cos{\alpha}, \sin{\alpga}, 0)$$, $$\text{liftDir} = (-\sin{\alpha}, \cos{\alpha}, 0)$$.
 4. Run each simulation with `foamRun` and verify convergence using `python3 create_plots.py`.
 5. How do the residuals and the number of iterations to convergence change for higher angles of attack?
 6. Visualize the flow field in ParaView for $$\alpha = 10^\circ$$. How does the velocity field differ from the $$\alpha = 0^\circ$$ case?
 
+{: .note }
+It is important that dragDir and liftDir are aligned with the freestream direction, not with the grid axes. Otherwise, the reported force coefficients will correspond to the $$x$$- and $$y$$-components of the total force rather than the actual drag and lift.
 
 ## 2. Validation Against Experimental Data
 

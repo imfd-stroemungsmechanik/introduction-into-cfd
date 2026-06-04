@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 # Read residuals
 iteration, R_p, R_Ux, R_Uy = np.genfromtxt(
@@ -55,33 +56,42 @@ plt.clf()
 
 
 
-# Read experimental data
-alpha, Cl_exp, Cd_exp = np.genfromtxt(
-    "experimental_data/lift_drag_coefficient.csv",
-    unpack=True,
-    delimiter=",")
+# Validation plot: only created if results.csv is present
+if os.path.exists("results.csv"):
 
-# Create two subplots side by side
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
+    # Read simulation results
+    alpha_sim, Cd_sim, Cl_sim = np.genfromtxt(
+        "results.csv",
+        unpack=True,
+        delimiter=",",
+        skip_header=1)
 
-# Lift coefficient plot
-ax1.scatter(alpha, Cl_exp, label="Experiment", color="black", marker="s")
-ax1.scatter(0, Cl[-1], label="Simulation", color="red")
-ax1.set_title("Lift Coefficient")
-ax1.set_xlabel("Angle of Attack [deg]")
-ax1.set_ylabel("Lift Coefficient $C_L$ [-]")
-ax1.grid(linewidth=0.5, color="lightgrey", linestyle="dashed")
-ax1.legend()
+    # Read experimental data
+    alpha_exp, Cl_exp, Cd_exp = np.genfromtxt(
+        "experimental_data/lift_drag_coefficient.csv",
+        unpack=True,
+        delimiter=",")
 
-# Drag coefficient plot
-ax2.scatter(alpha, Cd_exp, label="Experiment", color="black", marker="s")
-ax2.scatter(0, Cd[-1], label="Simulation", color="red")
-ax2.set_title("Drag Coefficient")
-ax2.set_xlabel("Angle of Attack [deg]")
-ax2.set_ylabel("Drag Coefficient $C_D$ [-]")
-ax2.grid(linewidth=0.5, color="lightgrey", linestyle="dashed")
-ax2.legend()
+    # Create two subplots side by side
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
 
-# Save figure
-plt.savefig("fig_force_coefficients_validation.png")
+    # Lift coefficient plot
+    ax1.scatter(alpha_exp, Cl_exp, label="Experiment", color="black", marker="s")
+    ax1.scatter(alpha_sim, Cl_sim, label="Simulation", color="red")
+    ax1.set_title("Lift Coefficient")
+    ax1.set_xlabel("Angle of Attack [deg]")
+    ax1.set_ylabel("Lift Coefficient $C_L$ [-]")
+    ax1.grid(linewidth=0.5, color="lightgrey", linestyle="dashed")
+    ax1.legend()
 
+    # Drag coefficient plot
+    ax2.scatter(alpha_exp, Cd_exp, label="Experiment", color="black", marker="s")
+    ax2.scatter(alpha_sim, Cd_sim, label="Simulation", color="red")
+    ax2.set_title("Drag Coefficient")
+    ax2.set_xlabel("Angle of Attack [deg]")
+    ax2.set_ylabel("Drag Coefficient $C_D$ [-]")
+    ax2.grid(linewidth=0.5, color="lightgrey", linestyle="dashed")
+    ax2.legend()
+
+    # Save figure
+    plt.savefig("fig_force_coefficients_validation.png")

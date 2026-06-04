@@ -164,19 +164,6 @@ So despite the fact that `checkMesh` fails due to aspect ratio, we can continue 
 
 
 
-
-## Physical Properties
-
-The physical properties for the fluid, such as kinematic viscosity, are stored in the `physicalProperties` file in the `constant` directory. In this tutorial, air is considered as fluid, which has a kinematic viscosity of $$\nu = 8.58 \times 10^{-6}\,\text{m}^2/\text{s}$$. Thus, the `physicalProperties` dictionary needs to read:
-
-```
-viscosityModel  Newtonian;
-
-nu              8.58e-6;
-```
-
-
-
 ## Boundary Conditions
 
 Initial and boundary conditions have to be provided for each variable to be solved. The case starts at time $$t=0$$, so the initial field data is stored in a `0` sub-directory. This folder contains 4 files, `p` and `U` for kinematic pressure and velocity, and `nuTilda` and `nut` for the modified turbulent viscosity and the turbulent viscosity itself, respectively.
@@ -288,6 +275,17 @@ boundaryField
         type            empty;
     }
 }
+```
+
+
+## Physical Properties
+
+The physical properties for the fluid, such as kinematic viscosity, are stored in the `physicalProperties` file in the `constant` directory. In this tutorial, air is considered as fluid, which has a kinematic viscosity of $$\nu = 8.58 \times 10^{-6}\,\text{m}^2/\text{s}$$. Thus, the `physicalProperties` dictionary needs to read:
+
+```
+viscosityModel  Newtonian;
+
+nu              8.58e-6;
 ```
 
 
