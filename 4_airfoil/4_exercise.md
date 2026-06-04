@@ -20,7 +20,7 @@ In the tutorial, the airfoil was simulated at an angle of attack of $$\alpha = 0
 
 1. Create a copy of the `4_airfoil` case directory for each of the following angles of attack: $$\alpha = 2^\circ$$, $$4^\circ$$, $$6^\circ$$, $$8^\circ$$, and $$10^\circ$$.
 2. For each case, update the inflow velocity in the U file in the 0 directory. The velocity components are decomposed based on the angle of attack as follows: $$U_x = U_\text{in} \cos{\alpha}$$, $$U_y = U_\text{in} \sin{\alpha}$$. This applies to `internalField`, `inletValue`, and `value` of the `farfield` patch.
-3. Update the `dragDir` and `liftDir` entries in the `functions` file in the `system` directory. Drag is defined parallel to the freestream direction and lift perpendicular to it: $$\text{dragDir} = (\cos{\alpha}, \sin{\alpga}, 0)$$, $$\text{liftDir} = (-\sin{\alpha}, \cos{\alpha}, 0)$$.
+3. Update the `dragDir` and `liftDir` entries in the `functions` file in the `system` directory. Drag is defined parallel to the freestream direction and lift perpendicular to it: $$\text{dragDir} = (\cos{\alpha}, \sin{\alpha}, 0)$$, $$\text{liftDir} = (-\sin{\alpha}, \cos{\alpha}, 0)$$.
 4. Run each simulation with `foamRun` and verify convergence using `python3 create_plots.py`.
 5. How do the residuals and the number of iterations to convergence change for higher angles of attack?
 6. Visualize the flow field in ParaView for $$\alpha = 10^\circ$$. How does the velocity field differ from the $$\alpha = 0^\circ$$ case?
@@ -38,13 +38,7 @@ CFD results must always be validated against experimental or analytical referenc
 ```bash
 tail -1 postProcessing/forceCoeffs/0/coefficient.dat
 ```
-2. Create a file called `results.csv` in the `4_airfoil` directory with the following format and enter the values from each simulation:
-```python
-"alpha","Cd","Cl"
-0,0.00821,0.00012
-2,...,...
-4,...,...
-```
+2. Add the resulting data to the `results.csv` file in the original `4_airfoil` directory.
 3. Run `python3 create_plots.py` to generate a validation diagram that compares the simulation results against the experimental reference data.
 4. How well do the computed lift and drag coefficients agree with the experimental data?
 

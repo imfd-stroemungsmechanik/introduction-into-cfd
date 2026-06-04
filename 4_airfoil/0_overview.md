@@ -29,6 +29,6 @@ The NACA0012 airfoil has been [studied extensively by NASA](https://tmbwg.github
 
 Before starting, perform the following steps for preparation:
 
- 1. Download the archive file [4_airfoil.zip]() containing the case folders.
+ 1. Download the archive file [4_airfoil.zip](https://github.com/user-attachments/files/28613461/4_airfoil.zip) containing the case folders.
  2. Extract the archive and move its content to the `OpenFOAM_Projects` folder, which has been created in the first tutorial. 
  3. Open a terminal, navigate to the newly created folder, and source OpenFOAM using the `of13` alias.

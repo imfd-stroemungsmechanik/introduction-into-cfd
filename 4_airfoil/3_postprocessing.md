@@ -66,7 +66,16 @@ The resulting diagram looks as follows:
 
 ## Force Coefficients
 
-Reference data for lift and drag coefficient is also provided in the `experimental_data` folder for different angles of attack. The `create_plots.py` script automatically took the lift and drag coefficient from the last iteration and plotted it against this data. The results look as follows:
+Before plotting the lift and drag coefficients against the experimental data, the results have to extracted into a separate `results.csv` file with the following format:
+
+```
+"alpha","Cd","Cl"
+0,0.00821,0.00012
+2,...,...
+4,...,...
+```
+
+The reference data itself for lift and drag coefficient is provided in the `experimental_data` folder for various angles of attack. The `create_plots.py` script automatically takes the data from `results.csv` and plots it against the experimental data. The results look as follows:
 
 
 ![Airfoil case force coefficients](figures/airfoil-results-force-coeffs-validation.png)
