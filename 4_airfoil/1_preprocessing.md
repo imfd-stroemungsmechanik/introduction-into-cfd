@@ -417,8 +417,15 @@ The momentum equation is solved iteratively using **Gauss-Seidel** sweeps (`smoo
 solvers
 {
 ...
-
     U
+    {
+        solver          smoothSolver;
+        smoother        GaussSeidel;
+        tolerance       1e-08;
+        relTol          0.1;
+    }
+
+    nuTilda
     {
         solver          smoothSolver;
         smoother        GaussSeidel;

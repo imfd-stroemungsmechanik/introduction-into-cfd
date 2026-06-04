@@ -34,7 +34,7 @@ ExecutionTime = 2.81196 s  ClockTime = 3 s
 This output at time step 0.53875s seconds tells us in summary:
 - The maximum Courant number of the simulation is 0.312361 with an average value of 0.157044. While being larger than the initially estimated value of 0.25, it is still smaller than 1.0 indicating a stable and accurate simulation.
 - The `smoothSolver` (e.g., a Gauss-Seidel solver) is used to solve the velocity components `Ux` and `Uy` in *x*- and *y*-direction. In this time step, it takes one iteration to reach the specified residual criteria.
-- The `GAMG` multigrid solver is used for solving the pressure poisson equation in the pressure-velocity coupling algorithm. For better stability and convergence, the pressure equation is solved twice per time step. It takes 3 and 4 iterations to reach convergence, respectively.
+- The `GAMG` multigrid solver is used for solving the pressure Poisson equation in the pressure-velocity coupling algorithm. For better stability and convergence, the pressure equation is solved twice per time step. It takes 3 and 4 iterations to reach convergence, respectively.
 - The error of the conservation of mass is denoted as `continuity error`. Since its value is very small, conservation of mass is maintained.
 - The execution time for the simulation up until this time step is 2.81 seconds as indicated by the `ExecutionTime`.
 
