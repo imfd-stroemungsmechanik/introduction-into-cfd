@@ -22,6 +22,9 @@ A case being simulated involves data for mesh, fields, properties, control param
 ├── constant
 │   ├── momentumTransport
 │   └── physicalProperties
+├── experimental_data
+│   ├── lift_drag_coefficient.csv
+│   └── pressure_coefficient
 ├── system
 │   ├── controlDict
 │   ├── functions
@@ -30,13 +33,14 @@ A case being simulated involves data for mesh, fields, properties, control param
 ├── airfoil_naca0012.msh
 └── create_plots.py
 
-3 directories, 12 files
+4 directories, 14 files
 ```
 
 The *relevant* files for this tutorial case are:
 - `0` - This directory stores the initial values and boundary condition for each variables solved.
 - `constant` - This directory contains files that are related to the physics of the problem, including the mesh and any physical properties that are required for the solver. In this case:
     - `physicalProperties` has the physical properties of the fluid, e.g. viscosity.
+- `experimental_data` - This folder contains raw data from experimental measurements for validation.
 - `system` - This folder contains files related to how the simulation is to be solved:
     - `controlDict` for setting control parameters including start/end time, time step size and parameters for data output.
     - `fvSolution` for the solver settings used in the Finite Volume Method.
@@ -438,7 +442,7 @@ solvers
 
 ### Pressure-velocity coupling
 
-The `SIMPLE` block configures the outer pressure-velocity coupling loop for this steady-state case. Setting `consistent` to `yes` activates the SIMPLEC variant, which uses a more complete pressure correction and allows for less aggressive under-relaxation. This is why `p` can be set to 1.0 (no relaxation) under `relaxationFactors`. The `residualControl` entries define when the SIMPLE loop considers the solution converged: iterations continue until the residuals fall throughout the simulation to below $$10^{-4}$$ for pressure and $$10^{-4}$$ for velocity:
+The `SIMPLE` block configures the outer pressure-velocity coupling loop for this steady-state case. Setting `consistent` to `yes` activates the SIMPLEC variant, which uses a more complete pressure correction and allows for less aggressive under-relaxation. This is why `p` can be set to 1.0 (no relaxation) under `relaxationFactors`. The `residualControl` entries define when the SIMPLE loop considers the solution converged: iterations continue until the residuals fall throughout the simulation to below $$10^{-4}$$ for pressure and $$10^{-5}$$ for velocity:
 
 ```
 SIMPLE

@@ -14,13 +14,13 @@ As soon as results are written to time directories, they can be viewed using Par
 ```bash
 paraFoam &
 ```
-To prepare ParaView to display the data of interest, the data at the required iteration of 547 must be loaded. If the case was run while ParaView was open, the output data in time directories will not be automatically loaded within ParaView. To load the data the user should click **Refresh** at the top **Properties** window (scroll up the panel if necessary).
+To prepare ParaView to display the data of interest, the data at the required iteration of 253 must be loaded. If the case was run while ParaView was open, the output data in time directories will not be automatically loaded within ParaView. To load the data the user should click **Refresh** at the top **Properties** window (scroll up the panel if necessary).
 
-The solution at the iteration 547 can be viewed by using the **VCR Controls** at the very top of the ParaView window and click the button for **Last Frame**.
+The solution at the iteration 253 can be viewed by using the **VCR Controls** at the very top of the ParaView window and click the button for **Last Frame**.
 
 ![Airfoil paraview vcr controls](figures/paraview-menu-VCR-controls.png)
 
-To color the mesh by velocity magnitude (i.e. the velocity contour) of the flow, the following settings must be selected in the **Properties** panel, as descriped in the following figure:
+To color the mesh by velocity magnitude (i.e. the velocity contour) of the flow, the following settings must be selected in the **Properties** panel, as described in the following figure:
 1. Select **Surface** from the **Representation** menu,
 2. Select **Coloring** by velocity magnitude U at the cell centers, and
 3. Select **Rescale to Data Range**, if necessary.
@@ -34,11 +34,11 @@ We can clearly see the flow around the airfoil the following key flow features: 
 
 ## Pressure Coefficient
 
-In order to plot the surface pressure coefficient, we first select only the `airfoil` surface in the **Properties** panel and confirm with **Apply**. Next, we use the **Calculator** filter to compute the pressure coefficient as follows. With the `4_airfoil.OpenFOAM` module highlighted in the **Pipeline Browser**, select the **Calculator** filter from the **Common Data and Analytics** in the top menu of Paraview. The equation for pressure coefficient $$C_p$$ should be implemented as follows:
+In order to plot the surface pressure coefficient, we first select only the `airfoil` surface in the **Properties** panel and confirm with **Apply**. Next, we use the **Calculator** filter to compute the pressure coefficient as follows. With the `4_airfoil.OpenFOAM` module highlighted in the **Pipeline Browser**, select the **Calculator** filter from the **Common Data and Analytics** in the top menu of ParaView. The equation for pressure coefficient $$C_p$$ should be implemented as follows:
 
 $$C_p = \frac{p}{\frac{1}{2}U_\text{inf}^2}$$
 
-with kinematic pressure $$p$$ and reference velocity $$U_\text{inf} = 51.48\,\text{m/s}$$, which is equal to the inflow velocity. Variables in the calculator can either be found via the **Scalar** and **Vector** dropdown menu or directly adressed via their name. The resulting array name should be `pressure_coefficient`. The final calculator should look as follows:
+with kinematic pressure $$p$$ and reference velocity $$U_\text{inf} = 51.48\,\text{m/s}$$, which is equal to the inflow velocity. Variables in the calculator can either be found via the **Scalar** and **Vector** dropdown menu or directly addressed via their name. The resulting array name should be `pressure_coefficient`. The final calculator should look as follows:
 
 ![Airfoil calculator configuration](figures/paraview-calculator.png)
 
@@ -51,25 +51,22 @@ The resulting **Properties** panel should look as follows:
 
 ![Airfoil plot data configuration](figures/paraview-plotData.png)
 
-Reference data for pressure coefficient is provided in the `experimental_data` folder for different angle of attacks. The files are formatted in CSV file format and can be imported to ParaView for visualization. Click on **File** $$\rightarrow$$ **Open...** to open the files and click **Apply**. With the following steps, we can add the reference data to the diagram:
+Reference data for pressure coefficient is provided in the `experimental_data` folder for an angle of attack of 10 degrees called `pressure_coefficient.csv`. The file is formatted in CSV file format and can be imported to ParaView for visualization. Click on **File** $$\rightarrow$$ **Open...** to open the files and click **Apply**. With the following steps, we can add the reference data to the diagram:
  1. Click in the diagram.
  2. Select the **Show** button for the just opened reference data in the **Pipeline Browser**.
  3. Uncheck the **Use Index for XAxis** and select **x/c** instead in the then available dropdown menu.
  4. Only select the variable `c_p` for plotting.
  5. Optionally change the **Legend Name** of the data added and adjust the line and marker style to distinguish from the numerical data plotted.
 
-The resulting diagram could look like follows:
+The resulting diagram looks as follows:
 
 ![Airfoil plot pressure coefficient](figures/airfoil-results-pressure-coefficient.png)
 
 
 
-
-
-
 ## Force Coefficients
 
-Reference data for lift and drag coefficient is also provided in the `experimental_data` folder for different angle of attacks. The `create_plots.py` script automatically took the lift and drag coefficient from the last iteration and plotted it against this data. The results look as follows:
+Reference data for lift and drag coefficient is also provided in the `experimental_data` folder for different angles of attack. The `create_plots.py` script automatically took the lift and drag coefficient from the last iteration and plotted it against this data. The results look as follows:
 
 
 ![Airfoil case force coefficients](figures/airfoil-results-force-coeffs-validation.png)
@@ -79,4 +76,4 @@ The results reveal a very good agreement for the NACA 0012 airfoil simulation at
 
 ## Conclusion
 
-This concludes the third seminar on the simulation of incompressible, laminar flow over around an airfoil. A two-dimensional mesh was generated using `cartesian2DMesh` based on a geometry file. The inlet boundary condition for velocity was adjusted to match a specified Reynolds number. The simulation was then run using `simpleFoam`, and residuals and force coefficients were plotted. Finally, the flow field was visualized in ParaView.
+This concludes the fourth seminar on the simulation of incompressible, turbulent flow around an airfoil. A two-dimensional mesh was imported using `fluentMeshToFoam` and its quality was verified with `checkMesh`. The inlet boundary condition for velocity was adjusted to match a specified Reynolds number. The simulation was then run using the solver `incompressibleFluid`, and residuals and force coefficients were monitored for convergence. Finally, the flow field and pressure coefficient were visualized in ParaView and compared against experimental data.
