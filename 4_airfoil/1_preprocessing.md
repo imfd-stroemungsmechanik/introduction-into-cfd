@@ -24,7 +24,7 @@ A case being simulated involves data for mesh, fields, properties, control param
 │   └── physicalProperties
 ├── experimental_data
 │   ├── lift_drag_coefficient.csv
-│   └── pressure_coefficient
+│   └── pressure_coefficient.csv
 ├── system
 │   ├── controlDict
 │   ├── functions
@@ -111,56 +111,65 @@ Create polyMesh for time = 0
 Time = 0s
 
 Mesh stats
-    points:           115648
+    points:           62516
     internal points:  0
-    faces:            229856
-    internal faces:   114208
-    cells:            57344
+    faces:            124138
+    internal faces:   61622
+    cells:            30960
     faces per cell:   6
     boundary patches: 3
     point zones:      0
     face zones:       0
     cell zones:       0
 
-...
+Overall number of cells of each type:
+    hexahedra:     30960
+    prisms:        0
+    wedges:        0
+    pyramids:      0
+    tet wedges:    0
+    tetrahedra:    0
+    polyhedra:     0
+
+Checking topology...
+    Boundary definition OK.
+    Cell to face addressing OK.
+    Point usage OK.
+    Upper triangular ordering OK.
+    Face vertices OK.
+    Number of regions: 1 (OK).
 
 Checking patch topology for multiply connected surfaces...
     Patch               Faces    Points   Surface topology                  
-    frontAndBack        114688   115648   ok (non-closed singly connected)  
-    airfoil             256      512      ok (non-closed singly connected)  
-    farfield            704      1408     ok (non-closed singly connected)  
+    airfoil             98       196      ok (non-closed singly connected)  
+    farfield            498      996      ok (non-closed singly connected)  
+    frontAndBackPlanes  61920    62516    ok (non-closed singly connected)  
 
 Checking geometry...
-
-    Overall domain bounding box (-484.457 -507.806 0) (501 507.806 1)
+    Overall domain bounding box (-19.9998 -20 -0.565684) (20 20 0.565684)
     Mesh has 2 geometric (non-empty/wedge) directions (1 1 0)
     Mesh has 2 solution (non-empty) directions (1 1 0)
     All edges aligned with or perpendicular to non-empty directions.
- ***High aspect ratio cells found, Max aspect ratio: 2.98998e+07, number of cells 7320
-    Minimum face area = 5.18207e-10. Maximum face area = 3181.85.  Face area magnitudes OK.
-    Min volume = 5.18207e-10. Max volume = 3181.85.  Total volume = 875555.  Cell volumes OK.
-    Mesh non-orthogonality Max: 52.3838 average: 5.03403
+    Max cell openness = 2.99654e-16 OK.
+    Max aspect ratio = 77.2122 OK.
+    Minimum face area = 3.58722e-06. Maximum face area = 1.09189.  Face area magnitudes OK.
+    Min volume = 4.05847e-06. Max volume = 0.306851.  Total volume = 1615.42.  Cell volumes OK.
+    Mesh non-orthogonality Max: 43.7468 average: 13.5331
     Non-orthogonality check OK.
     Face pyramids OK.
-    Max skewness = 0.341413 OK.
+    Max skewness = 0.412995 OK.
     Coupled point location match (average 0) OK.
 
-Failed 1 mesh checks.
+Mesh OK.
 ```
 
 This gives us all relevant mesh statistics and quality criteria of the mesh:
 
-- The mesh consists of 57344 hexahedral cells,
-- has three different boundary patches `farfield`, `airfoil`, and `frontAndBack`, and
+- The mesh consists of 30960 hexahedral cells,
+- has three different boundary patches `farfield`, `airfoil`, and `frontAndBackPlanes`, and
 - has two solution directions, i.e., a two-dimensional mesh.
 
-As this is a hexahedral, block-structured mesh, maximum non-orthogonality and skewness are good with 52.38 and 0.34, respectively. However, aspect ratio reaches extreme values with nearly $$30 \times 10^6$$. This comes from:
- 1. Very high near-wall mesh resolution for resolving the turbulent boundary layer
- 2. Maintained clustering of cells downstream of the trailing edge due to the C-grid topology of the block-structured mesh.
-
-While this contradicts the recommended values of maximum aspect ratio of 1000, this is not an issue for this simulation. High aspect ratio cells are only problematic when they are stretched across the direction of large solution gradients. In boundary layer and wake flows, the solution gradients are overwhelmingly in the wall-normal direction (velocity changes from zero at the wall to the freestream value over a short distance). The gradients in the streamwise direction are comparatively small (the flow changes slowly along the airfoil surface and downstream in the wake).
-
-So despite the fact that `checkMesh` fails due to aspect ratio, we can continue with this mesh.
+As this is a hexahedral, block-structured mesh, maximum non-orthogonality, skewness, and aspect ratio are very good with 42.75, 77.2, and 0.41, respectively.
 
 
 
@@ -234,10 +243,6 @@ boundaryField
     {
         type            noSlip;
     }
-    frontAndBack
-    {
-        type            empty;
-    }
 }
 ```
 
@@ -269,11 +274,6 @@ boundaryField
     airfoil
     {
         type            zeroGradient;
-    }
-
-    frontAndBack
-    {
-        type            empty;
     }
 }
 ```
@@ -380,14 +380,15 @@ gradSchemes
 
 The discretization of the convective terms is defined within the `divSchemes` keyword. Here, `div(phi,U)` refers to the discretization of the convective flux $$\partial(u_i u_j)/\partial x_j$$ with `phi` being the (volumetric) flux and `U` the variable transported by the flux. In this case, the **second order upwind scheme** is employed called `Gauss linearUpwindV` combined with a non-limited Gauss linear gradient scheme.
 
-One additional entry is required for the discretization of the convective flux $$\partial(\tilde{\nu} u_j)/\partial x_j$$ for the modified turbulent viscosity $$\tilde{\nu}$$. Similar to the convective flux of momentum, a bounded second order upwind scheme is used.
+Two additional entries is required for the discretization of the convective flux for the turbulent quantities, namely turbulent kinetic energy $$k$$ and specific dissipation rate $$\omega$$. Similar to the convective flux of momentum, a bounded second order upwind scheme is used.
 
 ```
 divSchemes
 {
     div(phi,U)      bounded Gauss linearUpwindV Gauss linear;
-    
-    div(phi,nuTilda) bounded Gauss linearUpwind grad(nuTilda);
+
+    div(phi,k)      bounded Gauss linearUpwind Gauss linear;
+    div(phi,omega)  bounded Gauss linearUpwind Gauss linear;
 }
 ```
 
@@ -432,7 +433,15 @@ solvers
         relTol          0.1;
     }
 
-    nuTilda
+    k
+    {
+        solver          smoothSolver;
+        smoother        GaussSeidel;
+        tolerance       1e-08;
+        relTol          0.1;
+    }
+
+    omega
     {
         solver          smoothSolver;
         smoother        GaussSeidel;
@@ -450,17 +459,19 @@ The `SIMPLE` block configures the outer pressure-velocity coupling loop for this
 ```
 SIMPLE
 {
+    consistent          yes;
+
     residualControl
     {
-        p               1e-4;
-        U               1e-5;
+        p               5e-5;
+        U               5e-5;
     }
 }
 ```
 
 ### Relaxation factors
 
-The `relaxationFactors` block stabilises the iterative process by blending each new solution with the previous one. The distinction between fields and equations is where the blending is applied: fields modifies the solution field directly after solving (here, pressure is unrelaxed at 1.0, enabled by SIMPLEC), while equations modifies the linear system itself before solving, which is numerically more stable for transport equations like momentum and the Spalart-Allmaras turbulence variable (both damped to 0.9, meaning each update retains 10% of the old solution).
+The `relaxationFactors` block stabilises the iterative process by blending each new solution with the previous one. The distinction between fields and equations is where the blending is applied: fields modifies the solution field directly after solving (here, pressure is unrelaxed at 1.0, enabled by SIMPLEC), while equations modifies the linear system itself before solving, which is numerically more stable for transport equations like momentum and the SST $$k-\omega$$ turbulence variables: velocity damped to 0.9, and turbulent kinetic energy and specific dissipation rate to 0.85.
 
 ```
 relaxationFactors
@@ -472,7 +483,8 @@ relaxationFactors
     equations
     {
         U               0.9;
-        nuTilda         0.9;
+        k               0.85;
+        omega           0.85;
     }
 }
 ```

@@ -13,28 +13,23 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -1 0 0 0 0];
+dimensions      [0 2 -2 0 0 0 0];
 
-internalField   uniform 3.432e-5;
+internalField   uniform 0.3975;
 
 boundaryField
 {
     farfield
     {
         type            inletOutlet;
-        inletValue      uniform 3.432e-5;
-        value           uniform 3.432e-5;
+        inletValue      uniform 0.3975;
+        value           uniform 0.3975;
     }
 
     airfoil
     {
-        type            fixedValue;
+        type            kqRWallFunction;
         value           uniform 0;
-    }
-
-    frontAndBack
-    {
-        type            empty;
     }
 }
 

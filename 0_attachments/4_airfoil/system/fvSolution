@@ -28,11 +28,19 @@ solvers
     {
         solver          smoothSolver;
         smoother        GaussSeidel;
+        tolerance       1e-06;
+        relTol          0.1;
+    }
+
+    k
+    {
+        solver          smoothSolver;
+        smoother        GaussSeidel;
         tolerance       1e-08;
         relTol          0.1;
     }
 
-    nuTilda
+    omega
     {
         solver          smoothSolver;
         smoother        GaussSeidel;
@@ -61,7 +69,8 @@ relaxationFactors
     equations
     {
         U               0.9;
-        nuTilda         0.9;
+        k               0.85;
+        omega           0.85;
     }
 }
 

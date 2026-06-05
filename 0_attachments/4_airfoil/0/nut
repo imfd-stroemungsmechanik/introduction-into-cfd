@@ -31,11 +31,6 @@ boundaryField
         type            nutUSpaldingWallFunction;
         value           uniform 0;
     }
-
-    frontAndBack
-    {
-        type            empty;
-    }
 }
 
 // ************************************************************************* //

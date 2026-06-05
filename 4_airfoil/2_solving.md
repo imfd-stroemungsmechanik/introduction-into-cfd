@@ -19,24 +19,25 @@ foamRun
 The progress of the job is written to the terminal window. It displays the current time step, the equations being solved, initial and final residuals for all fields and should look like follows:
 
 ```
-Time = 193s
+Time = 601s
 
-smoothSolver:  Solving for Ux, Initial residual = 9.40633e-07, Final residual = 8.42048e-08, No Iterations 12
-smoothSolver:  Solving for Uy, Initial residual = 8.43303e-05, Final residual = 7.98603e-06, No Iterations 13
-GAMG:  Solving for p, Initial residual = 1.57496e-06, Final residual = 8.68318e-07, No Iterations 2
-time step continuity errors : sum local = 1.27921e-08, global = -3.35755e-10, cumulative = -1.04265e-05
-smoothSolver:  Solving for nuTilda, Initial residual = 9.51434e-05, Final residual = 8.24927e-06, No Iterations 12
-bounding nuTilda, min: -2.78755e-05 max: 0.00360778 average: 0.000297013
-ExecutionTime = 18.8741 s  ClockTime = 19 s
+smoothSolver:  Solving for Ux, Initial residual = 3.70246e-05, Final residual = 2.66767e-07, No Iterations 1
+smoothSolver:  Solving for Uy, Initial residual = 0.000231212, Final residual = 9.04663e-07, No Iterations 1
+GAMG:  Solving for p, Initial residual = 8.11745e-05, Final residual = 8.05042e-06, No Iterations 2
+time step continuity errors : sum local = 1.87176e-06, global = 3.47601e-07, cumulative = 0.00244445
+smoothSolver:  Solving for omega, Initial residual = 2.36428e-19, Final residual = 2.36428e-19, No Iterations 0
+smoothSolver:  Solving for k, Initial residual = 0.0077071, Final residual = 0.000133732, No Iterations 2
+bounding k, min: -0.476601 max: 31.7883 average: 0.12704
+ExecutionTime = 23.5851 s  ClockTime = 25 s
 ```
 
-This output at iteration 193 tells us in summary:
-- The `smoothSolver` solver is used to solve the velocity components `Ux` and `Uy` in $$x$$- and $$y$$-direction and the modified turbulent viscosity $$\tilde{\nu}$$. In this iteration, the smoothSolver requires between 12 and 13 inner iterations to reach the specified residual criteria. The solver automatically detects and reports unphysical negative modified turbulent viscosity values and bounds them.
+This output at iteration 601 tells us in summary:
+- The `smoothSolver` solver is used to solve the velocity components `Ux` and `Uy` in $$x$$- and $$y$$-direction, the turbulent kinetic energy $$k$$, and specific dissipation rate $$\omega$$. In this iteration, the smoothSolver requires between 1 and 2 inner iterations to reach the specified residual criteria. The solver automatically detects and reports unphysical negative turbulent kinetic energy values and bounds them.
 - The `GAMG` multigrid solver is used for solving the pressure Poisson equation in the pressure-velocity coupling algorithm.
 - The error of the conservation of mass is denoted as `continuity error`. Since its value is very small, conservation of mass is maintained.
 - The execution time for the simulation up until this iteration is roughly 19 seconds as indicated by the `ExecutionTime`.
 
-After 253 iterations, the simulation automatically stops as the residuals fall below the specified residual criteria in `fvSolution`.
+The simulation does not converge within the 1000 iterations as residuals do not fall below the specified residual criteria in `fvSolution`.
 
 
 ## Monitoring the Simulation
