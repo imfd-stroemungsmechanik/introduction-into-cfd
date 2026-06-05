@@ -1,0 +1,11 @@
+# family_boco file written by ICEM CFD by heinrich on Fr Jun 05 12:22:15 CEST 2026
+## solver ANSYS Fluent
+"PNTS"
+"AIRFOIL"
+"GEOM"
+"GEOM" "color" 16598300
+"FARFIELD"
+"FARFIELD" "color" 16598300
+"SOLID"
+"SOLID" "color" 3403130
+
