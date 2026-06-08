@@ -21,15 +21,15 @@ ddtSchemes
 
 gradSchemes
 {
-    default         Gauss linear;
+    default         cellLimited Gauss linear 1.0;
 }
 
 divSchemes
 {
     div(phi,U)      bounded Gauss linearUpwindV Gauss linear;
 
-    div(phi,k)      bounded Gauss linearUpwind Gauss linear;
-    div(phi,omega)  bounded Gauss linearUpwind Gauss linear;
+    div(phi,k)      bounded Gauss linearUpwind grad(k);
+    div(phi,omega)  bounded Gauss linearUpwind grad(omega);
 }
 
 laplacianSchemes

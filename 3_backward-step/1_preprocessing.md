@@ -18,7 +18,7 @@ A case being simulated involves data for mesh, fields, properties, control param
 │   ├── p
 │   └── U
 ├── constant
-│   ├── momentumProperties
+│   ├── momentumTransport
 │   └── physicalProperties
 ├── system
 │   ├── blockMeshDict

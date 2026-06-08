@@ -18,7 +18,7 @@ The objectives for this tutorial are as follows:
 
 ## Overview
 
-This tutorial will describe how to pre-process, run, and post-process a case of a steady-state, isothermal, incompressible flow over a NACA 0012 airfoil. The flow can be characterized by a Reynolds-number of $$\text{Re} = 6 \times 10^6$$ at a Mach number of $$\text{Ma} = 0.15$$. The geometry is shown in the following figure with the airfoil of length $$L = 1\,\text{m}$$ in the center and a farfield boundary condition both upstream and downstream. The flow will be solved using the OpenFOAM solver `incompressibleFluid` suitable for laminar and turbulent, isothermal, incompressible flows.
+This tutorial will describe how to pre-process, run, and post-process a case of a steady-state, isothermal, incompressible flow over a NACA 0012 airfoil. The flow can be characterized by a Reynolds-number of $$\text{Re} = 6 \times 10^6$$ at a Mach number of $$\text{Ma} = 0.15$$. The geometry is shown in the following figure with the airfoil of length $$L = 1\,\text{m}$$ in the center and a farfield boundary condition both upstream and downstream. The flow will be solved using the OpenFOAM solver `incompressibleFluid`, suitable for laminar and turbulent, isothermal, incompressible flows.
 
 ![airfoil case geometry](figures/airfoil-geometry.png)
 

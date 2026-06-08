@@ -24,7 +24,7 @@ FoamFile
 (
     name    = forceCoeffs,
     patches = (airfoil),
-    magUInf = 51.4815,
+    magUInf = 51.48,
     lRef    = 1,
     Aref    = 1,
     CofR    = (0 0 0),

@@ -16,7 +16,8 @@ A case being simulated involves data for mesh, fields, properties, control param
 4_airfoil
 ├── 0
 │   ├── nut
-│   ├── nuTilda
+│   ├── k
+│   ├── omega
 │   ├── p
 │   └── U
 ├── constant
@@ -33,11 +34,11 @@ A case being simulated involves data for mesh, fields, properties, control param
 ├── airfoil_naca0012.msh
 └── create_plots.py
 
-4 directories, 14 files
+4 directories, 15 files
 ```
 
 The *relevant* files for this tutorial case are:
-- `0` - This directory stores the initial values and boundary condition for each variables solved.
+- `0` - This directory stores the initial values and boundary condition for each variable solved.
 - `constant` - This directory contains files that are related to the physics of the problem, including the mesh and any physical properties that are required for the solver. In this case:
     - `physicalProperties` has the physical properties of the fluid, e.g. viscosity.
 - `experimental_data` - This folder contains raw data from experimental measurements for validation.
@@ -59,35 +60,10 @@ The resulting mesh should look like follows:
 
 ![Airfoil case geometry](figures/airfoil-mesh.png)
 
-Since this is a two-dimensional mesh, the patches at the front and back must be of type `empty` in `constant/polyMesh/boundaries`. Therefore, open the `boundaries` file and correct the type of patch `frontAndBack` to `empty`. The other two patch types are correct and can be left as is:
-
-```
-3
-(
-    frontAndBack
-    {
-        type            empty;
-        nFaces          114688;
-        startFace       114208;
-    }
-    airfoil
-    {
-        type            wall;
-        inGroups        List<word> 1(wall);
-        nFaces          256;
-        startFace       228896;
-    }
-    farfield
-    {
-        type            patch;
-        nFaces          704;
-        startFace       229152;
-    }
-)
-```
+OpenFOAM automatically detects a two-dimensional mesh and creates an additional patch `frontAndBackPlanes` of type empty. By default, it does not have to be explicitly set in the boundary conditions in the `0` directory.
 
 {: .note }
-> OpenFOAM always operates in a 3 dimensional Cartesian coordinate system and all geometries are generated in 3 dimensions. OpenFOAM solves the case in 3 dimensions by default but can be instructed to solve in 2 dimensions by specifying a special `empty` boundary condition on boundaries normal to the 3rd dimension for which no solution is required. Since the created mesh is two-dimensional, it will have a single cell layer in $$z$$-direction with the patch `frontAndBack` of type `empty`.
+> OpenFOAM always operates in a 3 dimensional Cartesian coordinate system and all geometries are generated in 3 dimensions. OpenFOAM solves the case in 3 dimensions by default but can be instructed to solve in 2 dimensions by specifying a special `empty` boundary condition on boundaries normal to the 3rd dimension for which no solution is required. Since the created mesh is two-dimensional, it will have a single cell layer in $$z$$-direction with the patch `frontAndBackPlanes` of type `empty`.
 
 
 
@@ -150,14 +126,14 @@ Checking geometry...
     Mesh has 2 geometric (non-empty/wedge) directions (1 1 0)
     Mesh has 2 solution (non-empty) directions (1 1 0)
     All edges aligned with or perpendicular to non-empty directions.
-    Max cell openness = 2.99654e-16 OK.
-    Max aspect ratio = 77.2122 OK.
-    Minimum face area = 3.58722e-06. Maximum face area = 1.09189.  Face area magnitudes OK.
-    Min volume = 4.05847e-06. Max volume = 0.306851.  Total volume = 1615.42.  Cell volumes OK.
-    Mesh non-orthogonality Max: 43.7468 average: 13.5331
+    Max cell openness = 7.33348e-16 OK.
+    Max aspect ratio = 90.767 OK.
+    Minimum face area = 1.79193e-06. Maximum face area = 1.09189.  Face area magnitudes OK.
+    Min volume = 2.02733e-06. Max volume = 0.348905.  Total volume = 1615.42.  Cell volumes OK.
+    Mesh non-orthogonality Max: 43.7976 average: 15.5386
     Non-orthogonality check OK.
     Face pyramids OK.
-    Max skewness = 0.412995 OK.
+    Max skewness = 0.50669 OK.
     Coupled point location match (average 0) OK.
 
 Mesh OK.
@@ -169,14 +145,14 @@ This gives us all relevant mesh statistics and quality criteria of the mesh:
 - has three different boundary patches `farfield`, `airfoil`, and `frontAndBackPlanes`, and
 - has two solution directions, i.e., a two-dimensional mesh.
 
-As this is a hexahedral, block-structured mesh, maximum non-orthogonality, skewness, and aspect ratio are very good with 42.75, 77.2, and 0.41, respectively.
+As this is a hexahedral, block-structured mesh, maximum non-orthogonality, skewness, and aspect ratio are very good with 43.80, 0.51, and 90.77, respectively.
 
 
 
 
 ## Boundary Conditions
 
-Initial and boundary conditions have to be provided for each variable to be solved. The case starts at time $$t=0$$, so the initial field data is stored in a `0` sub-directory. This folder contains 4 files, `p` and `U` for kinematic pressure and velocity, and `nuTilda` and `nut` for the modified turbulent viscosity and the turbulent viscosity itself, respectively.
+Initial and boundary conditions have to be provided for each variable to be solved. The case starts at time $$t=0$$, so the initial field data is stored in a `0` sub-directory. This folder contains 5 files, `p` and `U` for kinematic pressure and velocity, `k` and `omega` for turbulent kinetic energy and specific dissipation, and `nut` for the turbulent viscosity.
 
 Each file has three primitive entries for a given variable: (1) Specification of the dimensions, (2) the internal field, and (3) the boundary field.
 
@@ -239,6 +215,7 @@ boundaryField
         inletValue      uniform (51.48 0 0);
         value           uniform (51.48 0 0);
     }
+
     airfoil
     {
         type            noSlip;
@@ -288,7 +265,7 @@ $$ \text{Re} = \frac{U_\text{in} L}{\nu} \quad \rightarrow \quad \nu  = \frac{U_
 Thus, the `physicalProperties` dictionary needs to read:
 
 ```
-viscosityModel  Newtonian;
+viscosityModel  constant;
 
 nu              8.58e-6;
 ```
@@ -367,12 +344,12 @@ ddtSchemes
 
 ### Gradient terms
 
-The discretization of the gradient terms is defined within the `gradSchemes` keyword. All gradient schemes are discretized equally with a second order **central differencing scheme**. Hence, the `default` discretization is set to `Gauss linear`.
+The discretization of the gradient terms is defined within the `gradSchemes` keyword. All gradient schemes are discretized equally with a cell-limited second order **central differencing scheme**, where the value `1.0` indicates full limiting:
 
 ```
 gradSchemes
 {
-    default         Gauss linear;
+    default         cellLimited Gauss linear 1.0;
 }
 ```
 
@@ -380,15 +357,15 @@ gradSchemes
 
 The discretization of the convective terms is defined within the `divSchemes` keyword. Here, `div(phi,U)` refers to the discretization of the convective flux $$\partial(u_i u_j)/\partial x_j$$ with `phi` being the (volumetric) flux and `U` the variable transported by the flux. In this case, the **second order upwind scheme** is employed called `Gauss linearUpwindV` combined with a non-limited Gauss linear gradient scheme.
 
-Two additional entries is required for the discretization of the convective flux for the turbulent quantities, namely turbulent kinetic energy $$k$$ and specific dissipation rate $$\omega$$. Similar to the convective flux of momentum, a bounded second order upwind scheme is used.
+Two additional entries are required for the discretization of the convective flux for the turbulent quantities, namely turbulent kinetic energy $$k$$ and specific dissipation rate $$\omega$$. Similar to the convective flux of momentum, a bounded second order upwind scheme is used with a cell-limited gradient limiter for the turbulent quantities:
 
 ```
 divSchemes
 {
     div(phi,U)      bounded Gauss linearUpwindV Gauss linear;
 
-    div(phi,k)      bounded Gauss linearUpwind Gauss linear;
-    div(phi,omega)  bounded Gauss linearUpwind Gauss linear;
+    div(phi,k)      bounded Gauss linearUpwind grad(k);
+    div(phi,omega)  bounded Gauss linearUpwind grad(omega);
 }
 ```
 
@@ -419,7 +396,7 @@ solvers
 }
 ```
 
-The momentum equation is solved iteratively using **Gauss-Seidel** sweeps (`smoothSolver` defines the solver strategy, `smoother` selects the specific algorithm applied at each sweep). The solver stops when either the residual drops below the absolute tolerance of $$10^{-8}$$, or when it falls to 10% of its initial value within the current time step (`relTol`), whichever is reached first:
+The momentum and turbulent transport equations are solved iteratively using **Gauss-Seidel** sweeps (`smoothSolver` defines the solver strategy, `smoother` selects the specific algorithm applied at each sweep). The solver stops when either the residual drops below the absolute tolerance of $$10^{-8}$$, or when it falls to 10% of its initial value within the current time step (`relTol`), whichever is reached first. For the turbulent quantities a minimum of 1 iteration is also enforced.
 
 ```
 solvers
@@ -439,6 +416,7 @@ solvers
         smoother        GaussSeidel;
         tolerance       1e-08;
         relTol          0.1;
+        minIter         1;
     }
 
     omega
@@ -447,6 +425,7 @@ solvers
         smoother        GaussSeidel;
         tolerance       1e-08;
         relTol          0.1;
+        minIter         1;
     }
 }
 ```
@@ -454,7 +433,7 @@ solvers
 
 ### Pressure-velocity coupling
 
-The `SIMPLE` block configures the outer pressure-velocity coupling loop for this steady-state case. Setting `consistent` to `yes` activates the SIMPLEC variant, which uses a more complete pressure correction and allows for less aggressive under-relaxation. This is why `p` can be set to 1.0 (no relaxation) under `relaxationFactors`. The `residualControl` entries define when the SIMPLE loop considers the solution converged: iterations continue until the residuals fall throughout the simulation to below $$10^{-4}$$ for pressure and $$10^{-5}$$ for velocity:
+The `SIMPLE` block configures the outer pressure-velocity coupling loop for this steady-state case. Setting `consistent` to `yes` activates the SIMPLEC variant, which uses a more complete pressure correction and allows for less aggressive under-relaxation. This is why `p` can be set to 1.0 (no relaxation) under `relaxationFactors`. The `residualControl` entries define when the SIMPLE loop considers the solution converged: iterations continue until the residuals fall throughout the simulation to below $$5 \times 10^{-5}$$ for pressure and velocity:
 
 ```
 SIMPLE
@@ -471,7 +450,7 @@ SIMPLE
 
 ### Relaxation factors
 
-The `relaxationFactors` block stabilises the iterative process by blending each new solution with the previous one. The distinction between fields and equations is where the blending is applied: fields modifies the solution field directly after solving (here, pressure is unrelaxed at 1.0, enabled by SIMPLEC), while equations modifies the linear system itself before solving, which is numerically more stable for transport equations like momentum and the SST $$k-\omega$$ turbulence variables: velocity damped to 0.9, and turbulent kinetic energy and specific dissipation rate to 0.85.
+The `relaxationFactors` block stabilises the iterative process by blending each new solution with the previous one. The distinction between fields and equations is where the blending is applied: fields modifies the solution field directly after solving (here, pressure is unrelaxed at 1.0, enabled by SIMPLEC), while equations modifies the linear system itself before solving, which is numerically more stable for transport equations like momentum and the SST $$k-\omega$$ turbulence variables: velocity, turbulent kinetic energy, and specific dissipation rate are damped to 0.85.
 
 ```
 relaxationFactors
@@ -482,7 +461,7 @@ relaxationFactors
     }
     equations
     {
-        U               0.9;
+        U               0.85;
         k               0.85;
         omega           0.85;
     }

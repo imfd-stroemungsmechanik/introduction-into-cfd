@@ -21,21 +21,21 @@ The progress of the job is written to the terminal window. It displays the curre
 ```
 Time = 601s
 
-smoothSolver:  Solving for Ux, Initial residual = 3.70246e-05, Final residual = 2.66767e-07, No Iterations 1
-smoothSolver:  Solving for Uy, Initial residual = 0.000231212, Final residual = 9.04663e-07, No Iterations 1
-GAMG:  Solving for p, Initial residual = 8.11745e-05, Final residual = 8.05042e-06, No Iterations 2
-time step continuity errors : sum local = 1.87176e-06, global = 3.47601e-07, cumulative = 0.00244445
-smoothSolver:  Solving for omega, Initial residual = 2.36428e-19, Final residual = 2.36428e-19, No Iterations 0
-smoothSolver:  Solving for k, Initial residual = 0.0077071, Final residual = 0.000133732, No Iterations 2
-bounding k, min: -0.476601 max: 31.7883 average: 0.12704
+smoothSolver:  Solving for Ux, Initial residual = 5.96114e-06, Final residual = 2.46361e-07, No Iterations 1
+smoothSolver:  Solving for Uy, Initial residual = 9.78093e-05, Final residual = 9.24054e-06, No Iterations 1
+GAMG:  Solving for p, Initial residual = 9.04108e-05, Final residual = 8.58762e-06, No Iterations 2
+time step continuity errors : sum local = 1.37525e-06, global = 3.85856e-07, cumulative = -0.00130387
+smoothSolver:  Solving for omega, Initial residual = 3.2139e-05, Final residual = 1.63898e-07, No Iterations 1
+smoothSolver:  Solving for k, Initial residual = 2.16839e-06, Final residual = 2.10727e-07, No Iterations 1
+bounding k, min: -0.00245442 max: 18.7981 average: 0.295356
 ExecutionTime = 23.5851 s  ClockTime = 25 s
 ```
 
 This output at iteration 601 tells us in summary:
-- The `smoothSolver` solver is used to solve the velocity components `Ux` and `Uy` in $$x$$- and $$y$$-direction, the turbulent kinetic energy $$k$$, and specific dissipation rate $$\omega$$. In this iteration, the smoothSolver requires between 1 and 2 inner iterations to reach the specified residual criteria. The solver automatically detects and reports unphysical negative turbulent kinetic energy values and bounds them.
+- The `smoothSolver` solver is used to solve the velocity components `Ux` and `Uy` in $$x$$- and $$y$$-direction, the turbulent kinetic energy $$k$$, and specific dissipation rate $$\omega$$. In this iteration, the smoothSolver requires 1 inner iteration to reach the specified residual criteria. The solver automatically detects and reports unphysical negative turbulent kinetic energy values and bounds them.
 - The `GAMG` multigrid solver is used for solving the pressure Poisson equation in the pressure-velocity coupling algorithm.
 - The error of the conservation of mass is denoted as `continuity error`. Since its value is very small, conservation of mass is maintained.
-- The execution time for the simulation up until this iteration is roughly 19 seconds as indicated by the `ExecutionTime`.
+- The execution time for the simulation up until this iteration is roughly 24 seconds as indicated by the `ExecutionTime`.
 
 The simulation does not converge within the 1000 iterations as residuals do not fall below the specified residual criteria in `fvSolution`.
 
@@ -55,7 +55,7 @@ In order to track and monitor the simulation during its run, two function object
 (
     name    = forceCoeffs,
     patches = (airfoil),
-    magUInf = 51.4815,
+    magUInf = 51.48,
     lRef    = 1,
     Aref    = 1,
     CofR    = (0 0 0),
@@ -65,9 +65,9 @@ In order to track and monitor the simulation during its run, two function object
 )
 ```
 
-By default, the residuals are only printed to the terminal window. In order to visualize the residuals to help judge convergence, a function object has been added to the `controlDict`. This function object of type `residuals` saves the initial residuals of the fields `(p U)`, so pressure and velocity, during runtime. Therefore, a new folder called `postProcessing` is automatically created inside the case folder. So in this example, the residuals are stored under the following path: `postProcessing/residuals/0/residuals.dat`.
+By default, the residuals are only printed to the terminal window. In order to visualize the residuals to help judge convergence, a function object called `residuals` is employed, which saves the initial residuals of the fields `(p U)`, so pressure and velocity, during runtime. Therefore, a new folder called `postProcessing` is automatically created inside the case folder. So in this example, the residuals are stored under the following path: `postProcessing/residuals/0/residuals.dat`.
 
-Additionally, a second function object named `forceCoeffs` in the `controlDict` evaluates the drag and lift coefficients acting on the airfoil. Since this computation is done during runtime and stored in the `postProcessing` directory, it is well suited for checking convergence. The most important settings here are the boundaries, on which the forces are evaluated (keyword `patches`), here set to `airfoil`, and the reference values for velocity $$U_\text{inf}$$ (`magUInf`), cross-sectional area of the airfoil $$A_\text{ref}$$ (`Aref`), and reference length $$l_\text{ref}$$ required for computing the moment coefficient. The drag coefficient is then calculated as follows:
+Additionally, a second function object named `forceCoeffs` evaluates the drag and lift coefficients acting on the airfoil. Since this computation is done during runtime and stored in the `postProcessing` directory, it is well suited for checking convergence. The most important settings here are the boundaries, on which the forces are evaluated (keyword `patches`), here set to `airfoil`, and the reference values for velocity $$U_\text{inf}$$ (`magUInf`), cross-sectional area of the airfoil $$A_\text{ref}$$ (`Aref`), and reference length $$l_\text{ref}$$ required for computing the moment coefficient. The drag coefficient is then calculated as follows:
 
 $$
 C_D = \frac{F_D}{0.5 \, A_\text{ref} \, U_\text{inf}^2}
@@ -86,7 +86,7 @@ This creates the following diagram of the residuals on the $$y$$-axis plotted ag
 
 ![Airfoil case residuals](figures/airfoil-results-residuals.png)
 
-The plot shows that the residuals fall throughout the simulation to below $$10^{-4}$$ for pressure and $$10^{-5}$$ for velocity. Since this is the specified residual criteria, the simulation stops automatically. We can assume this is a converged steady-state simulation.
+The plot shows that the residuals fall throughout the simulation to $$10^{-4}$$ for pressure and $$y$$-velocity, and below $$10^{-5}$$ for $$x$$-velocity. This is above the specified residual criteria, so the simulation stops after 1000 iterations.
 
 Similar to the residual plot, a diagram for drag and lift coefficient over the number of iterations is automatically created when executing the `create_plots.py` script. The resulting plot looks as follows:
 
