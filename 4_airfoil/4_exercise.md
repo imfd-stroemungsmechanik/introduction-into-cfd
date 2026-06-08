@@ -38,12 +38,7 @@ CFD results must always be validated against experimental or analytical referenc
 
 ### Tasks
 
-1. For each angle of attack (including $$\alpha = 0^\circ$$), extract the final drag and lift coefficient from the last line of the `postProcessing/forceCoeffs/0/coefficient.dat` file. The following command prints the last line of the file:
-
-    ```bash
-    tail -1 postProcessing/forceCoeffs/0/coefficient.dat
-    ```
-
+1. For each angle of attack (including $$\alpha = 0^\circ$$), extract the final drag and lift coefficient.
 2. Add the resulting data to the `results.csv` file in the original `4_airfoil` directory.
 3. Run `python3 create_plots.py` to generate a validation diagram that compares the simulation results against the experimental reference data.
 4. How well do the computed lift and drag coefficients agree with the experimental data?

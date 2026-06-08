@@ -71,6 +71,12 @@ Before plotting the lift and drag coefficients against the experimental data, th
 8,...,...
 ```
 
+The numerical results can be extracted from the last line of the `postProcessing/forceCoeffs/0/coefficient.dat` file. The following command prints the last line of the file:
+
+```bash
+tail -1 postProcessing/forceCoeffs/0/coefficient.dat
+```
+
 The reference data itself for lift and drag coefficient is provided in the `experimental_data` folder for various angles of attack. The `create_plots.py` script automatically takes the data from `results.csv` and plots it against the experimental data. The results look as follows:
 
 
