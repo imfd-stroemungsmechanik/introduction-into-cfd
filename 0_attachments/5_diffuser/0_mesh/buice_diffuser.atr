@@ -1,0 +1,47 @@
+# Written by ICEM CFD 19.5, user heinrich, Mo Jun 15 11:43:30 CEST 2026
+
+begin family GEOM
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 16598300 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family GEOM
+
+begin family INLET
+    begin solver "ANSYS Fluent"
+    end solver "ANSYS Fluent"
+end family INLET
+
+begin family UPPERWALL
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 16598300 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family UPPERWALL
+
+begin family LOWERWALL
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 16598300 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family LOWERWALL
+
+begin family OUTLET
+    begin solver "ANSYS Fluent"
+    end solver "ANSYS Fluent"
+end family OUTLET
+
+begin family SOLID
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 3403130 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family SOLID
