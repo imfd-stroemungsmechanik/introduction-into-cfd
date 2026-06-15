@@ -2,6 +2,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
+# change to directory of python script
+os.chdir(os.path.dirname(__file__))
+
+
 # Read residuals
 iteration, R_p, R_Ux, R_Uy = np.genfromtxt(
     "postProcessing/residuals/0/residuals.dat",

@@ -30,12 +30,8 @@ writeControl    runTime;
 
 writeInterval   0.05;
 
-purgeWrite      0;
-
 writeFormat     ascii;
 
-writeCompression off;
-
-runTimeModifiable yes;
+runTimeModifiable true;
 
 // ************************************************************************* //
