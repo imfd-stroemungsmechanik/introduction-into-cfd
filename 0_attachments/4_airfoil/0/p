@@ -9,6 +9,7 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
+    location    "0";
     object      p;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -19,17 +20,18 @@ internalField   uniform 0;
 
 boundaryField
 {
+    airfoil
+    {
+        type            zeroGradient;
+    }
+
     farfield
     {
         type            outletInlet;
         outletValue     uniform 0;
         value           uniform 0;
     }
-
-    airfoil
-    {
-        type            zeroGradient;
-    }
 }
+
 
 // ************************************************************************* //

@@ -9,27 +9,29 @@ FoamFile
 {
     format      ascii;
     class       volVectorField;
+    location    "0";
     object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform (45 0 0);
+internalField   uniform (51.48 0 0);
 
 boundaryField
 {
-    farfield
-    {
-        type            inletOutlet;
-        inletValue      uniform (45 0 0);
-        value           uniform (45 0 0);
-    }
-
     airfoil
     {
         type            noSlip;
     }
+
+    farfield
+    {
+        type            inletOutlet;
+        inletValue      uniform (51.48 0 0);
+        value           uniform (51.48 0 0);
+    }
 }
+
 
 // ************************************************************************* //

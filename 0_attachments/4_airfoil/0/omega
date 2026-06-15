@@ -9,7 +9,8 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
-    object      nuTilda;
+    location    "0";
+    object      omega;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -19,18 +20,19 @@ internalField   uniform 46334.7;
 
 boundaryField
 {
+    airfoil
+    {
+        type            omegaWallFunction;
+        value           uniform 0;
+    }
+
     farfield
     {
         type            inletOutlet;
         inletValue      uniform 46334.7;
         value           uniform 46334.7;
     }
-
-    airfoil
-    {
-        type            omegaWallFunction;
-        value           uniform 0;
-    }
 }
+
 
 // ************************************************************************* //

@@ -1,5 +1,5 @@
 # blocking file written by ICEM CFD - version 19.5
-# written on Mon Jun  8 09:26:05 2026
+# written on Tue Jun  9 12:29:04 2026
 
 MATERIALS
 {
@@ -205,7 +205,7 @@ crv.17
 }
 }
 BOUNDARY_FAMILY 0 0 0 0 0 0
-DIMENSION geometry 2 mesh 2 third 2
+DIMENSION geometry 2 mesh 2 third 2 dim_to_mesh 3
 GRID 0 6
 {
 -28 2

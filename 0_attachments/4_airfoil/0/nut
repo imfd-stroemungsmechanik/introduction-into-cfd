@@ -9,28 +9,30 @@ FoamFile
 {
     format      ascii;
     class       volScalarField;
+    location    "0";
     object      nut;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 2 -1 0 0 0 0];
 
-internalField   uniform 8.58e-6;
+internalField   uniform 8.58e-06;
 
 boundaryField
 {
-    farfield
-    {
-        type            inletOutlet;
-        inletValue      uniform 8.58e-6;
-        value           uniform 8.58e-6;
-    }
-
     airfoil
     {
         type            nutUSpaldingWallFunction;
         value           uniform 0;
     }
+
+    farfield
+    {
+        type            inletOutlet;
+        inletValue      uniform 8.58e-06;
+        value           uniform 8.58e-06;
+    }
 }
+
 
 // ************************************************************************* //
