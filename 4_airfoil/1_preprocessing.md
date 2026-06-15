@@ -60,7 +60,7 @@ The resulting mesh should look like follows:
 
 ![Airfoil case geometry](figures/airfoil-mesh.png)
 
-OpenFOAM automatically detects a two-dimensional mesh and creates an additional patch `frontAndBackPlanes` of type empty. By default, it does not have to be explicitly set in the boundary conditions in the `0` directory.
+OpenFOAM automatically detects a two-dimensional mesh and creates an additional patch `frontAndBackPlanes` of type empty. By default, these patches do not have to be explicitly specified in the boundary conditions in the `0` directory.
 
 {: .note }
 > OpenFOAM always operates in a 3 dimensional Cartesian coordinate system and all geometries are generated in 3 dimensions. OpenFOAM solves the case in 3 dimensions by default but can be instructed to solve in 2 dimensions by specifying a special `empty` boundary condition on boundaries normal to the 3rd dimension for which no solution is required. Since the created mesh is two-dimensional, it will have a single cell layer in $$z$$-direction with the patch `frontAndBackPlanes` of type `empty`.
@@ -380,7 +380,7 @@ The specification of the linear equation solvers, tolerances and other algorithm
 
 ### Solver settings
 
-The pressure equation is solved using the **Generalised Algebraic MultiGrid method** (GAMG), which accelerates convergence by coarsening the linear system onto progressively smaller grid levels, solving cheaply on the coarsest level, and mapping the correction back. At each grid level, **Gauss-Seidel** sweeps are applied as the smoother to eliminate local, high-frequency errors. The convergence criteria are as follows: the solver stops when the residual reaches either the absolute tolerance of $$10^{-6}$$ or 10% of its initial value (`relTol`).
+The pressure equation is solved using the **Geometric agglomerated Algebraic MultiGrid** (GAMG), which accelerates convergence by coarsening the linear system onto progressively smaller grid levels, solving cheaply on the coarsest level, and mapping the correction back. At each grid level, **Gauss-Seidel** sweeps are applied as the smoother to eliminate local, high-frequency errors. The convergence criteria are as follows: the solver stops when the residual reaches either the absolute tolerance of $$10^{-6}$$ or 10% of its initial value (`relTol`).
 
 ```
 solvers
@@ -410,16 +410,7 @@ solvers
         relTol          0.1;
     }
 
-    k
-    {
-        solver          smoothSolver;
-        smoother        GaussSeidel;
-        tolerance       1e-08;
-        relTol          0.1;
-        minIter         1;
-    }
-
-    omega
+    "(k|omega)"
     {
         solver          smoothSolver;
         smoother        GaussSeidel;
@@ -455,10 +446,6 @@ The `relaxationFactors` block stabilises the iterative process by blending each 
 ```
 relaxationFactors
 {
-    fields
-    {
-        p               1.0;
-    }
     equations
     {
         U               0.85;

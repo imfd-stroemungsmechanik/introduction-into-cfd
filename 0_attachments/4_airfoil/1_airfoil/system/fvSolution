@@ -64,10 +64,6 @@ SIMPLE
 
 relaxationFactors
 {
-    fields
-    {
-        p               1.0;
-    }
     equations
     {
         U               0.85;
