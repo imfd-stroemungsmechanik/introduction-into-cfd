@@ -69,68 +69,35 @@ OpenFOAM automatically detects a two-dimensional mesh and creates an additional 
 
 ## Mesh Quality
 
-Once the mesh has been created, it is always recommended to check the mesh statistics and quality. This can easily be done using the utility `checkMesh` from within the `diffuser` folder:
+After import, the mesh statistics and quality are checked with `checkMesh`, run from within the case directory:
 
 ```
 checkMesh
 ```
 
-The most relevant output is as follows:
+The relevant part of the output is:
 
 ```
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-Create time
-
-Create polyMesh for time = 0
-
-Time = 0s
-
 Mesh stats
     points:           62496
-    internal points:  0
     faces:            121877
-    internal faces:   59383
     cells:            30210
-    faces per cell:   6
     boundary patches: 5
-    point zones:      0
-    face zones:       0
-    cell zones:       0
 
 ...
 
 Checking geometry...
     Overall domain bounding box (-90 0 -1.51073) (61 4.7 1.51073)
-    Mesh has 2 geometric (non-empty/wedge) directions (1 1 0)
-    Mesh has 2 solution (non-empty) directions (1 1 0)
-    All edges aligned with or perpendicular to non-empty directions.
-    Max cell openness = 2.24507e-16 OK.
     Max aspect ratio = 4.50225 OK.
-    Minimum face area = 0.005. Maximum face area = 0.473362.  Face area magnitudes OK.
-    Min volume = 0.0151073. Max volume = 0.0718261.  Total volume = 1020.8.  Cell volumes OK.
     Mesh non-orthogonality Max: 10.0804 average: 2.10704
-    Non-orthogonality check OK.
-    Face pyramids OK.
     Max skewness = 0.167862 OK.
-    Coupled point location match (average 0) OK.
 
 Mesh OK.
-    
-End
 ```
 
-This gives us all relevant mesh statistics and quality criteria of the mesh:
+The mesh has 30210 cells across 5 boundary patches, and all quality metrics are well within their limits: a maximum aspect ratio of 4.50, a maximum non-orthogonality of 10.08, and a maximum skewness of 0.17. The closing `Mesh OK`. confirms that no critical issues were found, so we can proceed to the simulation.
 
-- The mesh consists of 30210 cells,
-- has 5 different boundary patches.
 
-As this is a block-structured mesh, the mesh quality in general is very good:
-
-- max cell aspect ratio of 4.50,
-- a maximum mesh non-orthogonality of 10.08, and
-- a max cell skewness of 0.17.
-
-The final output `Mesh OK.` indicates that no critical problems or errors were found during `checkMesh`. Therefore, we can continue with this mesh and proceed with the simulation.
 
 
 ## Physical Properties
@@ -300,9 +267,8 @@ boundaryField
 
 ## Simulation Control
 
-Settings related to the control of time (for transient simulations) or iterations (for steady-state simulations) and reading and writing of the solution data are read in from the `controlDict` file in the `system` folder.
+Time control, solver selection and output settings are read from the `controlDict` in the `system` directory:
 
-The key settings for this steady-state turbulent simulation include:
 ```
 solver          incompressibleFluid;
 
@@ -321,41 +287,25 @@ writeControl    timeStep;
 writeInterval   250;
 ```
 
-In this tutorial case, the solver `incompressibleFluid` is used, a pressure-based solver for incompressible, steady-state or transient, laminar or turbulent single-phase flows. The simulation starts at time `0`. Therefore we set the `startFrom` keyword to `startTime` and then specify the `startTime` keyword to be `0`. The simulation runs for 1500 iterations, which is why the `endTime` entry is set to `1500`. Since time step size has no physical meaning in steady-state simulations, the time step size `deltaT` is set to 1, which functions as an iteration counter rather than physical time. Finally, results are written out every 250 iterations configured via the `writeInterval` keyword.
+As in the previous tutorials, this is a steady-state run with the `incompressibleFluid` solver, so `deltaT` acts purely as an iteration counter. The case starts at time 0 (`startTime`), advances for 1500 iterations (`endTime`), and writes a result every 250 (`writeInterval`).
 
 
 
 ## Discretization
 
-The user specifies the choice of finite volume discretisation schemes in the `fvSchemes` dictionary in the `system` directory. Here, we will only cover the most relevant settings.
-
-### Temporal derivatives
-
-The discretization of the temporal derivatives $$(\partial / \partial t)$$ is defined within the `ddtSchemes` keyword. Since this is a steady-state simulation, the entry here is set to `steadyState`, i.e. the temporal derivative is set to zero.
+The finite-volume discretisation schemes are set in the `fvSchemes` dictionary in the `system` directory. Since this is a steady-state run, the temporal term is switched off (`steadyState`), gradients use a cell-limited central scheme to suppress overshoots, and the convective terms for momentum and turbulent scalars use a bounded second-order upwind scheme:
 
 ```
 ddtSchemes
 {
     default             steadyState;
 }
-```
 
-### Gradient terms
-
-The discretization of the gradient terms is defined within the `gradSchemes` keyword. All gradient schemes are discretized equally with a second order **central differencing scheme** with a cell-based gradient limiter to avoid excessively large gradients. Hence, the `default` discretization is set to `cellLimited Gauss linear 1.0`.
-
-```
 gradSchemes
 {
     default             cellLimited Gauss linear 1.0;
 }
-```
 
-### Convective terms
-
-The discretization of the convective transport terms is defined within the `divSchemes` keyword. Here, `div(phi,U)` refers to the discretization of the convective transport of momentum with `phi` being the (volumetric) flux and `U` the variable transported by the flux. In this case, the **second order upwind scheme** is employed called `Gauss linearUpwindV` combined with the default gradient scheme defined under `gradSchemes`. Since a turbulence model is employed, the convective transport of the turbulent quantities `k` and `epsilon` in their respective transport equations is also discretized with the **second order upwind scheme** combined with the default gradient scheme.
-
-```
 divSchemes
 {
     div(phi,U)          bounded Gauss linearUpwindV grad(U);
@@ -374,12 +324,9 @@ divSchemes
 
 ## Linear Solver Settings
 
-The specification of the linear equation solvers, tolerances and other algorithm controls is made in the `fvSolution` dictionary in the `system` directory. These settings are as follows for the diffuser case.
+The linear equation solvers, tolerances and coupling controls are set in the `fvSolution` dictionary in the `system` directory.
 
-### Solver settings
-
-The pressure field in the pressure-velocity coupling is solved using a **Geometric agglomerated Algebraic MultiGrid** (short: GAMG) solver with a Gauss-Seidel solver for smoothing during the multi-grid steps. The absolute solver tolerance for each iteration is set to $$10^{-6}$$ with a relative tolerance of $$0.1$$: 
-
+The pressure equation uses a **Geometric agglomerated Algebraic MultiGrid** (short: GAMG) solver with a Gauss-Seidel smoother. The momentum and turbulence equations have asymmetric matrices and are solved with a **Preconditioned bi-Conjugate Gradient** solver with a simplified **Diagonal-based Incomplete LU** preconditioner (PBiCG solver with DILU preconditioner). All solvers use an absolute tolerance of $$10^{-6}$$ and a relative tolerance of $$0.1$$:
 
 ```
 solvers
@@ -391,16 +338,6 @@ solvers
         tolerance       1e-06;
         relTol          0.1;
     }
-... 
-}
-```
-
-The momentum equation and the transport equations for the turbulent properties are solved using a **Preconditioned bi-Conjugate Gradient** solver with a simplified **Diagonal-based Incomplete LU** preconditioner (PBiCG solver with DILU preconditioner). The absolute tolerance for solving is $$10^{-6}$$ with a relative tolerance of $$0.1$$ with at least one iteration solved:
-
-```
-solvers
-{
-...
 
     "(U|k|epsilon)"
     {
@@ -414,11 +351,10 @@ solvers
 ```
 
 
+
 ### Pressure-velocity coupling
 
-Pressure-based, steady-state simulations in OpenFOAM rely on the SIMPLE pressure-velocity coupling algorithm. Additional options for this algorithm are available within the `SIMPLE` entry in `fvSolution`. In this tutorial, the consistent formulation of the algorithm is used called SIMPLEC with the keyword `consistent`.
-
-The simulation will automatically be stopped as soon as the residual criteria are met specified in the `residualControl` sub-dictionary. In this case, these thresholds are set to $$10^{-5}$$ for pressure and velocity.
+As a pressure-based steady-state case, the SIMPLE pressure-velocity coupling is used in its consistent (SIMPLEC) variant via `consistent yes`. The run stops once the residuals fall below $$10^{-5}$$ for pressure and velocity (`residualControl`). Because SIMPLEC is used, pressure needs no relaxation; velocity and the turbulent quantities are relaxed by a factor of 0.8 (equation under-relaxation):
 
 ```
 SIMPLE
@@ -431,13 +367,7 @@ SIMPLE
         U               1e-5;
     }
 }
-```
 
-### Relaxation factors
-
-Steady state simultions are highly unstable if no relaxation factors are used. Since the SIMPLEC algorithm is employed, no relaxation factor for pressure has to be set. However, velocity, turbulent kinetic energy and turbulent dissipation rate are relaxed with a factor of 0.8 using equation underrelaxation.
-
-```
 relaxationFactors
 {
     equations
