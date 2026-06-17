@@ -225,12 +225,18 @@ boundaryField
 
 ### Turbulent Viscosity
 
-Finally, the turbulent viscosity $$\nu_\text{t}$$ with unit $$\text{m}^2\text{/s}$$ has to be specified. Since the turbulent viscosity will be calculated based on the turbulent quantities $$k$$ and $$\epsilon$$ as part of the turbulence model, the initial field values and the boundary conditions at anything other than walls are not relevant. Therefore, the internal field is simply set to $$0\,\text{m}^2\text{/s}$$ and the boundary conditions for inlet and outlet are set to `calculated`.
+For the interior flow field and all non-wall patches, the turbulence model automatically computes the turbulent viscosity $$\nu_t$$. For example, the standard $$k-\epsilon$$ model uses the following relation:
+
+$$
+\nu_t = C_\mu \frac{k^2}{ \epsilon}
+$$
+
+Therefore, the initial field values and the boundary conditions for anything other than walls are not relevant and the internal field is simply set to $$0\,\text{m}^2\text{/s}$$. Boundary conditions for inlet and outlet are set to `calculated`. 
 
 {: .note }
 > The `calculated` boundary type in OpenFOAM is always used when the corresponding variable is calculated by the CFD model itself and does not have to be specified. In case of turbulent viscosity, $$\nu_\text{t}$$ will be calculated by the turbulence model and thus does not have to be specified.
 
-The specification of the boundary condition at walls for $$\nu_\text{t}$$ is critical, though, as this defines the wall treatment approach. In this case, a high-Reynolds approach wall function of type `nutUWallFunction` is used, which is designed to work within the log-law region with $$y^+ > 30$$.
+The specification of the boundary condition at walls for $$\nu_\text{t}$$ is critical, though, as this defines the wall treatment approach. In this case, a high-Reynolds approach with standard wall functions of type `nutUWallFunction` is used, which is designed to work within the log-law region with $$30 < y^+ < 300$$.
 
 The complete `boundaryField` entry for the turbulent viscosity looks as follows:
 
