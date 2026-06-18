@@ -73,4 +73,4 @@ This creates the following diagram of the residuals on the $$y$$-axis plotted ag
 
 ![Diffuser case residuals](figures/diffuser-results-residuals.png)
 
-The plot shows that the residuals fall throughout the simulation to below $$10^{-5}$$ for all monitored variables. Since this is the specified residual criteria, the simulation stops automatically. We can assume this is a converged steady-state simulation.
+The plot shows that the residuals fall throughout the simulation to below $$10^{-5}$$ for pressure and velocity. Since this is the specified residual criteria, the simulation stops automatically. We can assume this is a converged steady-state simulation.

@@ -132,7 +132,7 @@ RAS
 
 ## Boundary Conditions
 
-Since the simulation starts at time $$t=0$$, the boundary and initial field data is stored in the `0` sub-directory. This must be done for all variables solved for, such as pressure `p` and velocity `U`. Furthermore, the $$k-\epsilon$$ model solves two additional transport equations for turbulent kinetic energy $$k$$ and turbulent dissipation rate $$\epsilon$$. Therefore, initial and boundary conditions have to be provided for these variables as well. Finally, the treatment of the turbulent viscosity $$\nu_\text{t}$$ at the walls has to be specified as well.
+Since the simulation starts at time $$t=0$$, the boundary and initial field data is stored in the `0` sub-directory. This must be done for all variables solved for, such as pressure `p` and velocity `U`. Furthermore, the $$k-\epsilon$$ model solves two additional transport equations for turbulent kinetic energy $$k$$ and turbulent dissipation rate $$\epsilon$$. Therefore, initial and boundary conditions have to be provided for these variables. Finally, the treatment of the turbulent viscosity $$\nu_\text{t}$$ at the walls has to be specified as well.
 
 ### Pressure and Velocity
 
@@ -293,7 +293,7 @@ writeControl    timeStep;
 writeInterval   250;
 ```
 
-As in the previous tutorials, this is a steady-state run with the `incompressibleFluid` solver, so `deltaT` acts purely as an iteration counter. The case starts at time 0 (`startTime`), advances for 1500 iterations (`endTime`), and writes a result every 250 (`writeInterval`).
+As in the previous tutorials, this is a steady-state run with the `incompressibleFluid` solver, so `deltaT` acts purely as an iteration counter. The case is set to start at time 0 (`startTime`), advances for 1500 iterations (`endTime`), and writes a result every 250 (`writeInterval`).
 
 
 

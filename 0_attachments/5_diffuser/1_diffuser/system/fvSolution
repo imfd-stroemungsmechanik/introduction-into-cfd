@@ -51,8 +51,6 @@ relaxationFactors
     equations
     {
         U               0.8;
-        k               0.8;
-        epsilon         0.8;
     }
 }
 

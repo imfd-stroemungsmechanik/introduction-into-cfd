@@ -23,7 +23,7 @@ boundaryField
     inlet
     {
         type            turbulentMixingLengthDissipationRateInlet;
-        mixingLength    0.0015;
+        mixingLength    0.15;
         value           uniform 100;
     }
 

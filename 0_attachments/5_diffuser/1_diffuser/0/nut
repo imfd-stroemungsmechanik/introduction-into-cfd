@@ -34,13 +34,13 @@ boundaryField
 
     lowerWall
     {
-        type            nutUSpaldingWallFunction;
+        type            nutUWallFunction;
         value           uniform 0;
     }
 
     upperWall
     {
-        type            nutUSpaldingWallFunction;
+        type            nutUWallFunction;
         value           uniform 0;
     }
 }

@@ -38,6 +38,9 @@ Furthermore, a numerical study from NASA can be found [here](https://www.grc.nas
 
 Before starting, perform the following steps for preparation:
 
- 1. Download the archive file [5_diffuser.zip]() containing the case folders.
+ 1. Download the archive file [5_diffuser.zip](https://github.com/user-attachments/files/29093739/5_diffuser.zip) containing the case folders.
  2. Extract the archive and move its content to the `OpenFOAM_Projects` folder, which has been created in the first tutorial. 
  3. Open a terminal, navigate to the newly created folder, and source OpenFOAM using the `of13` alias.
+
+{: .note }
+> This case is provided as a generic template: the configuration files are not yet set up for the diffuser problem. Throughout this chapter you will adapt the case to it exactly as you would when starting from an existing case in practice. Each value is derived as it comes up; apply it to the corresponding file as you go. If your setup is correct, your results should match the reference solutions shown.
