@@ -11,7 +11,7 @@ nav_order: 4
 
 The simulation setup of the turbulent, incompressible flow through a diffuser did not yield good results compared with experimental measurements. The main reason is the choice of the turbulence model, namely the Standard $$k-\epsilon$$, which is not able to model flows under adverse pressure gradients and with separation.
 
-In this exercise, an additional simulation with a more suitable turbulence model will be performend. Furthermore, the skin friction coefficient will be evaluated and compared with experimental data to further quantify the results.
+In this exercise, an additional simulation with a more suitable turbulence model will be performed. Furthermore, the skin friction coefficient will be evaluated and compared with experimental data to further quantify the results.
 
 
 ## 1. Simulation with SST $$k-\omega$$ Turbulence Model
@@ -24,7 +24,7 @@ Repeat the simulations with the SST $$k-\omega$$ turbulence model instead of the
 2. Within the `diffuser_kOmegaSST` case folder, remove all results folders (except `0`) and the `postProcessing` folder for a clean setup.
 3. Change the turbulence model from `kEpsilon` to `kOmegaSST` in the `momentumTransport` file in the `constant` dictionary.
 4. In the `0` folder, rename the `epsilon` file to `omega` for the new variable solved and apply the following changes to the file itself:
-    - Set the name of the object in line 14 to `omega`.
+    - Set the name of the object entry in the `FoamFile` header to `omega`.
     - Change the dimensions of the variable to $$\text{seconds}^{-1}$$.
     - The inlet boundary condition must be of type `turbulentMixingLengthFrequencyInlet`.
     - Replace the `epsilonWallFunction` at the wall patches with `omegaWallFunction`.
@@ -44,7 +44,6 @@ wallDist
 
 1. Are there any improvements in the prediction of the flow separation at the lower diffuser wall?
 2. Plot the velocity profile of both simulations and the experimental measurements in a single graph in ParaView. Which model is best suited for modelling this complex flow?
-3. How does the skin friction coefficient improve with the SST $$k-\omega$$ turbulence model?
 
 
 
