@@ -35,13 +35,11 @@ boundaryField
     lowerWall
     {
         type            epsilonWallFunction;
-        value           uniform 100;
     }
 
     upperWall
     {
         type            epsilonWallFunction;
-        value           uniform 100;
     }
 }
 

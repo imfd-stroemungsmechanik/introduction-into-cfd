@@ -17,7 +17,7 @@ plt.plot(iteration, R_p, label="$p$")
 plt.plot(iteration, R_Ux, label="$U_x$")
 plt.plot(iteration, R_Uy, label="$U_y$")
 plt.plot(iteration, R_k, label="$k$")
-plt.plot(iteration, R_epsilon, label="$\epsilon$")
+plt.plot(iteration, R_epsilon, label="$\\epsilon$")
 
 # Grid lines
 plt.grid(linewidth=0.5, color="lightgrey", linestyle="dashed")
