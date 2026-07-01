@@ -8,26 +8,44 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "system";
-    object      controlDict;
+    class       volScalarField;
+    location    "0";
+    object      p;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solver          incompressibleFluid;
+dimensions      [1 -1 -2 0 0 0 0];
 
-startFrom       startTime;
+internalField   uniform 1e5;
 
-startTime       0;
+boundaryField
+{
+    inlet_air
+    {
+        type        zeroGradient;
+    }
 
-stopAt          endTime;
+    inlet_exhaust
+    {
+        type        zeroGradient;
+    }
 
-endTime         500;
+    outlet
+    {
+        type        fixedValue;
+        value       uniform 1e5;
+    }
 
-deltaT          1;
+    pipe_air
+    {
+        type        zeroGradient;
+    }
 
-writeControl    timeStep;
+    pipe_exhaust
+    {
+        type        zeroGradient;
+    }
+}
 
-writeInterval   500;
 
 // ************************************************************************* //

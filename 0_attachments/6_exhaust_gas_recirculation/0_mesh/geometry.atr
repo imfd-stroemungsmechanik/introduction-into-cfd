@@ -1,0 +1,55 @@
+# Written by ICEM CFD 19.5, user heinrich, Mi Jul 01 13:40:47 CEST 2026
+
+begin family GEOM
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 8336360 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family GEOM
+
+begin family PIPE_AIR
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 5176370 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family PIPE_AIR
+
+begin family PIPE_EXHAUST
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 5911550 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family PIPE_EXHAUST
+
+begin family INLET_EXHAUST
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 3385300 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family INLET_EXHAUST
+
+begin family INLET_AIR
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 13609800 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family INLET_AIR
+
+begin family OUTLET
+    begin solver "ANSYS Fluent"
+        begin bctype color
+            active 1
+            color 15610700 1
+        end bctype color
+    end solver "ANSYS Fluent"
+end family OUTLET

@@ -9,25 +9,45 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      controlDict;
+    object      blockMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solver          incompressibleFluid;
+convertToMeters 1;
 
-startFrom       startTime;
+vertices
+(
+    (-25 -25 -25)
+    (375 -25 -25)
+    (375 175 -25)
+    (-25 175 -25)
+    (-25 -25 25)
+    (375 -25 25)
+    (375 175 25)
+    (-25 175 25)
+);
 
-startTime       0;
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) (24 12 3) simpleGrading (1 1 1)
+);
 
-stopAt          endTime;
+boundary
+(
+    box
+    {
+        type patch;
+        faces
+        (
+            (3 7 6 2)
+            (0 4 7 3)
+            (2 6 5 1)
+            (1 5 4 0)
+            (0 3 2 1)
+            (4 5 6 7)
+        );
+    }
+);
 
-endTime         500;
-
-deltaT          1;
-
-writeControl    timeStep;
-
-writeInterval   500;
 
 // ************************************************************************* //

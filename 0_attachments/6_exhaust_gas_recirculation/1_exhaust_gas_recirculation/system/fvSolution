@@ -9,25 +9,41 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      controlDict;
+    object      fvSolution;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solver          incompressibleFluid;
+solvers
+{
+    p
+    {
+        solver          GAMG;
+        smoother        GaussSeidel;
+        tolerance       1e-6;
+        relTol          0.01;
+    }
 
-startFrom       startTime;
+    pFinal
+    {
+        $p;
+        relTol          0;
+    }
 
-startTime       0;
+    "(rho|U|h|k|omega).*"
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-06;
+        relTol          0;
+    }
+}
 
-stopAt          endTime;
+PIMPLE
+{
+    nOuterCorrectors    1;
+    nCorrectors         2;
+    nNonOrthogonalCorrectors 0;
+}
 
-endTime         500;
-
-deltaT          1;
-
-writeControl    timeStep;
-
-writeInterval   500;
 
 // ************************************************************************* //

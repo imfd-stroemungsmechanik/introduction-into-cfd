@@ -1,0 +1,148 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  13
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeEtc "caseDicts/mesh/generation/snappyHexMeshDict.cfg"
+
+castellatedMesh on;
+snap            on;
+addLayers       on;
+
+geometry
+{
+    geometry
+    {
+        type    triSurface;
+        file    "geometry.obj";
+
+        regions
+        {
+            inlet_air
+            {
+                name    inlet_air;
+            }
+            inlet_exhaust
+            {
+                name    inlet_exhaust;
+            }
+            pipe_air
+            {
+                name    pipe_air;
+            }
+            pipe_exhaust
+            {
+                name    pipe_exhaust;
+            }
+            outlet
+            {
+                name    outlet;
+            }
+        }
+    }
+};
+
+castellatedMeshControls
+{
+    refinementSurfaces
+    {
+        geometry
+        {
+            level (1 1);
+
+            regions
+            {
+                inlet
+                {
+                    level (1 1);
+                    patchInfo
+                    {
+                        type patch;
+                    }
+                }
+
+                outlet
+                {
+                    level (1 1);
+                    patchInfo
+                    {
+                        type patch;
+                    }
+                }
+
+                pipe_air
+                {
+                    level (3 3);
+                    patchInfo
+                    {
+                        type wall;
+                    }
+                }
+
+                pipe_exhaust
+                {
+                    level (3 3);
+                    patchInfo
+                    {
+                        type wall;
+                    }
+                }
+            }
+        }
+    }
+
+    refinementRegions
+    {}
+
+    features
+    ();
+
+    insidePoint (1e-5 1e-5 1e-5);
+
+    nCellsBetweenLevels     2;
+}
+
+snapControls
+{
+    implicitFeatureSnap     true;
+}
+
+addLayersControls
+{
+    layers
+    {
+        pipe_air
+        {
+            nSurfaceLayers 3;
+        }
+        pipe_exhaust
+        {
+            nSurfaceLayers 3;
+        }
+    }
+
+    relativeSizes       true;
+
+    expansionRatio      1.2;
+
+    finalLayerThickness 0.5;
+
+    minThickness        1e-3;
+}
+
+writeFlags
+();
+
+mergeTolerance 1e-6;
+
+// ************************************************************************* //

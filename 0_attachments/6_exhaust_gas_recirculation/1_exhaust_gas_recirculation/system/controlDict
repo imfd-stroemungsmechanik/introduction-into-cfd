@@ -9,25 +9,24 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    location    "system";
     object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solver          incompressibleFluid;
+solver          fluid;
 
-startFrom       startTime;
+startFrom       latestTime;
 
 startTime       0;
 
 stopAt          endTime;
 
-endTime         500;
+endTime         0.08;
 
-deltaT          1;
+deltaT          1.25e-5;
 
-writeControl    timeStep;
+writeControl    runTime;
 
-writeInterval   500;
+writeInterval   0.002;
 
 // ************************************************************************* //

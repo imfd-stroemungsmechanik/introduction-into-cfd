@@ -1,0 +1,15 @@
+# family_boco file written by ICEM CFD by heinrich on Mi Jul 01 13:40:47 CEST 2026
+## solver ANSYS Fluent
+"GEOM"
+"GEOM" "color" 8336360
+"PIPE_AIR"
+"PIPE_AIR" "color" 5176370
+"PIPE_EXHAUST"
+"PIPE_EXHAUST" "color" 5911550
+"INLET_EXHAUST"
+"INLET_EXHAUST" "color" 3385300
+"INLET_AIR"
+"INLET_AIR" "color" 13609800
+"OUTLET"
+"OUTLET" "color" 15610700
+
