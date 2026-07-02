@@ -9,53 +9,54 @@ nav_order: 4
 
 ## Introduction
 
-The simulation setup of the turbulent, compressible flow through a exhaust gas recirculation system did give reasonable results. However, there are unresolved issues:
- - Maximum and minimum temperature within the computational domain where unphysical.
- - How does the mixing temperature as well as maximum temperature at the outlet change with varying exhaust gas flow rate?
+The simulation setup of the turbulent, compressible flow through an exhaust gas recirculation system gave reasonable results. However, there are unresolved issues:
+ - The maximum temperature within the computational domain exceeded the inlet temperature of $$900\,\text{K}$$, which is unphysical.
+ - The influence of the exhaust gas flow rate on the mixing temperature has not been investigated.
 
 In order to resolve these issues, additional simulations should be performed.
 
 
-## Tasks
+## 1. Bounded Discretization Scheme
 
-### 1. Improved Discretization Schemes
+In the tutorial, the unlimited second-order gradient scheme `Gauss linear` allowed local temperature overshoots at the sharp interface between the cold air and hot exhaust gas. Gradient limiting constrains the reconstructed face values so they cannot exceed the range of surrounding cell values, thereby enforcing physical bounds on the solution. In this task, the gradient scheme should be changed to a cell-limited variant to eliminate the unphysical temperature overshoot.
 
-Repeat the simulation with a limited gradient scheme to suppress unphysical temperature.
+### Tasks
 
-#### Subtasks
-
-1. Duplicate the case folder and rename it to `exhaust_gas_recirculation_gradient_scheme`. This way the results of the first simulation do not get overwritten by this second simulation.
-2. Within the `exhaust_gas_recirculation_gradient_scheme` case folder, remove all results folders (except `0`), processor folder, and the `postProcessing` folder for a clean setup.
-3. Set the default gradient scheme in `fvSchemes` in the `system` directory from `Gauss linear` to `cellLimited Gauss linear 1.0`.
+1. Create a copy of the `exhaust_gas_recirculation` case directory named `exhaust_gas_recirculation_limited`.
+2. Within the copied case folder, remove all time directories (except `0`), all processor folders, and the `postProcessing` folder for a clean setup.
+3. In `fvSchemes` in the `system` directory, change the default gradient scheme from `Gauss linear` to `cellLimited Gauss linear 1.0`.
 4. Rerun the simulation in parallel:
-    1. Decompose the case with `decomposePar`
-    2. Run the simulation in parallel with `mpirun -np 4 rhoPimpleFoam -parallel`.
+    1. Decompose the case with `decomposePar`.
+    2. Run the simulation in parallel with `mpirun -np 4 foamRun -parallel`.
     3. Reconstruct the case with `reconstructPar`.
-5. Analyse the simulation results with ParaView similar to the first simulation.
-
+5. Recreate the monitoring plots with `python3 create_plots.py`.
+6. Visualize the temperature field in ParaView and inspect the region downstream of the exhaust gas inlet.
 
 #### Questions
 
-1. Did the limited gradient scheme remove the unphysical temperature?
+1. Does the maximum temperature in the domain now stay below $$900\,\text{K}$$?
+2. How does the maximum temperature plot from `cellMax` compare to the original simulation?
+3. Do you notice any differences in the overall flow field or the mixing temperature profile compared to the unlimited scheme?
 
 
-### 2. Variation of Exhaust Gas Flow Rate
+## 2. Variation of Exhaust Gas Flow Rate
 
-Repeat the simulations with different volumetric flow rates of the exhaust gas.
+In the tutorial, the exhaust gas volumetric flow rate was set to $$Q = 0.0025\,\text{m}^3\text{/s}$$. In practice, the amount of recirculated exhaust gas varies depending on engine operating conditions. In this task, additional simulations with different exhaust gas flow rates should be performed to investigate their effect on the mixing temperature.
 
-#### Subtasks
+### Tasks
 
-1. Duplicate the folder with the updated discretization schemes from Task 1 and rename it to `exhaust_gas_recirculation_0.00125`.
-2. Within the `exhaust_gas_recirculation_0` case folder, remove all results folders (except `0`), processor folder, and the `postProcessing` folder for a clean setup.
-3. Change the volumetric flow rate of the `inlet_exhaust` from `0.0025` to `0.00125`.
+1. Create a copy of the `exhaust_gas_recirculation_limited` case directory (with the bounded gradient scheme from Task 1) and rename it to `exhaust_gas_recirculation_Q0.00125`.
+2. Within the copied case folder, remove all time directories (except `0`), all processor folders, and the `postProcessing` folder for a clean setup.
+3. In the velocity boundary condition file `U` in the `0` directory, change the `volumetricFlowRate` at the `inlet_exhaust` from `0.0025` to `0.00125`.
 4. Rerun the simulation in parallel:
-    1. Decompose the case with `decomposePar`
-    2. Run the simulation in parallel with `mpirun -np 4 rhoPimpleFoam -parallel`.
+    1. Decompose the case with `decomposePar`.
+    2. Run the simulation in parallel with `mpirun -np 4 foamRun -parallel`.
     3. Reconstruct the case with `reconstructPar`.
-5. Analyse the simulation results with ParaView similar to the first simulation.
-6. Repeat steps 1-5 with volumetric flow rates of 0.005 and 0.0075.
-
+5. Recreate the monitoring plots with `python3 create_plots.py` and visualize the results in ParaView.
+6. Repeat steps 1–5 for exhaust gas volumetric flow rates of $$Q = 0.005\,\text{m}^3\text{/s}$$ and $$Q = 0.0075\,\text{m}^3\text{/s}$$.
 
 #### Questions
 
-1. How does the maximum and average outlet temperature change with varying exhaust gas flow rate?
+1. How does the average outlet temperature change with increasing exhaust gas flow rate?
+2. How does the maximum temperature in the domain change across the different flow rates?
+3. Compare the temperature contour and mixing temperature profile for all four flow rates. At what distance downstream of the T-junction is the mixing process approximately complete for each case?
