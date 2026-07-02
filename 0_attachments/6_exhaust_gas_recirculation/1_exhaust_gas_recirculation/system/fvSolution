@@ -40,9 +40,7 @@ solvers
 
 PIMPLE
 {
-    nOuterCorrectors    1;
     nCorrectors         2;
-    nNonOrthogonalCorrectors 0;
 }
 
 

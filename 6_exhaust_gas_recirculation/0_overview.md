@@ -39,7 +39,7 @@ Due to the high temperature differences between air and exhaust gas, the flow is
 ## Preparation
 
 Before starting, perform the following steps for preparation:
- 1. Download the archive file [6_exhaust_gas_recirculation.zip]() containing the case folders.
+ 1. Download the archive file [6_exhaust_gas_recirculation.zip](https://github.com/user-attachments/files/29613014/exhaust_gas_recirculation.zip) containing the case folders.
  2. Extract the archive and move its content to the `OpenFOAM_Projects` folder, which has been created in the first tutorial. 
  3. Open a terminal, navigate to the newly created folder, and source OpenFOAM using the `of13` alias.
 
