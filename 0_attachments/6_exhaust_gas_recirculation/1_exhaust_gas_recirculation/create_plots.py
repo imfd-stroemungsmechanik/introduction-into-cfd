@@ -84,7 +84,7 @@ time, avg_T = np.genfromtxt(
     )
 
 # Plot residuals
-plt.plot(time, avg_T, label="Average temperatur")
+plt.plot(time, avg_T, label="Average temperature")
 
 # Grid lines
 plt.grid(linewidth=0.5, color="lightgrey", linestyle="dashed")
@@ -114,7 +114,7 @@ time, max_T = np.genfromtxt(
     )
 
 # Plot residuals
-plt.plot(time, max_T, label="Maximum temperatur")
+plt.plot(time, max_T, label="Maximum temperature")
 
 # Grid lines
 plt.grid(linewidth=0.5, color="lightgrey", linestyle="dashed")
