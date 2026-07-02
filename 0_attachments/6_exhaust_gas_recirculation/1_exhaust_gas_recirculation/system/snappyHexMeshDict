@@ -24,7 +24,7 @@ geometry
     geometry
     {
         type    triSurface;
-        file    "geometry.obj";
+        file    "surface.obj";
 
         regions
         {

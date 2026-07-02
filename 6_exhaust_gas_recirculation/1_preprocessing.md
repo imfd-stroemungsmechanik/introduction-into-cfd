@@ -22,73 +22,68 @@ A case being simulated involves data for mesh, fields, properties, control param
 │   ├── T
 │   └── U
 ├── constant
-│   ├── thermophysicalProperties
-│   └── turbulenceProperties
+│   ├── geometry
+│       └── geometry.obj
+│   ├── momentumTransport
+│   └── physicalProperties
 ├── system
+│   ├── blockMeshDict
 │   ├── controlDict
 │   ├── decomposeParDict
+│   ├── functions
 │   ├── fvSchemes
 │   ├── fvSolution
-│   └── meshDict
-└── exhaust_gas_recirculation.obj
+│   ├── meshQualityDict
+│   └── snappyHexMeshDict
+└── create_plots.py
 
-3 directories, 15 files
+4 directories, 19 files
 ```
 
 The *relevant* files for this tutorial case are:
 - `0` - This directory stores the initial values and boundary condition for each variables solved.
 - `constant` - This directory contains files that are related to the physics of the problem, including the mesh and any physical properties that are required for the solver. In this case:
-    - `thermophysicalProperties` defines the thermophysical properties of the fluid.
-    - `turbulenceProperties` defines, which turbulence model to use for the simulation.
+    - `geometry` contains the geometry needed for the automated mesh generation
+    - `momentumTransport` defines, which turbulence model to use for the simulation.
+    - `physicalProperties` defines the thermophysical properties of the fluid.
 - `system` - This folder contains files related to how the simulation is to be solved:
     - `controlDict` for setting control parameters including start/end time, time step size and parameters for data output.
-    - `decomposeParDict` for setting the number of processors in a parallel run.
+    - `decomposeParDict` for specifying the number of processors in a parallel run.
+    - `functions` contains function objects for runtune post-processing.
     - `fvSchemes` for the discretization schemes used in the Finite Volume Method.
     - `fvSolution` for the solver settings used in the Finite Volume Method.
-    - `meshDict` contains the configuration for the automated meshing process.
+    - `meshQualityDict` sets the mesh quality criteria for the meshing process.
+    - `snappyHexMeshDict` configures the automated meshing tool `snappyHexMesh`.
 
 
 
 ## Mesh Generation
 
-The hexahedral-dominant, three-dimensional mesh is created automatically with the meshing utility `cartesianMesh` from a user provided surface geometry named `exhaust_gas_recirculation.obj, which is located in the case folder.
+The hexahedral-dominant, three-dimensional mesh is created automatically with the meshing utility `snappyHexMesh` from a user provided surface geometry named `surface.obj`, which is located in the `geometry` sub-folder under `constant`.
 
-The exhaust gas recirculation pipe has a total length of $$360\,\text{mm}$$ in $$x$$-direction with an air inlet diameter of $$40\,\text{mm}$$ and an exhaust gas inlet with a diameter of $$20\,\text{mm}$$. an initial channel height of $$H = 1\,\text{m}$$ at the inlet and extends to $$4.7\,\text{m}$$ towards the outlet. The maximum cell size is set to $$3\,\text{mm}$$ resulting in about 13 cells across the large pipe diameter. Additionally, the walls have Five inflation layers with a thickness ratio of 1.3.
+Generating a mesh with `snappyHexMesh` is a 4-step process:
+ 1. A background mesh created with `blockMeshDict` must be generated that fills the entire region of interest.
+ 2. SnappyHexMesh refines the background mesh towards user-specified surfaces or regions by splitting the hexahedral cells and removes cells which are not within the region of interest.
+ 3. Cell vertex points are moved onto the surface geometry to remove the castellated surface of the mesh.
+ 4. Inflation layers are added at appropriate surfaces.
 
-The resulting `meshDict` looks as follows:
+The complete process for this case is visualized in the following figure:
 
-```
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+![Exhaust gas recirculation snappyHexMesh workflow](figures/snappyHexMesh_workflow.png)
 
-surfaceFile "exhaust_gas_recirculation.obj";
+The overall cell size solely depends on the cell size of the background mesh and the number of refinement steps during generation of the castellated mesh.
 
-maxCellSize 3;
 
-boundaryLayers
-{
-    patchBoundaryLayers
-    {
-        pipe_exhaust
-        {
-            nLayers           5;
-            thicknessRatio    1.3;
-        }
-        pipe_air
-        {
-            nLayers           5;
-            thicknessRatio    1.3;
-        }
-    }
-}
-```
 
-Finally, all corresponding patches are grouped together correctly using a suitable patch type. In order to create the mesh, the `cartesianMesh` utility has to be executed:
+### Background Mesh Generation
+
+At first, a background mesh must be generated using `blockMesh`. The `blockMeshDict` in the `system` folder creates a structured mesh, which completely spans the provided geometry of the exhaust gas recirculation domain. This background mesh can be generated as follows:
 
 ```bash
-cartesianMesh
+blockMesh
 ```
 
-The resulting mesh can be visualized with ParaView should look like follows around the exhaust gas recirculation:
+
 
 ![Exhaust gas recirculation coarse mesh](figures/exhaust-gas-recirculation-mesh.png)
 
