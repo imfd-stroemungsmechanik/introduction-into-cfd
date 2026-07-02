@@ -164,7 +164,7 @@ The plot shows that while there is a clear trend of falling residuals, this tren
 
 ### Probe Temperatures
 
-The `probes` function object evaluates temperature at three pre-defined monitor points and stores the data under `postProcessing/probes/0/T`. The three probes are placed along the centreline of the horizontal pipe, spaced 30 mm apart in the vicinity of the exhaust gas junction as shown in the following figure:
+The `probes` function object evaluates temperature at three pre-defined monitor points and stores the data under `postProcessing/probes/0/T`. The three probes are placed along the centreline of the horizontal pipe, spaced 30 mm apart starting at the exhaust gas junction and extending downstream as shown in the following figure:
 
 ![Exhaust gas recirculation case probe locations](figures/exhaust-gas-recirculation-probes.png)
 
@@ -172,7 +172,7 @@ The resulting temperature history is as follows:
 
 ![Exhaust gas recirculation case probe temperatures](figures/diagram-probes.png)
 
-It takes about 0.01 seconds until the hot exhaust gas reaches the probe locations. Then, their temperatures rise quickly but at different rates depending on the proximity to the exhaust jet core. At the end of the simulation, probe 2 (directly at the exhaust junction) records the highest temperature of around $$800\,\text{K}$$, as it sits in the core of the hot exhaust stream. Probe 3 (further downstream) reaches intermediate values of around $$620\,\text{K}$$ due to progressive mixing of cold air and hot exhaust gas. Probe 1 (upstream of the junction) shows the lowest mean temperature with heavy oscillations between roughly $$300$$ and $$500\,\text{K}$$, as the recirculating flow alternately sweeps hot exhaust gas and cold air past this location.
+It takes about 0.01 seconds until the hot exhaust gas reaches the probe locations. Then, their temperatures rise quickly but at different rates depending on the distance from the exhaust gas entry. At the end of the simulation, probe 1 (directly at the exhaust gas junction) records the highest temperatures with peaks reaching up to $$950\,\text{K}$$, as it sits in the core of the incoming hot exhaust stream. The large oscillations at this location reflect the periodic vortex shedding at the T-junction, which alternately sweeps hot exhaust gas and cold air past the probe. Probe 2 (30 mm downstream) reaches intermediate values of around $$700$$ to $$800\,\text{K}$$ as the mixing progresses. Probe 3 (60 mm downstream) shows the lowest temperatures of around $$550$$ to $$600\,\text{K}$$, confirming that the hot exhaust gas is progressively diluted by the cold air stream as it travels downstream.
 
 
 ### Average Outlet Temperature

@@ -16,21 +16,11 @@ As soon as results from the processor folders are reconstructed, they can be vie
 paraFoam &
 ```
 
-To prepare ParaView to display the data of interest, the data of the last time step at $$t = 0.08\,\text{s}$$ must be loaded. If the case was run while ParaView was open, the output data in time directories will not be automatically loaded within ParaView. To load the data the user should click **Refresh** at the top **Properties** window (scroll up the panel if necessary).
-
-To color the mesh by velocity magnitude (i.e. the velocity contour) of the flow, the following settings must be selected in the **Properties** panel, as descriped in the following figure:
-
-1. Select **Surface** from the **Representation** menu,
-2. Select **Coloring** by velocity magnitude U, and
-3. Select **Rescale to Data Range**, if necessary.
-
-![Exhaust gas recirculation system paraview velocity contour settings](figures/paraview-menu-velocity-contour-settings.png)
-
-When inspecting the velocity field, the increase of flow velocity at and downstream of the t-junction is apparent. This is simply due to conservation of mass as flow rates from both inlets have to pass through the main pipe.
+Colour the surface by velocity magnitude `U` (Representation $$\rightarrow$$ **Surface**, Coloring $$\rightarrow$$ **U**, **Rescale to Data Range**). Navigate to the last time step at $$t = 0.08\,\text{s}$$ using the **Last Frame** button in the **VCR Controls**. When inspecting the velocity field, the increase of flow velocity at and downstream of the T-junction is apparent. This is due to conservation of mass, as the combined flow rates from both inlets have to pass through the main pipe.
 
 ![Exhaust gas recirculation system paraview velocity contour](figures/results-velocity-contour.png)
 
-When clicking the **Play** button in the **VCR Controls** at the very top of the ParaView window, one can see the transient nature of the flow and the characteristic flow separation just below the t-junction:
+When clicking the **Play** button in the **VCR Controls** at the very top of the ParaView window, one can see the transient nature of the flow and the characteristic flow separation just below the T-junction:
 
 ![Exhaust gas recirculation system paraview velocity animation](figures/results-velocity-animation.gif)
 
@@ -42,30 +32,31 @@ The mixing of exhaust gas and fresh air is best visualized using the temperature
 
 ![Exhaust gas recirculation system paraview temperature contour](figures/results-temperature-contour.png)
 
-Smaller flow structures with higher temperature can be seen downstream the t-junction. When selecting the time-averaged temperature field `TMean` instead, it shows a smooth temperature field and the mixing process of exhaust gas and fresh air:
 
-![Exhaust gas recirculation system paraview temperature contour](figures/results-temperature-mean-contour.png)
+In the solving section, the `cellMax` function object revealed that the maximum temperature in the domain exceeds the exhaust gas inlet temperature of $$900\,\text{K}$$, which is unphysical since no heat source is present. To locate where this overshoot occurs, we can adjust the ParaView visualization.
+
+By default, ParaView interpolates field values from cell centres to vertices for a smooth rendering. To display the actual cell centre values without interpolation, select the temperature `T` next to the orange cell symbol when choosing the variable to visualize. Then, manually fix the colour scale range to $$[850, 950]\,\text{K}$$ by clicking **Rescale to Custom Data Range** to make the overshoots clearly visible. Finally, zoom into the region just downstream of the exhaust gas inlet.
+
+![Exhaust gas recirculation system paraview temperature overshoot](figures/results-temperature-overshoot.png)
+
+Cells with temperatures exceeding $$900\,\text{K}$$ are concentrated at the interface between the cold air stream and the hot exhaust gas jet, precisely where the steepest temperature gradients occur. The unlimited second-order upwind scheme (`Gauss linearUpwind`) reconstructs the temperature at cell faces using an unbounded gradient, which can overshoot the physical bounds in regions of steep gradients. This is a well-known limitation of unlimited higher-order schemes and will be addressed in the exercise by switching to a bounded discretization scheme.
+
 
 
 
 ## Analysing the Mixing Process
 
-In order to analyse the mixing of exhaust gas and fresh air along the pipe, we can plot the average temperature over a line in the center of the main pipe. Select the **Plot over Line** filter from the **Domain** $$\rightarrow$$ **Data Analysis**. The **Properties** window panel should appear as shown in the following figure:
+In order to quantify the mixing of exhaust gas and fresh air along the pipe, the temperature can be plotted over a line along the centreline of the main pipe. With the `exhaust_gas_recirculation.OpenFOAM` module selected in the **Pipeline Browser**, apply the **Plot Over Line** filter (**Filters** $$\rightarrow$$ **Data Analysis**). Set the start and end points of the sampling line to $$(0\,\, 0\,\, 0)$$ and $$(0.36\,\, 0\,\, 0)$$, respectively, with a spatial **Resolution** of 1000 points. Click **Apply** to show the plot.
 
-![Exhaust gas recirculation system paraview plot over line menu](figures/paraview-menu-plot-over-line.png)
 
-Tthe coordinates of the start and end point of the sampling line should be $$(0 \,\, -0.15\,\, 0)$$ and $$(0.36 \,\, -0.15\,\, 0)$$, respectively, with a spatial **Resolution** of 1000 points along this line. Clicking **Apply** will open a separate window plotting all variables solved over the length of the line. This resulting diagram is very cluttered. Therefore, in the **Properties** window deselect all variables except the average temperature labelled `TMean`. In order to plot over the $$x$$-coordiantes of the line, uncheck **Use Index for X Axis** and set **X Array Name** to `Points_X`. Finally, thile the mean temeprature is selected in the **Properties** window, change the **Line Thickness** to 5 for better readability. Optionally, line color can be changed and chart title as well as axis can be specified. The **Properties** window should now look like follows:
-
-![Exhaust gas recirculation system paraview plot over line menu](figures/paraview-menu-plot-over-line-clean.png)
-
-The resulting diagram should look like follows:
+The resulting diagram is cluttered as all solved variables are displayed. In the **Properties** panel, deselect all variables except temperature `T`. Uncheck **Use Index for X Axis** and set **X Array Name**** to `Points_X` so that temperature is plotted along the streamwise coordinate. Increasing the **Line Thickness** (e.g. to 5) improves readability. The resulting diagram should look as follows:
 
 ![Exhaust gas recirculation system paraview temperature profile](figures/diagram-mixing-temperature.png)
 
-Just downstream the mixing temperature reaches its peak with about $$650\,\text{K}$$ and then falls rapidly with an average temperature of $$340\,\text{K}$$ at the outlet.
+Just downstream of the T-junction, the centreline temperature reaches its peak as the hot exhaust gas enters the main pipe. Further downstream, the temperature decreases as the mixing between the cold air and hot exhaust gas progresses. Note that the instantaneous temperature profile shows local fluctuations due to the transient vortex structures in the flow, unlike a time-averaged profile which would appear smooth.
 
 
 
 ## Conclusion
 
-This concludes the fifth seminar on the simulation of a compressible, turbulent flow through a exhaust gas recirculation system. A three-dimensional mesh was generated using `cartesianMesh` based on a geometry file. The inlet boundary conditions for air and exhaust gas were adjusted for a given volumetric flow rate. The simulation was then run using `rhoPimpleFoam`, and residuals, maximum and average outlet temperature were plotted. Finally, the flow field was visualized in ParaView.
+This concludes the sixth seminar on the simulation of a compressible, turbulent flow through an exhaust gas recirculation system. A three-dimensional mesh was generated using `snappyHexMesh` and the case was run in parallel using the compressible solver `fluid`. Residuals, probe temperatures, and average outlet temperature were monitored during runtime. Finally, the velocity and temperature fields were visualized in ParaView and the mixing process along the pipe was analysed.

@@ -436,7 +436,7 @@ solvers
 
 ### Pressure-velocity coupling
 
-Pressure-based,transient simulations in OpenFOAM rely on the PIMPLE pressure-velocity coupling algorithm. In this tutorial, the pressure correction equation is solved one additional time every iteration for improved convergence and stability with the `nCorrectors` entry set to `2`. Since this is a transient simulation, relaxation factors or residual criteria are not strictly required.
+Transient pressure-based simulations in OpenFOAM rely on the PIMPLE pressure-velocity coupling algorithm. In this tutorial, the pressure correction equation is solved one additional time every iteration for improved convergence and stability with the `nCorrectors` entry set to `2`. Since this is a transient simulation, relaxation factors or residual criteria are not strictly required.
 
 ```
 PIMPLE
