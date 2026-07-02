@@ -75,9 +75,9 @@ The overall cell size solely depends on the cell size of the background mesh and
 
 
 
-### Background Mesh Generation
+### Background Mesh
 
-At first, a background mesh must be generated using `blockMesh`. The `blockMeshDict` in the `system` folder creates a structured mesh, which completely spans the provided geometry of the exhaust gas recirculation domain. This background mesh can be generated as follows:
+At first, a background mesh must be generated using `blockMesh`. The `blockMeshDict` in the `system` folder creates a structured mesh, which completely spans the provided geometry of the exhaust gas recirculation domain with $$24 \times 12 \times 3$$ cells in $$x$$-, $$y$$-, and $$z$$-direction, respectively. This results in a uniform cell size of $$\Delta = 16.67\,\text{mm}$$. This background mesh can be generated as follows:
 
 ```bash
 blockMesh
@@ -85,79 +85,55 @@ blockMesh
 
 
 
+### Automated Hex-dominated Mesh
+
+The automated mesh generation can be started using the following command
+
+```bash
+snappyHexMesh
+```
+
+The background mesh is refined towards the wall patches `pipe_air` and `pipe_exhaust` by spliting the cells of the background mesh 3 times resulting in a cell size of $$\Delta \approx 2.1\,\text{mm}$$. At the other patches, the background mesh is refined only once for a cell size of $$\Delta \approx 8.33\,\text{mm}$$. Finally, three layers of prism cells are added at the `pipe_air` and `pipe_exhaust` wall patches with a growth ratio of 1.2.
+
+The resulting mesh looks as follows:
+
 ![Exhaust gas recirculation coarse mesh](figures/exhaust-gas-recirculation-mesh.png)
 
-
-At this point the mesh generation is complete. The mesh consists of:
- - Background mesh with a cell size of $$3 \text{mm}$$
- - Five inflation layers at the walls with a thickness ratio of 1.3.
- - Correct patch types for air and exhaust inlet, outlet, and pipe walls.
 
 
 
 
 ## Mesh Quality
 
-Once the mesh has been created, it is always recommended to check the mesh statistics and quality. This can easily be done using the utility `checkMesh` from within the `exhaust_gas_recirculation` folder:
+After mesh generation, the mesh statistics and quality are checked with `checkMesh`, run from within the case directory:
 
 ```
 checkMesh
 ```
 
-The most relevant output is as follows:
+The relevant part of the output is:
 
 ```
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-Create time
-
-Create polyMesh for time = 0
-
-Time = 0s
-
-Mesh stats 
-    points:           66681
-    faces:            190868
-    internal faces:   181436
-    cells:            62182
-    faces per cell:   5.98733
+Mesh stats
+    points:           88119
+    faces:            244816
+    cells:            78617
     boundary patches: 5
-
 ...
 
 Checking geometry...
-    Overall domain bounding box (-20.0004 -170 -19.9912) (360 7.23793e-11 19.9912)
-    Mesh has 3 geometric (non-empty/wedge) directions (1 1 1)
-    Mesh has 3 solution (non-empty) directions (1 1 1)
-    Boundary openness (4.74107e-17 -7.05875e-17 -2.54233e-15) OK.
-    Max cell openness = 5.20632e-16 OK.
-    Max aspect ratio = 16.3738 OK.
-    Minimum face area = 0.206012. Maximum face area = 13.7709.  Face area magnitudes OK.
-    Min volume = 0.177828. Max volume = 37.082.  Total volume = 627526.  Cell volumes OK.
-    Mesh non-orthogonality Max: 61.6751 average: 6.22186
-    Non-orthogonality check OK.
-    Face pyramids OK.
-    Max skewness = 2.4353 OK.
-    Coupled point location match (average 0) OK.
-
+    Overall domain bounding box (-20 -20 -20.0002) (360 160 20.0002)
+    Max aspect ratio = 5.87141 OK.
+    Mesh non-orthogonality Max: 63.1022 average: 8.46125
+    Max skewness = 1.57355 OK.
 
 Mesh OK.
-    
-End
 ```
 
-This gives us all relevant mesh statistics and quality criteria of the mesh:
+The mesh has 78617 cells across 5 boundary patches, and all quality metrics are well within their limits: a maximum aspect ratio of 5.87, a maximum non-orthogonality of 63.10, and a maximum skewness of 1.57. The closing `Mesh OK`. confirms that no critical issues were found, so we can proceed to the simulation.
 
-- The mesh consists of 62182 cells,
-- has 5 different boundary patches,
-- the overall boundingbox of $$380\,\text{m}$$ in $$x$$-direction, $$170\,\text{m}$$ in $$y$$-direction and $$40\,\text{m}$$ in $$z$$-direction.
 
-As this is a hexa-dominant, unstructured mesh with five layers of inflation cells on the wall surfaces, the mesh quality in general is good:
 
-- max cell aspect ratio of 16.4,
-- a maximum mesh non-orthogonality of 61.7, and
-- a max cell skewness of 2.44.
-
-The final output `Mesh OK.` indicates that no critical problems or errors were found during `checkMesh`. Therefore, we can continue with this mesh and proceed with the simulation.
 
 
 ## Mesh Scaling
@@ -182,7 +158,7 @@ Thermophysical models are concerned with:
 - Transport, e.g. the dependence of properties such as viscosity $$\mu$$ on temperature
 - State, e.g. dependence of density on temperature $$T$$ and pressure $$p$$.
 
-Unlike the setup for incompressible flows, these thermophysical properties are stored in the `thermophysicalProperties` file in the `constant` directory.
+These thermophysical properties are stored in the `physicalProperties` file in the `constant` directory.
 
 A thermophysical model required an entry named `thermoType` which specifies the package of thermophysical modelling that is used in the simulation. OpenFOAM includes a large set of pre-compiled combinations of modelling, built within the code using C++ templates.
 
@@ -203,7 +179,7 @@ thermoType
 }
 ```
 
-Depending on these submodels, specific fluid properties have to be specified. These settings are within the `mixture` dictionary in the `thermophysicalProperties` file:
+Depending on these submodels, specific fluid properties have to be specified. These settings are within the `mixture` dictionary in the `physicalProperties` file:
 
 ```
 mixture
@@ -220,7 +196,7 @@ mixture
     transport
     {
         mu          1.8e-5;
-        Pr          0.7;
+        kappa       0.025;
     }
 }
 ```
@@ -243,13 +219,13 @@ with the specific gas constant for air $$R$$.
 
 #### **Transport model**
 
-The transport modelling concerns evaluating dynamic viscosity $$\mu$$, thermal conductivity $$\kappa$$, and thermal diffusivity $$\alpha$$. In this case, a `const` transport model is specified, which assumes a constant dynamic viscosity $$\mu$$ and Prandtl number $$\text{Pr}$$. These two variables are specified by the keywords `mu` set to $$1.8 \times 10^{-5}$$ and `Pr` to $$0.7$$. Since thermal conductivity and thermal diffusivity can be derived from these quantities, they do not have to be specified.
+The transport modelling concerns evaluating dynamic viscosity $$\mu$$, thermal conductivity $$\kappa$$, and thermal diffusivity $$\alpha$$. In this case, a `const` transport model is specified, which assumes a constant dynamic viscosity $$\mu$$ and thermal conductivity $$\kappa$$. These two variables are specified by the keywords `kappa` set to $$1.8 \times 10^{-5}$$ and `kappa` to $$0.025$$.
 
 
 
 ## Turbulence Modelling
 
-The turbulence model is set in the `turbulenceProperties` file in the `constant` directory. The content of the file is as follows:
+The turbulence model is set in the `momentumTransport` file in the `constant` directory. The content of the file is as follows:
 
 ```
 simulationType RAS;
@@ -288,7 +264,7 @@ inlet_exhaust
 }
 ```
 
-Pressure at the inlet is treated as zero gradient and inlet temperature is $$300\,\text{K}$$ for the air inlet and $$900\,\text{K}$$ for the exhaust gas inlet, respectively. At the outlet, velocity and temperature are treated as zero gradient and the static pressure is set to $$10^5\,\text{Pa}$$. The walls are considered no-slip and adiabatic. Thus, the velocity is set to $$(0 \, 0 \, 0)$$, temperature and pressure to zero gradient.
+Pressure at both inlets is treated as zero gradient and inlet temperature is $$300\,\text{K}$$ for the air inlet and $$900\,\text{K}$$ for the exhaust gas inlet, respectively. At the outlet, velocity and temperature are treated as zero gradient and the static pressure is set to $$10^5\,\text{Pa}$$. The walls are considered no-slip and adiabatic. Thus, the velocity is set to $$(0 \, 0 \, 0)$$, temperature and pressure to zero gradient.
 
 
 ### Turbulent Quantities
@@ -301,11 +277,12 @@ Turbulent viscosity $$\nu_t$$ and turbulent thermal diffusivity $$\alpha_t$$ hav
 
 ## Simulation Control
 
-Settings related to the control of time and reading and writing of the solution data are read in from the `controlDict` file in the `system` folder.
+Time control, solver selection and output settings are read from the `controlDict` in the `system` directory:
 
-The key settings for this steady-state turbulent simulation include:
 ```
-application     rhoPimpleFoam;
+solver          fluid;
+
+startFrom       latestTime;
 
 startTime       0;
 
@@ -313,72 +290,58 @@ stopAt          endTime;
 
 endTime         0.08;
 
-deltaT          8e-6;
+deltaT          1.25e-5;
 
 writeControl    runTime;
 
 writeInterval   0.002;
 ```
 
-In this tutorial case, the solver `rhoPimpleFoam` is used, a pressure-based solver for compressible, transient, laminar or turbulent single-phase flows. The simulation starts at time `0`. Therefore we set the `startFrom` keyword to `startTime` and then specify the `startTime` keyword to be `0`. The simulations runs until an end time of $$0.08\,\text{s}$$. Time step size `deltaT` is set to $$8 \times 10^{-6}\,\text{s}$$ for stability reasons. Finally, results are witten out every $$0.002\,\text{s}$$ configured via the `writeInterval` keyword.
+In this tutorial case, the solver `fluid` is used, a pressure-based solver for compressible, steady-state or transient, laminar or turbulent single-phase flows. The simulation starts at time `0`, runs until an end time of $$0.08\,\text{s}$$. Time step size `deltaT` is set to $$1.25 \times 10^{-5}\,\text{s}$$ for stability reasons. Finally, results are witten out every $$0.002\,\text{s}$$.
 
 
 
 ## Discretization
 
-The user specifies the choice of finite volume discretisation schemes in the `fvSchemes` dictionary in the `system` directory. Here, we will only cover the most relevant settings.
+The finite-volume discretisation schemes are set in the `fvSchemes` dictionary in the `system` directory. Since this is a transient simulation, the temporal term discretization is first Euler implicit, gradients use an unlimited second order scheme `Gauss linear`, and the convective terms for momentum, energy, and turbulent scalars use a second order upwind scheme. Since the SST $$k-\omega$$ turbulence model is chosen, the distance from cell centers to the nearest wall has to be computed. For this, the `meshWave` method is selected under `wallDist`.
 
-### Temporal derivatives
-
-The discretization of the temporal derivatives $$(\partial / \partial t)$$ is defined within the `ddtSchemes` keyword. The entry here is set to `Euler`, e.g. a first order implicit time discretization.
 
 ```
 ddtSchemes
 {
-    default             Euler;
+    default         Euler;
 }
-```
 
-### Gradient terms
-
-The discretization of the gradient terms is defined within the `gradSchemes` keyword. All gradient schemes are discretized equally with a second order **central differencing scheme**. Hence, the `default` discretization is set to `Gauss linear`.
-
-```
 gradSchemes
 {
-    default             Gauss linear;
+    default         Gauss linear;
 }
-```
 
-### Convective terms
-
-The discretization of the convective transport terms is defined within the `divSchemes` keyword. The convective transport of momentum `div(phi,U)` adn enthalpy `div(phi,h)` is discretized using the **second order upwind scheme** called `Gauss linearUpwind` combined with the default gradient scheme defined under `gradSchemes`. The convection of kinetic energy in the energy equation `div(phi,K)` is discretized with a **second order central differencing scheme** called `Gauss linear` and the turbulent quantities are discretized with **first order upwind**.
-
-Additionaly, `div((nuEff*dev2(T(grad(U)))))` denotes the divergence of the shear stress tensor in the momentum equation. Since this term is diffusive in nature, it is recommended to discretize it with a central differencing scheme, here `Gauss linear`.
-
-```
 divSchemes
 {
-    div(phi,U)      Gauss linearUpwindV default;
+    div(phi,U)      Gauss linearUpwindV  Gauss linear;
 
-    div(phi,h)      Gauss linearUpwind default;
-    div(phi,K)      Gauss linear;
+    div(phi,h)      Gauss linearUpwind Gauss linear;
+    div(phi,K)      Gauss linearUpwind Gauss linear;
 
-    div(phi,k)      Gauss upwind;
-    div(phi,omega)  Gauss upwind;
+    div(phi,k)      Gauss linearUpwind Gauss linear;
+    div(phi,omega)  Gauss linearUpwind Gauss linear;
+}
 
-    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
+...
+
+wallDist
+{
+    method          meshWave;
 }
 ```
 
 
 ## Linear Solver Settings
 
-The specification of the linear equation solvers, tolerances and other algorithm controls is made in the `fvSolution` dictionary in the `system` directory. These settings are as follows for the exhaust gas recirculation case.
+The linear equation solvers, tolerances and coupling controls are set in the `fvSolution` dictionary in the `system` directory.
 
-### Solver settings
-
-The pressure field in the pressure-velocity coupling is solved using a **Geometric agglomerated Algebraic MultiGrid** (short: GAMG) solver with a Gauss-Seidel solver for smoothing during the multi-grid steps. The solver is actually set up twice as the pressure-velocity equation is solved more than once. For the intermediate iterations, a relative tolerance of $$0.01$$ is used while for the final iteration a relative tolerance of $$0$$ is used.
+The pressure field in the pressure-velocity coupling is solved using a **Geometric agglomerated Algebraic MultiGrid** (short: GAMG) solver with a Gauss-Seidel solver for smoothing during the multi-grid steps. The solver is actually set up twice as the pressure-velocity equation is solved more than once. For the intermediate iterations, a relative tolerance of $$0.01$$ is used while for the final iteration a relative tolerance of $$0$$ is used. The momentum and energy equation as well as the transport equations for the turbulent properties are solved using a Gauss Seidel solver . The absolute tolerance for solving is $$10^{-6}$$ with a relative tolerance of $$0.1$$.
 
 ```
 solvers
@@ -387,7 +350,7 @@ solvers
     {
         solver          GAMG;
         smoother        GaussSeidel;
-        tolerance       1e-06;
+        tolerance       1e-6;
         relTol          0.01;
     }
 
@@ -396,43 +359,26 @@ solvers
         $p;
         relTol          0;
     }
-... 
-}
-```
 
-The momentum and energy equation as well as the transport equations for the turbulent properties are solved using a Gauss Seidel solver . The absolute tolerance for solving is $$10^{-6}$$ with a relative tolerance of $$0.1$$:
-
-```
-solvers
-{
-...
-
-    "(rho|U|h|k|omega)"
+    "(rho|U|h|k|omega).*"
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
         tolerance       1e-06;
-        relTol          0.1;
-    }
-
-    "(rho|U|h|k|omega)Final"
-    {
-        $U;
-        relTol          0;
+        relTol          0.01;
     }
 }
 ```
 
 
+
 ### Pressure-velocity coupling
 
-Pressure-based, steady-state simulations in OpenFOAM rely on the PIMPLE pressure-velocity coupling algorithm. Additional options for this algorithm are available within the `PIMPLE` entry in `fvSolutions`. In this tutorial, the pressure correction equation is solved one additional time every iteration for improved convergence and stability with the `nCorrectors` entry set to `2`. Since this is a transient simulation, relaxation factors or residual criteria are not necessarily required.
+Pressure-based simulations in OpenFOAM rely on the PIMPLE pressure-velocity coupling algorithm. In this tutorial, the pressure correction equation is solved one additional time every iteration for improved convergence and stability with the `nCorrectors` entry set to `2`. Since this is a transient simulation, relaxation factors or residual criteria are not strictly required.
 
 ```
 PIMPLE
 {
-    nOuterCorrectors    1;
     nCorrectors         2;
-    nNonOrthogonalCorrectors 0;
 }
 ```
