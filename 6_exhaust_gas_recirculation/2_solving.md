@@ -10,7 +10,7 @@ nav_order: 2
 
 ## Running in Parallel
 
-By default, OpenFOAM does only run on a single CPU core on a computer (e.g. it runs in serial). Even for smaller cases this might lead to long computational times. For example, the mesh for this simulation consists of about 60.000 cells. A simulation on a single CPU core would take about 24 min to finish. In contrast, most modern workstation computer and laptops come equipped with 8 - 16 CPU cores (not including hyperthreading). So it would just make sense to run OpenFOAM in parallel using several CPU cores at once to speed up the simulation.
+By default, OpenFOAM does only run on a single CPU core on a computer (e.g. it runs in serial). Even for smaller cases this might lead to long computational times. For example, the mesh for this simulation consists of about 80.000 cells. A simulation on a single CPU core would take about 24 min to finish. In contrast, most modern workstation computer and laptops come equipped with 8 - 16 CPU cores (not including hyperthreading). So it would just make sense to run OpenFOAM in parallel using several CPU cores at once to speed up the simulation.
 
 Using OpenFOAM in parallel consists of three steps:
  1. Decomposing the mesh and initial/boundary conditions into individual processor folders,
@@ -49,56 +49,44 @@ Decomposing the exhaust gas recirculation system case for running in parallel re
 
 ### 2. Run in parallel
 
-Once the case has been decomposed, it can be solved in parallel using mpi (Message Passing Interface), which organizes the processor-processor communication. Instead of just typing `rhoPimpleFoam` into the terminal, for a parallel execution the command is as follows:
+Once the case has been decomposed, it can be solved in parallel using mpi (Message Passing Interface), which organizes the processor-processor communication. Instead of just typing `foamRun` into the terminal, for a parallel execution the command is as follows:
 
 ```bash
-mpirun -np 4 rhoPimpleFoam -parallel
+mpirun -np 4 foamRun -parallel
 ```
 
-Here, `mpirun` takes care of the parallel execution, `-np 4` is an additional option specifying the number of processors used (here: 4), `rhoPimpleFoam` is the executable run in parallel and `-parallel` an additional option, so OpenFOAM knows to run the solver in parallel. Results folders created during parallel execution are stored in their respective processor folder. Furthermore, post-processing function objects are stored as normal in the `postProcessing` directory.
+Here, `mpirun` takes care of the parallel execution, `-np 4` is an additional option specifying the number of processors used (here: 4), `foamRun` is the executable run in parallel and `-parallel` an additional option, so OpenFOAM knows to run the solver in parallel. Results folders created during parallel execution are stored in their respective processor folder. Furthermore, post-processing function objects are stored as normal in the `postProcessing` directory.
 
 The progress of the job is written to the terminal window like normal. It tells the user the current time step (e.g. iteration in steady-state simulations), the equations being solved, initial and final residuals for all fields and should look like follows:
 
 
+```
+Courant Number mean: 0.0240667 max: 0.234012
+Time = 0.08s
 
+diagonal:  Solving for rho, Initial residual = 0, Final residual = 0, No Iterations 0
+smoothSolver:  Solving for Ux, Initial residual = 0.00584081, Final residual = 3.60744e-06, No Iterations 1
+smoothSolver:  Solving for Uy, Initial residual = 0.00152905, Final residual = 1.06892e-06, No Iterations 1
+smoothSolver:  Solving for Uz, Initial residual = 0.00117061, Final residual = 1.0538e-06, No Iterations 1
+smoothSolver:  Solving for h, Initial residual = 0.000756259, Final residual = 5.4808e-07, No Iterations 1
+GAMG:  Solving for p, Initial residual = 0.00737078, Final residual = 1.37979e-05, No Iterations 1
+diagonal:  Solving for rho, Initial residual = 0, Final residual = 0, No Iterations 0
+time step continuity errors : sum local = 8.74165e-08, global = -1.77969e-09, cumulative = 4.61467e-05
+GAMG:  Solving for p, Initial residual = 2.44065e-05, Final residual = 3.76191e-07, No Iterations 2
+diagonal:  Solving for rho, Initial residual = 0, Final residual = 0, No Iterations 0
+time step continuity errors : sum local = 2.37826e-09, global = 1.93121e-10, cumulative = 4.61469e-05
+smoothSolver:  Solving for omega, Initial residual = 0.000145111, Final residual = 1.43467e-07, No Iterations 1
+smoothSolver:  Solving for k, Initial residual = 0.00118793, Final residual = 1.22708e-06, No Iterations 1
+bounding k, min: -0.373581 max: 49.3845 average: 0.382731
+ExecutionTime = 482.009 s  ClockTime = 499 s
 
-In order to start the simulation, we have to execute corresponding the OpenFOAM application. As defined in the `controlDict`, the solver `rhoPimpleFoam` will be used, suitable for transient, compressible, laminar or turbulent flows.
-
-
-
- This application can be started by typing the appropriate command in the terminal from within the case directory:
-
-```bash
-rhoPimpleFoam
 ```
 
-The progress of the job is written to the terminal window. It tells the user the current iteration, the equations being solved, initial and final residuals for all fields and should look like follows:
-
-```
-Courant Number mean: 0.0231348 max: 0.692643
-Time = 0.04652
-
-PIMPLE: iteration 1
-diagonal:  Solving for rho, Initial residual = 0, Final residual = 0, No Iterations 0
-smoothSolver:  Solving for Ux, Initial residual = 0.00113556, Final residual = 6.34284e-07, No Iterations 1
-smoothSolver:  Solving for Uy, Initial residual = 0.000635827, Final residual = 3.65292e-07, No Iterations 1
-smoothSolver:  Solving for Uz, Initial residual = 0.00327433, Final residual = 2.0464e-09, No Iterations 2
-smoothSolver:  Solving for h, Initial residual = 0.00158282, Final residual = 8.79904e-10, No Iterations 2
-GAMG:  Solving for p, Initial residual = 0.0355897, Final residual = 4.33579e-05, No Iterations 1
-diagonal:  Solving for rho, Initial residual = 0, Final residual = 0, No Iterations 0
-time step continuity errors : sum local = 1.17717e-07, global = -4.46739e-09, cumulative = 1.27345e-05
-GAMG:  Solving for p, Initial residual = 5.75699e-05, Final residual = 7.2923e-07, No Iterations 5
-diagonal:  Solving for rho, Initial residual = 0, Final residual = 0, No Iterations 0
-time step continuity errors : sum local = 1.98789e-09, global = -1.20932e-11, cumulative = 1.27345e-05
-smoothSolver:  Solving for omega, Initial residual = 3.61447e-05, Final residual = 1.39389e-08, No Iterations 1
-smoothSolver:  Solving for k, Initial residual = 0.000695609, Final residual = 3.04741e-07, No Iterations 1
-ExecutionTime = 254.95 s  ClockTime = 266 s
-```
-
-This output at time 0.04652 tells us in summary:
-- The solvers being used for the different governing equations, initial and final residuals, and the number of iterations per time step.
-- The error of the conservation of mass is denoted as `continuity error`. Since its value is very small, conservation of mass is maintained.
-- The execution time for the simulation up to this iteration is roughly 255 seconds as indicated by the `ExecutionTime`.
+This output at time 0.08 tells us in summary:
+ - Mean and maximum Courant number in the computational domain.
+ - The solvers being used for the different governing equations, initial and final residuals, and the number of iterations per time step.
+ - The error of the conservation of mass is denoted as `continuity error`. Since its value is very small, conservation of mass is maintained.
+ - The execution time for the simulation up to this iteration is roughly 499 seconds as indicated by the `ExecutionTime`.
 
 
 ### 3. Reconstructing the case
@@ -119,157 +107,74 @@ This tool automatically reconstructs all time folders in the individual processo
 
 ## Monitoring the Simulation
 
-In order to monitor the simulation during its run and for postprocessing, several function objects are added at the bottom of the `controlDict`.
-
-### Residuals
-
-In order to visualize the residuals to help judge convergence, the function object `solverInfo` has been added to the `controlDict`. It saves the initial residuals of the fields `(p U h k omega)`, so pressure, velocity, enthalpy, turbulent kinetic energy, and specific dissipation rate, during runtime in the `postProcessing` folder under the following path: `postProcessing/solverInfo/0/solverInfo.dat`.
+Four function objects are defined in the `functions` file in the `system` folder to monitor the run:
 
 ```
-functions
-{
-    solverInfo
-    {
-        type            solverInfo;
-        libs            (utilityFunctionObjects);
-        fields          (p U h k omega);
-    }
+#includeFunc residuals
+(
+    name    = residuals,
+    fields  = (p U h k omega)
+)
 
-...
-}
+#includeFunc probes
+(
+    name    = probes,
+    fields  = (T),
+    points  = 
+        (
+            (0.12 0 0)
+            (0.15 0 0)
+            (0.18 0 0)
+        )
+)
+
+#includeFunc patchAverage
+(
+    name    = avgT,
+    patch   = outlet,
+    fields  = (T)
+)
+#includeFunc cellMax
+(
+    name    = maxT,
+    fields  = (T)
+)
 ```
 
-Either during runtime or once the simulation has finished, the data written by the function objects can be analyzed. This data can typically be plotted in a diagram using Microsoft Excel, Python, Gnuplot or any other tool. In order to quickly evaluate the monitored results from the function objects, a script is added to the case directory called `create_plots.py`. Executing it will automatically create the diagrams for residuals. By typing the following command in the terminal, the diagrams are created using Python and stored as png file:
+The `residuals` object writes the initial residuals of `(p U h k omega)`, so pressure, velocity, enthalpy, turbulent kinetic energy and specific dissipation rate, to `postProcessing/residuals/0/residuals.dat` at every time step.
 
-```bash
-python3 create_plots.py
-```
+The `probes` function object evaluates temperature at pre-defined monitor points and stores it under `postProcessing/probes/0/T`. In this case, three points are defined just below where the exhaust pipe intersects with the air pipe and further downstream as shown in the following figure:
 
-This creates the following diagram of the residuals on the $$y$$-axis plotted against time on the $$x$$-axis in the case folder:
+![Exhaust gas recirculation system case probe locations](figures/exhaust-gas-recirculation-probes.png)
+
+The `patchAverage` function object evaluates the average temperature at the outlet patch and writes it to `postProcessing/avgT/0/surfaceFieldValue.dat`. The `cellMax` function object tracks the maximum temperature in the computational domain and stores it under `postProcessing/maxT/0/volFieldValue.dat`,
+
+In order to quickly evaluate the monitored data, a script is added to the diffuser case directory called `create_plots.py`. Executing it will automatically create the diagrams and store them as png file.
+
+
+
+The following diagram shows the residuals on the $$y$$-axis plotted against time on the $$x$$-axis:
 
 ![Exhaust gas recirculation system case residuals](figures/diagram-residuals.png)
 
 The plot shows that while there is a clear trend in falling residuals, this trend is superimposed by large oscillations. This indicates that this is a stronly transient flow with no stationary state.
 
+The diagram of the temperature over time for the individual probe points is follows:
 
+![Exhaust gas recirculation system case probe temperature](figures/diagram-probes.png)
 
-### Probes
+It takes about 0.01 seconds until the hot exhaust gas reaches the location of the probe points. Then, their temperature rises quickly. At the end of the simulation, directly below the t-junction at probe 1, the temperature is highest with a maximum of over $$900\,\text{K}$$. Probe 2 has the somewhat lower temperature values of around $$750\,\text{K}$$. However, probe 3 monitores the lowest temperaturewith values below $$600\,\text{K}$$ due to the mixing of cold air and hot exhaust gas.
 
-Additionally, a second function object named `probes` in the `controlDict` evaluates pressure, velocity and temperature in pre-defined monitor points. In this case, three points are defined just below where the exhaust pipe intersects with the air pipe and further downstream as shown in the following figure:
-
-![Exhaust gas recirculation system case probe locations](figures/exhaust-gas-recirculation-probes.png)
-
-The values are written out every time step and help in analysing the transient flow behaviour and detect possible characteristic frequencies. The function object itself is configured as follows:
-
-```
-functions
-{
-...
-    
-    probes
-    {
-        type            probes;
-        libs            (sampling);
-        writeControl    timeStep;
-        writeInterval   1;
-
-        fields
-        (
-            T
-        );
-
-        probeLocations
-        (
-            (0.12 -0.15 0.0)
-            (0.15 -0.15 0.0)
-            (0.18 -0.15 0.0)
-        );
-    }
-}
-```
-
-By using the provided `create_plots.py` Python script, a diagram of the temperature over time for the individual probe points is created:
-
-![Exhaust gas recirculation system case probe temperature](figures/diagram-probe-temperature.png)
-
-It takes about 0.01 seconds until the hot exhaust gas reaches the location of the probe points. Then, their temperature rises quickly. Directly below the t-junction at probe 1, the temperature is lowest with a maximum of $$500\,\text{K}$$. Probe 2 has the highest temperature of around $$850\,\text{K}$$ at the end of the simulation. However, probe 3 sits in between with a lower temperature in the range of $$600\,\text{K}$$ due to the mixing of cold air and hot exhaust gas. Note that the maximum and minimum temperature is actually above and below the inlet temperatures of $$900\,\text{K}$$ and $$300\,\text{K}$$, respectively. This is **unphysical** and probably due to the unlimited gradient in the second order upwind discretication scheme.
-
-
-### Average and Maximum Outlet Temperature
-
-For exhaust gas recirculation systems the maximum and average outlet temperature is essential to avoid the damage of downstream engine components due to exessive temperature. Therefore, two additional function object are added to compute maximum and average outlet temperature of the mixing gas. The first one, called `average_outlet_temperature` is of type `surfaceFieldValue` and compute the area-weighted average of the temperature field at a region of type `patch` with the name of that patch `outlet`. Similar, the second one called `maximum_outlet_temperature` is also of type `surfaceFieldValue` and computes the maximum face temperature at the outlet patch.
-
-```
-functions
-{
-...
-
-    average_outlet_temperature
-    {
-        type            surfaceFieldValue;
-        libs            (fieldFunctionObjects);
-
-        fields          (T);
-        operation       areaAverage;
-
-        regionType      patch;
-        name            outlet;
-        writeFields     false;
-    }
-    
-    maximum_outlet_temperature
-    {
-        type            surfaceFieldValue;
-        libs            (fieldFunctionObjects);
-
-        fields          (T);
-        operation       max;
-
-        regionType      patch;
-        name            outlet;
-        writeFields     false;
-    }
-}
-```
-
-Similar to the previous plots, these results indicate a strongly transient flow problem with a maximum temperature of up to $$500\,\text{K}$$ and an average temperature of around $$400\,\text{K}$$.
+The average temperature at the outlet patch is shown next:
 
 ![Exhaust gas recirculation system case outlet temperature](figures/diagram-outlet-temperature.png)
 
+Similar to the previous plots, these results indicate a strongly transient flow problem with an average temperature of about $$400\,\text{K}$$.
 
+The maximum temperature in the copmutational domain is as follows:
 
-### Average Flow Field
+![Exhaust gas recirculation system case outlet temperature](figures/diagram-max-temperature.png)
 
-Since the flow problem seems to be highly transient, averaged flow fields over time can be handy for postprocessing. Therefore, a final function object called `fieldAverage` is added, which averages the temperature and velocity field over every time step. The resulting fields, `TMean` for temperature and `UMean` for velocity, are written out whenever a results folder would be written out with the entry `writeControl` set to `writeTime`. The function object is configured as follows:
-
-```
-functions
-{
-    ...
-    
-    fieldAverage
-    {
-        type            fieldAverage;
-        libs            (fieldFunctionObjects);
-        writeControl    writeTime;
-
-        fields
-        (
-            U
-            {
-                mean        on;
-                prime2Mean  off;
-                base        time;
-            }
-            T
-            {
-                mean        on;
-                prime2Mean  off;
-                base        time;
-            }
-        );
-    }
-}
-```
+Note that the maximum is actually above the inlet temperatures of $$900\,\text{K}$$. This is **unphysical** and needs further investigation. It is probably due to the unlimited gradient in the second order upwind discretication scheme.
 
 This concludes the setup of the exhaust gas recirculation system and the configuration of function objects for runtime postpressing.
