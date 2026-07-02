@@ -24,17 +24,17 @@ The objectives for this tutorial are as follows:
 
 ## Overview
 
-This tutorial will describe how to pre-process, run, and post-process a case involving a transient, compressible flow of a exhaust gas recirculation. The geometry is shown in the following figure with an inlet for cold air on the left, inlet for the hot exhaust gas in the center, no-slip adiabatic walls for the air and exhaust side, and an outlet at the right. The flow will be solved using the OpenFOAM solver `fluid` the suitable for laminar and turbulent, compressible, steady-state and transient flows.
+This tutorial will describe how to pre-process, run, and post-process a case involving a transient, compressible flow of an exhaust gas recirculation. The geometry is shown in the following figure with an inlet for cold air on the left, inlet for the hot exhaust gas in the center, no-slip adiabatic walls for the air and exhaust side, and an outlet at the right. The flow will be solved using the OpenFOAM solver `fluid` suitable for laminar and turbulent, compressible, steady-state and transient flows.
 
 ![Exhaust gas recirculation system case geometry](figures/exhaust-gas-recirculation-geometry.png)
 
-The boundary conditions for the give problem are as follows:
+The boundary conditions for the given problem are as follows:
 - Air inlet: Volumetric flow rate of $$Q = 0.005\,\text{m}^3\text{/s}$$ at a temperature of $$300\,\text{K}$$
 - Exhaust gas inlet: Volumetric flow rate of $$Q = 0.0025\,\text{m}^3\text{/s}$$ at a temperature of $$900\,\text{K}$$
 - Outlet: Pressure of $$10^5\,\text{Pa}$$
 - Pipe walls: Adiabatic and no-slip
 
-Due to the high temperature differences between air and exhaust gas, the flow is assumbed to be compressible.
+Due to the high temperature differences between air and exhaust gas, the flow is assumed to be compressible.
 
 ## Preparation
 
@@ -44,4 +44,4 @@ Before starting, perform the following steps for preparation:
  3. Open a terminal, navigate to the newly created folder, and source OpenFOAM using the `of13` alias.
 
 {: .note }
-> This case is provided as a generic template: the configuration files are not yet set up for the diffuser problem. Throughout this chapter you will adapt the case to it exactly as you would when starting from an existing case in practice. Each value is derived as it comes up; apply it to the corresponding file as you go. If your setup is correct, your results should match the reference solutions shown.
+> This case is provided as a generic template: the configuration files are not yet set up for the exhaust gas recirculation problem. Throughout this chapter you will adapt the case to it exactly as you would when starting from an existing case in practice. Each value is derived as it comes up; apply it to the corresponding file as you go. If your setup is correct, your results should match the reference solutions shown.
