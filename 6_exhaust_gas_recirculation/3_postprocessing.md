@@ -16,7 +16,11 @@ As soon as results from the processor folders are reconstructed, they can be vie
 paraFoam &
 ```
 
-Colour the surface by velocity magnitude `U` (Representation $$\rightarrow$$ **Surface**, Coloring $$\rightarrow$$ **U**, **Rescale to Data Range**). Navigate to the last time step at $$t = 0.08\,\text{s}$$ using the **Last Frame** button in the **VCR Controls**. When inspecting the velocity field, the increase of flow velocity at and downstream of the T-junction is apparent. This is due to conservation of mass, as the combined flow rates from both inlets have to pass through the main pipe.
+In the **Pipeline Browser** on the left, click the green **Apply** button in the **Properties** panel to load the case. Navigate to the last time step at $$t = 0.08\,\text{s}$$ using the **Last Frame** button in the **VCR Controls**.
+
+Since this is a three-dimensional geometry, colouring the surface by velocity would only show the outer pipe walls. To visualize the internal flow field, a cutting plane through the centre of the pipe must be created first. With the `exhaust_gas_recirculation.OpenFOAM` module highlighted in the **Pipeline Browser**, select the **Slice** filter from **Common Data and Analytics** in the top menu of ParaView. Set the cutting plane origin to $$(0, 0, 0)$$ and its normal to $$(0, 0, 1)$$ by clicking the **Z Normal** button. Disable **Show Plane** in the **Properties** panel to prevent the plane from being repositioned accidentally when rotating the view, and click **Apply**.
+
+Now colour the slice by velocity magnitude `U` (Representation $$\rightarrow$$ **Surface**, Coloring $$\rightarrow$$ **U**, **Rescale to Data Range**). When inspecting the velocity field, the increase of flow velocity at and downstream of the T-junction is apparent. This is due to conservation of mass, as the combined flow rates from both inlets have to pass through the main pipe.
 
 ![Exhaust gas recirculation system paraview velocity contour](figures/results-velocity-contour.png)
 
@@ -28,7 +32,7 @@ When clicking the **Play** button in the **VCR Controls** at the very top of the
 
 ## Visualizing the Temperature Contour
 
-The mixing of exhaust gas and fresh air is best visualized using the temperature field. Selecting temperature `T` in the **Properties** panel and rescaling the data range gives the following temperature contour:
+The mixing of exhaust gas and fresh air is best visualized using the temperature field. With the `Slice1` module still selected in the **Pipeline Browser**, change the colouring from velocity to temperature `T` in the **Properties** panel and rescale the data range. The resulting temperature contour looks as follows:
 
 ![Exhaust gas recirculation system paraview temperature contour](figures/results-temperature-contour.png)
 
@@ -49,7 +53,7 @@ Cells with temperatures exceeding $$900\,\text{K}$$ are concentrated at the inte
 In order to quantify the mixing of exhaust gas and fresh air along the pipe, the temperature can be plotted over a line along the centreline of the main pipe. With the `exhaust_gas_recirculation.OpenFOAM` module selected in the **Pipeline Browser**, apply the **Plot Over Line** filter (**Filters** $$\rightarrow$$ **Data Analysis**). Set the start and end points of the sampling line to $$(0\,\, 0\,\, 0)$$ and $$(0.36\,\, 0\,\, 0)$$, respectively, with a spatial **Resolution** of 1000 points. Click **Apply** to show the plot.
 
 
-The resulting diagram is cluttered as all solved variables are displayed. In the **Properties** panel, deselect all variables except temperature `T`. Uncheck **Use Index for X Axis** and set **X Array Name**** to `Points_X` so that temperature is plotted along the streamwise coordinate. Increasing the **Line Thickness** (e.g. to 5) improves readability. The resulting diagram should look as follows:
+The resulting diagram is cluttered as all solved variables are displayed. In the **Properties** panel, deselect all variables except temperature `T`. Uncheck **Use Index for X Axis** and set **X Array Name** to `Points_X` so that temperature is plotted along the streamwise coordinate. Increasing the **Line Thickness** (e.g. to 5) improves readability. The resulting diagram should look as follows:
 
 ![Exhaust gas recirculation system paraview temperature profile](figures/diagram-mixing-temperature.png)
 
