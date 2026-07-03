@@ -361,7 +361,7 @@ The simulation starts at time `0` and runs until an end time of $$0.08\,\text{s}
 
 The finite-volume discretisation schemes are set in the `fvSchemes` dictionary in the `system` directory. Since this is a transient simulation, the temporal term discretization is first-order Euler implicit, gradients use an unlimited second order scheme `Gauss linear`, and the convective terms for momentum, energy, and turbulent scalars use a second order upwind scheme.
 
-Compared to the incompressible tutorials, two new convective terms appear. The entry `div(phi,h)` discretizes the convective transport of specific enthalpy $$h$$ in the energy equation, while `div(phi,K)` handles the convective transport of kinetic energy $$K = \frac{1}{2} \left| U \right|^2$$. Both arise because the compressible solver `fluid` solves an energy equation in enthalpy form, which was not present in the incompressible cases.
+Compared to the incompressible tutorials, two new convective terms appear. The entry `div(phi,h)` discretizes the convective transport of specific enthalpy $$h$$ in the energy equation, while `div(phi,K)` handles the convective transport of kinetic energy $$K = \frac{1}{2} U^2$$. Both arise because the compressible solver `fluid` solves an energy equation in enthalpy form, which was not present in the incompressible cases.
 
 Since the SST $$k-\omega$$ turbulence model is chosen, the distance from cell centers to the nearest wall has to be computed. For this, the `meshWave` method is selected under `wallDist`.
 
