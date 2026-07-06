@@ -217,12 +217,12 @@ The equation of state is set to `perfectGas`, which computes density from the id
 
 $$ \rho = \frac{p}{R\,T} $$
 
-The specific gas constant $$R$$ is not specified directly but is automatically computed from the molecular weight $$M$$ via $$R = R_u / M$$, where $$R_u = 8.314\,\text{J/(mol·K)}$$ is the universal gas constant. With air at $$M = 28.9\,\text{g/mol}$$, this gives $$R \approx 287.7\,\text{J/(kg·K)}$$. No additional parameters are needed for this equation of state.
+The specific gas constant $$R$$ is not specified directly but is automatically computed from the molecular weight $$M$$ via $$R = R_u / M$$, where $$R_u = 8.314\,\text{J/(mol K)}$$ is the universal gas constant. With air at $$M = 28.9\,\text{g/mol}$$, this gives $$R \approx 287.7\,\text{J/(kg K)}$$. No additional parameters are needed for this equation of state.
 
 
 #### **Transport model**
 
-The transport modelling concerns evaluating dynamic viscosity $$\mu$$ and thermal conductivity $$\kappa$$. In this case, a `const` transport model is specified, which assumes a constant dynamic viscosity $$\mu$$ and thermal conductivity $$\kappa$$. These two variables are specified by the keywords `mu` set to $$1.8 \times 10^{-5} \,\text{Pa\,s}$$ and `kappa` to $$0.025\,\text{W/(m K)}$$.
+The transport modelling concerns evaluating dynamic viscosity $$\mu$$ and thermal conductivity $$\kappa$$. In this case, a `const` transport model is specified, which assumes a constant dynamic viscosity $$\mu$$ and thermal conductivity $$\kappa$$. These two variables are specified by the keywords `mu` set to $$1.8 \times 10^{-5} \,\text{Pa s}$$ and `kappa` to $$0.025\,\text{W/(m K)}$$.
 
 
 
