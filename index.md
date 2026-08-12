@@ -16,7 +16,6 @@ This repository complements the course Introduction into Computational Fluid Dyn
 4. [Steady-state flow around a NACA 0012 airfoil](https://imfd-stroemungsmechanik.github.io/introduction-into-cfd/4_airfoil/0_overview.html)
 5. [Steady-state, turbulent flow in a diffuser](https://imfd-stroemungsmechanik.github.io/introduction-into-cfd/5_diffuser/0_overview.html)
 6. [Compressible flow in an exhaust gas recirculation](https://imfd-stroemungsmechanik.github.io/introduction-into-cfd/6_exhaust_gas_recirculation/0_overview.html)
-7. Two-phase liquid sloshing in a tank
 
 ## How to use this guide
 
